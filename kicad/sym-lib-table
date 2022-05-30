@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name "local_symbols")(type "KiCad")(uri "${KIPRJMOD}/local_symbols.kicad_sym")(options "")(descr ""))
+  (lib (name "local_keystone")(type "Legacy")(uri "${KIPRJMOD}/1072.lib")(options "")(descr ""))
 )
