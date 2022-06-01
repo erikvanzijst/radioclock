@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name "local_symbols")(type "KiCad")(uri "${KIPRJMOD}/local_symbols.kicad_sym")(options "")(descr ""))
   (lib (name "local_keystone")(type "Legacy")(uri "${KIPRJMOD}/1072.lib")(options "")(descr ""))
+  (lib (name "dk_level_shifters")(type "KiCad")(uri "${KIPRJMOD}/symbols/dk_Logic-Translators-Level-Shifters.kicad_sym")(options "")(descr ""))
 )
