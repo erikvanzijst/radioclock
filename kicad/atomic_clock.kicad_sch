@@ -2073,7 +2073,6 @@
     )
   )
 
-
   (junction (at 125.095 285.75) (diameter 0) (color 0 0 0 0)
     (uuid 00ed86d4-e0d9-474a-9e97-d9138d2676e1)
   )
@@ -2323,7 +2322,7 @@
   (no_connect (at 391.795 146.05) (uuid 65191c55-0816-41c9-9f8d-e0c4f1a410fb))
   (no_connect (at 407.035 156.21) (uuid 65191c55-0816-41c9-9f8d-e0c4f1a410fc))
   (no_connect (at 426.72 238.76) (uuid 846de296-c1f2-48ba-80b3-2b297d4257b9))
-  (no_connect (at 426.085 270.51) (uuid 846de296-c1f2-48ba-80b3-2b297d4257b9))
+  (no_connect (at 426.085 270.51) (uuid 846de296-c1f2-48ba-80b3-2b297d4257ba))
   (no_connect (at 426.085 241.3) (uuid 8874f8d1-56d9-4bf5-8ee3-0a692c146e11))
   (no_connect (at 58.42 132.715) (uuid 8b915f7e-5906-415d-b180-7e44b93e0fa0))
   (no_connect (at 58.42 130.175) (uuid 8b915f7e-5906-415d-b180-7e44b93e0fa1))
@@ -8289,8 +8288,8 @@
     (in_bom yes) (on_board yes) (fields_autoplaced)
     (uuid 7d458036-f861-4562-94d1-fe3b89225623)
     (property "Reference" "U3" (id 0) (at 138.43 288.4002 0))
-    (property "Value" "D198K" (id 1) (at 138.43 290.9371 0))
-    (property "Footprint" "Display_7Segment:D1X8K" (id 2) (at 138.43 320.04 0)
+    (property "Value" "" (id 1) (at 138.43 290.9371 0))
+    (property "Footprint" "" (id 2) (at 138.43 320.04 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "https://ia800903.us.archive.org/24/items/CTKD1x8K/Cromatek%20D168K.pdf" (id 3) (at 125.73 292.735 0)
