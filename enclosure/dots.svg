@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="36mm"
+   height="29mm"
+   viewBox="0 0 36 29"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
@@ -24,20 +24,25 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="6.9176445"
-     inkscape:cx="86.011937"
-     inkscape:cy="39.392021"
-     inkscape:window-width="2025"
-     inkscape:window-height="1251"
-     inkscape:window-x="997"
+     inkscape:cx="90.131836"
+     inkscape:cy="58.329103"
+     inkscape:window-width="1792"
+     inkscape:window-height="1067"
+     inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="5" />
   <defs
      id="defs2" />
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(5.0000001,5.0000001)">
     <rect
        style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:0.195696;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect31"
@@ -95,15 +100,15 @@
        style="fill:none;stroke:#ff0000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="circle1254"
        cx="24.09831"
-       cy="2.7065656"
-       r="0.89999998"
+       cy="2.7065654"
+       r="0.99999994"
        transform="rotate(8)" />
     <circle
        style="fill:none;stroke:#ff0000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="circle1256"
        cx="24.09831"
        cy="9.7065649"
-       r="0.89999998"
+       r="0.99999994"
        transform="rotate(8)" />
   </g>
 </svg>
