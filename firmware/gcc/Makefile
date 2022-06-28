@@ -1,7 +1,7 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
+VERSION=1.0
+BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
 
+MK_DIR = mkdir -p
 ifdef SystemRoot
 	SHELL = cmd.exe
 	MK_DIR = mkdir
@@ -22,7 +22,7 @@ else
 		MK_DIR = mkdir -p
 	endif
 
-	ifeq ($(shell uname | cut -d _ -f 1), DARWIN)
+	ifeq ($(shell uname | cut -d _ -f 1), Darwin)
 		MK_DIR = mkdir -p
 	endif
 endif
@@ -30,9 +30,11 @@ endif
 # List the subdirectories for creating object files
 SUB_DIRS +=  \
  \
+stdio_redirect/gcc \
 samda1b/gcc \
 hpl/systick \
 hpl/dmac \
+stdio_redirect \
 hal/src \
 samda1b/gcc/gcc \
 hpl/pm \
@@ -46,7 +48,9 @@ hpl/core
 # List the object files
 OBJS +=  \
 hal/src/hal_io.o \
+stdio_redirect/stdio_io.o \
 hpl/systick/hpl_systick.o \
+stdio_redirect/gcc/write.o \
 hal/utils/src/utils_syscalls.o \
 hal/src/hal_delay.o \
 hpl/pm/hpl_pm.o \
@@ -58,7 +62,9 @@ hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
 hpl/sysctrl/hpl_sysctrl.o \
 hal/src/hal_usart_sync.o \
+stdio_redirect/gcc/read.o \
 hpl/gclk/hpl_gclk.o \
+stdio_start.o \
 hal/src/hal_init.o \
 main.o \
 examples/driver_examples.o \
@@ -73,7 +79,9 @@ hal/src/hal_atomic.o
 
 OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
+"stdio_redirect/stdio_io.o" \
 "hpl/systick/hpl_systick.o" \
+"stdio_redirect/gcc/write.o" \
 "hal/utils/src/utils_syscalls.o" \
 "hal/src/hal_delay.o" \
 "hpl/pm/hpl_pm.o" \
@@ -85,7 +93,9 @@ OBJS_AS_ARGS +=  \
 "hpl/dmac/hpl_dmac.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
 "hal/src/hal_usart_sync.o" \
+"stdio_redirect/gcc/read.o" \
 "hpl/gclk/hpl_gclk.o" \
+"stdio_start.o" \
 "hal/src/hal_init.o" \
 "main.o" \
 "examples/driver_examples.o" \
@@ -114,7 +124,8 @@ DIR_INCLUDES +=  \
 -I"../hpl/sysctrl" \
 -I"../hpl/systick" \
 -I"../hri" \
--I"../" \
+-I"../config" \
+-I"../stdio_redirect" \
 -I"../CMSIS/Core/Include" \
 -I"../samda1b/include"
 
@@ -122,11 +133,13 @@ DIR_INCLUDES +=  \
 DEPS := $(OBJS:%.o=%.d)
 
 DEPS_AS_ARGS +=  \
+"stdio_redirect/stdio_io.d" \
 "hal/src/hal_gpio.d" \
 "hal/src/hal_io.d" \
 "samda1b/gcc/system_samda1.d" \
 "hpl/systick/hpl_systick.d" \
 "hal/utils/src/utils_syscalls.d" \
+"stdio_redirect/gcc/write.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
 "hpl/dmac/hpl_dmac.d" \
@@ -134,9 +147,11 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_delay.d" \
 "hpl/core/hpl_init.d" \
 "hpl/sysctrl/hpl_sysctrl.d" \
+"stdio_start.d" \
 "hpl/gclk/hpl_gclk.d" \
 "hal/src/hal_init.d" \
 "hal/src/hal_usart_sync.d" \
+"stdio_redirect/gcc/read.d" \
 "driver_init.d" \
 "main.d" \
 "examples/driver_examples.d" \
@@ -189,27 +204,27 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 
 
 %.o: %.c
-	@echo Building file: $<
+	@echo Building file: $< "->" $@
 	@echo ARM/GNU C Compiler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
 
 %.o: %.s
-	@echo Building file: $<
+	@echo Building file: $< "->" $@
 	@echo ARM/GNU Assembler
-	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
 
 %.o: %.S
-	@echo Building file: $<
+	@echo Building file: $< "->" $@
 	@echo ARM/GNU Preprocessing Assembler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"

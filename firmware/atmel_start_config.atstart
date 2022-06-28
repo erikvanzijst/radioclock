@@ -18,7 +18,15 @@ board:
   device: SAMDA1E16B-MB
 details: null
 application: null
-middlewares: {}
+middlewares:
+  STDIO_REDIRECT_0:
+    user_label: STDIO_REDIRECT_0
+    configuration: {}
+    definition: Atmel:STDIO_redirect:0.0.1::STDIO_Redirect
+    functionality: STDIO_Redirect
+    api: STDIO:Redirect:IO
+    dependencies:
+      Target IO: USART_0
 drivers:
   GCLK:
     user_label: GCLK
@@ -26,10 +34,10 @@ drivers:
     functionality: System
     api: HAL:HPL:GCLK
     configuration:
-      $input: 8000000
-      $input_id: 8MHz Internal Oscillator (OSC8M)
-      RESERVED_InputFreq: 8000000
-      RESERVED_InputFreq_id: 8MHz Internal Oscillator (OSC8M)
+      $input: 400000
+      $input_id: External Crystal Oscillator 0.4-32MHz (XOSC)
+      RESERVED_InputFreq: 400000
+      RESERVED_InputFreq_id: External Crystal Oscillator 0.4-32MHz (XOSC)
       _$freq_output_Generic clock generator 0: 8000000
       _$freq_output_Generic clock generator 1: 32768
       _$freq_output_Generic clock generator 2: 400000

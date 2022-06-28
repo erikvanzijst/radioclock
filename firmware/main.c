@@ -1,21 +1,21 @@
 #include <atmel_start.h>
-#include <string.h>
 #include "atmel_start_pins.h"
 #include "hal_delay.h"
+#include "version.h"
 
 int main(void)
 {
     struct io_descriptor *io;
-    char * hw = "Hello world!\r\n";
 
-	/* Initializes MCU, drivers and middleware */
-	atmel_start_init();
+    atmel_start_init();
     gpio_set_pin_level(LED, true);
 
     usart_sync_get_io_descriptor(&USART_0, &io);
     usart_sync_enable(&USART_0);
 
-    io_write(io, (uint8_t *)hw, strlen(hw));
+    printf("Radio clock firmware build: %s\r\n", VERSION_STR);
+    printf("https://github.com/erikvanzijst/radioclock\r\n");
+    printf("Erik van Zijst <erik.van.zijst@gmail.com>\r\n\r\n");
 
 	/* Replace with your application code */
 	while (1) {
