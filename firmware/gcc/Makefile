@@ -148,7 +148,7 @@ DEPS_AS_ARGS +=  \
 "atmel_start.d" \
 "samda1b/gcc/gcc/startup_samda1.d"
 
-OUTPUT_FILE_NAME :=AtmelStart
+OUTPUT_FILE_NAME :=radioclock
 QUOTE := "
 OUTPUT_FILE_PATH +=$(OUTPUT_FILE_NAME).elf
 OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_FILE_NAME).elf
@@ -222,15 +222,15 @@ ifneq ($(strip $(DEPS)),)
 endif
 endif
 
-$(SUB_DIRS):
-	$(MK_DIR) "$@"
-
 program: $(SUB_DIRS) $(OUTPUT_FILE_PATH)
 	@echo Writing flash...
 	openocd -f ../openocd.cfg -c "program $(OUTPUT_FILE_PATH) verify reset exit"
 
 debug: $(OUTPUT_FILE_PATH)
 	arm-none-eabi-gdb -iex "target extended-remote localhost:3333" $(OUTPUT_FILE_PATH)
+
+$(SUB_DIRS):
+	$(MK_DIR) "$@"
 
 clean:
 	rm -f $(OBJS_AS_ARGS)
