@@ -21,11 +21,19 @@ extern "C" {
 #include <hal_io.h>
 #include <hal_sleep.h>
 
+#include <hal_i2c_m_sync.h>
+
 #include <hal_usart_sync.h>
 
 #include <hal_delay.h>
 
+extern struct i2c_m_sync_desc I2C_0;
+
 extern struct usart_sync_descriptor USART_0;
+
+void I2C_0_CLOCK_init(void);
+void I2C_0_init(void);
+void I2C_0_PORT_init(void);
 
 void USART_0_PORT_init(void);
 void USART_0_CLOCK_init(void);

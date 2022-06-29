@@ -52,6 +52,7 @@ stdio_redirect/stdio_io.o \
 hpl/systick/hpl_systick.o \
 stdio_redirect/gcc/write.o \
 hal/utils/src/utils_syscalls.o \
+hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 hpl/pm/hpl_pm.o \
 hpl/core/hpl_init.o \
@@ -83,6 +84,7 @@ OBJS_AS_ARGS +=  \
 "hpl/systick/hpl_systick.o" \
 "stdio_redirect/gcc/write.o" \
 "hal/utils/src/utils_syscalls.o" \
+"hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "hpl/pm/hpl_pm.o" \
 "hpl/core/hpl_init.o" \
@@ -140,6 +142,7 @@ DEPS_AS_ARGS +=  \
 "hpl/systick/hpl_systick.d" \
 "hal/utils/src/utils_syscalls.d" \
 "stdio_redirect/gcc/write.d" \
+"hal/src/hal_i2c_m_sync.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
 "hpl/dmac/hpl_dmac.d" \
