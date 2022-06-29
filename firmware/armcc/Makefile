@@ -38,6 +38,7 @@ hpl/sercom \
 examples \
 hpl/gclk \
 stdio_redirect/keil \
+hpl/rtc \
 hpl/core
 
 # List the object files
@@ -45,21 +46,23 @@ OBJS +=  \
 hal/src/hal_io.o \
 stdio_redirect/stdio_io.o \
 hpl/systick/hpl_systick.o \
+hal/src/hal_calendar.o \
 hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
-hpl/pm/hpl_pm.o \
+hpl/sysctrl/hpl_sysctrl.o \
 hpl/core/hpl_init.o \
 hal/utils/src/utils_list.o \
 hpl/core/hpl_core_m0plus_base.o \
 hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
-hpl/sysctrl/hpl_sysctrl.o \
+hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
 stdio_redirect/keil/Retarget.o \
 hpl/gclk/hpl_gclk.o \
 stdio_start.o \
 hal/src/hal_init.o \
 main.o \
+hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
 hpl/sercom/hpl_sercom.o \
@@ -73,21 +76,23 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
 "stdio_redirect/stdio_io.o" \
 "hpl/systick/hpl_systick.o" \
+"hal/src/hal_calendar.o" \
 "hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
-"hpl/pm/hpl_pm.o" \
+"hpl/sysctrl/hpl_sysctrl.o" \
 "hpl/core/hpl_init.o" \
 "hal/utils/src/utils_list.o" \
 "hpl/core/hpl_core_m0plus_base.o" \
 "hal/utils/src/utils_assert.o" \
 "hpl/dmac/hpl_dmac.o" \
-"hpl/sysctrl/hpl_sysctrl.o" \
+"hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
 "stdio_redirect/keil/Retarget.o" \
 "hpl/gclk/hpl_gclk.o" \
 "stdio_start.o" \
 "hal/src/hal_init.o" \
 "main.o" \
+"hpl/rtc/hpl_rtc.o" \
 "examples/driver_examples.o" \
 "driver_init.o" \
 "hpl/sercom/hpl_sercom.o" \
@@ -101,8 +106,9 @@ OBJS_AS_ARGS +=  \
 DEPS := $(OBJS:%.o=%.d)
 
 DEPS_AS_ARGS +=  \
+"hal/src/hal_calendar.d" \
 "stdio_redirect/stdio_io.d" \
-"hal/src/hal_gpio.d" \
+"hal/utils/src/utils_event.d" \
 "hal/src/hal_io.d" \
 "hpl/systick/hpl_systick.d" \
 "hal/src/hal_i2c_m_sync.d" \
@@ -121,9 +127,10 @@ DEPS_AS_ARGS +=  \
 "driver_init.d" \
 "main.d" \
 "examples/driver_examples.d" \
+"hpl/rtc/hpl_rtc.d" \
 "hal/src/hal_sleep.d" \
 "hpl/sercom/hpl_sercom.d" \
-"hal/utils/src/utils_event.d" \
+"hal/src/hal_gpio.d" \
 "hal/src/hal_atomic.d" \
 "hpl/pm/hpl_pm.d" \
 "atmel_start.d"
@@ -162,7 +169,7 @@ $(OBJS_AS_ARGS)
 	@echo Building file: $<
 	@echo ARMCC Compiler
 	$(QUOTE)armcc$(QUOTE) --c99 -c -DDEBUG -O1 -g --apcs=interwork --split_sections --cpu Cortex-M0+ -D__SAMDA1E16B__ \
--I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
+-I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/rtc" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
 --depend "$@"  -o "$@" "$<"
 
 	@echo Finished building: $<
@@ -171,7 +178,7 @@ $(OBJS_AS_ARGS)
 	@echo Building file: $<
 	@echo ARMCC Assembler
 	$(QUOTE)armasm$(QUOTE) -g --apcs=interwork --cpu Cortex-M0+ --pd "D__SAMDA1E16B__ SETA 1" \
--I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
+-I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/rtc" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
 --depend "$(@:%.o=%.d)" -o "$@" "$<"
 
 	@echo Finished building: $<
@@ -180,7 +187,7 @@ $(OBJS_AS_ARGS)
 	@echo Building file: $<
 	@echo ARMCC Preprocessing Assembler
 	$(QUOTE)armcc$(QUOTE) --c99 -c -DDEBUG -O1 -g --apcs=interwork --split_sections --cpu Cortex-M0+ -D__SAMDA1E16B__ \
--I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
+-I"../" -I"../config" -I"../examples" -I"../hal/include" -I"../hal/utils/include" -I"../hpl/core" -I"../hpl/dmac" -I"../hpl/gclk" -I"../hpl/pm" -I"../hpl/port" -I"../hpl/rtc" -I"../hpl/sercom" -I"../hpl/sysctrl" -I"../hpl/systick" -I"../hri" -I"../" -I"../config" -I"../stdio_redirect" -I"../" -I"../CMSIS/Core/Include" -I"../samda1b/include"  \
 --depend "$@"  -o "$@" "$<"
 
 	@echo Finished building: $<

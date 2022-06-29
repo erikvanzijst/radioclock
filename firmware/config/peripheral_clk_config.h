@@ -57,7 +57,7 @@
 
 // <i> Select the slow clock source.
 #ifndef CONF_GCLK_SERCOM1_SLOW_SRC
-#define CONF_GCLK_SERCOM1_SLOW_SRC GCLK_CLKCTRL_GEN_GCLK3_Val
+#define CONF_GCLK_SERCOM1_SLOW_SRC GCLK_CLKCTRL_GEN_GCLK0_Val
 #endif
 
 /**
@@ -73,7 +73,7 @@
  * \brief SERCOM1's Slow Clock frequency
  */
 #ifndef CONF_GCLK_SERCOM1_SLOW_FREQUENCY
-#define CONF_GCLK_SERCOM1_SLOW_FREQUENCY 48000000
+#define CONF_GCLK_SERCOM1_SLOW_FREQUENCY 8000000
 #endif
 
 // <y> Core Clock Source
@@ -138,6 +138,38 @@
  */
 #ifndef CONF_GCLK_SERCOM3_SLOW_FREQUENCY
 #define CONF_GCLK_SERCOM3_SLOW_FREQUENCY 8000000
+#endif
+
+// <y> RTC Clock Source
+// <id> rtc_clk_selection
+
+// <GCLK_CLKCTRL_GEN_GCLK0_Val"> Generic clock generator 0
+
+// <GCLK_CLKCTRL_GEN_GCLK1_Val"> Generic clock generator 1
+
+// <GCLK_CLKCTRL_GEN_GCLK2_Val"> Generic clock generator 2
+
+// <GCLK_CLKCTRL_GEN_GCLK3_Val"> Generic clock generator 3
+
+// <GCLK_CLKCTRL_GEN_GCLK4_Val"> Generic clock generator 4
+
+// <GCLK_CLKCTRL_GEN_GCLK5_Val"> Generic clock generator 5
+
+// <GCLK_CLKCTRL_GEN_GCLK6_Val"> Generic clock generator 6
+
+// <GCLK_CLKCTRL_GEN_GCLK7_Val"> Generic clock generator 7
+
+// <i> Select the clock source for RTC.
+#ifndef CONF_GCLK_RTC_SRC
+#define CONF_GCLK_RTC_SRC GCLK_CLKCTRL_GEN_GCLK1_Val
+#endif
+
+/**
+ * \def CONF_GCLK_RTC_FREQUENCY
+ * \brief RTC's Clock frequency
+ */
+#ifndef CONF_GCLK_RTC_FREQUENCY
+#define CONF_GCLK_RTC_FREQUENCY 32768
 #endif
 
 // <<< end of configuration section >>>

@@ -9,6 +9,8 @@ typedef struct {
     uint8_t crc;
 } dht_measurement_t;
 
+static struct calendar_alarm alarm;
+
 uint8_t crc8(uint8_t *ptr, uint8_t len) {
     uint8_t crc = 0xFF;
     while (len--) {
@@ -23,6 +25,35 @@ uint8_t crc8(uint8_t *ptr, uint8_t len) {
         }
     }
     return crc;
+}
+
+static void alarm_cb(struct calendar_descriptor *const descr) {
+    printf("RTC alarm\r\n");
+}
+
+int init_cal() {
+
+    struct calendar_date date;
+    struct calendar_time time;
+
+    calendar_enable(&CALENDAR_0);
+
+    date.year  = 2022;
+    date.month = 6;
+    date.day   = 29;
+
+    time.hour = 22;
+    time.min  = 00;
+    time.sec  = 00;
+
+    calendar_set_date(&CALENDAR_0, &date);
+    calendar_set_time(&CALENDAR_0, &time);
+
+    alarm.cal_alarm.datetime.time.sec = 4;
+    alarm.cal_alarm.option            = CALENDAR_ALARM_MATCH_SEC;
+    alarm.cal_alarm.mode              = REPEAT;
+
+    calendar_set_alarm(&CALENDAR_0, &alarm, alarm_cb);
 }
 
 int main(void)
@@ -49,6 +80,8 @@ int main(void)
     i2c_m_sync_get_io_descriptor(&I2C_0, &I2C_0_io);
     i2c_m_sync_enable(&I2C_0);
     i2c_m_sync_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
+
+    init_cal();
 
 	/* Replace with your application code */
 	while (1) {

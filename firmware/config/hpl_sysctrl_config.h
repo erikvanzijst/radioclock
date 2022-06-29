@@ -109,7 +109,7 @@
 // <i> Indicates whether configuration for OSC32K is enabled or not
 // <id> enable_osc32k
 #ifndef CONF_OSC32K_CONFIG
-#define CONF_OSC32K_CONFIG 0
+#define CONF_OSC32K_CONFIG 1
 #endif
 
 // <h> 32kHz Internal Oscillator (OSC32K) Control
@@ -117,7 +117,7 @@
 // <i> Indicates whether Internal 32K Oscillator is enabled or not
 // <id> osc32k_arch_enable
 #ifndef CONF_OSC32K_ENABLE
-#define CONF_OSC32K_ENABLE 0
+#define CONF_OSC32K_ENABLE 1
 #endif
 
 // <q> On Demand Control

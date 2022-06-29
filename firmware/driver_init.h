@@ -27,9 +27,13 @@ extern "C" {
 
 #include <hal_delay.h>
 
+#include <hal_calendar.h>
+
 extern struct i2c_m_sync_desc I2C_0;
 
 extern struct usart_sync_descriptor USART_0;
+
+extern struct calendar_descriptor CALENDAR_0;
 
 void I2C_0_CLOCK_init(void);
 void I2C_0_init(void);
@@ -40,6 +44,9 @@ void USART_0_CLOCK_init(void);
 void USART_0_init(void);
 
 void delay_driver_init(void);
+
+void CALENDAR_0_CLOCK_init(void);
+void CALENDAR_0_init(void);
 
 /**
  * \brief Perform system initialization, initialize pins and clocks for

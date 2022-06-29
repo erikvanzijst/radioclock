@@ -43,6 +43,7 @@ hal/utils/src \
 hpl/sercom \
 examples \
 hpl/gclk \
+hpl/rtc \
 hpl/core
 
 # List the object files
@@ -50,24 +51,26 @@ OBJS +=  \
 hal/src/hal_io.o \
 stdio_redirect/stdio_io.o \
 hpl/systick/hpl_systick.o \
+hal/src/hal_calendar.o \
 stdio_redirect/gcc/write.o \
 hal/utils/src/utils_syscalls.o \
 hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
-hpl/pm/hpl_pm.o \
+hpl/sysctrl/hpl_sysctrl.o \
 hpl/core/hpl_init.o \
 samda1b/gcc/system_samda1.o \
 hal/utils/src/utils_list.o \
 hpl/core/hpl_core_m0plus_base.o \
 hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
-hpl/sysctrl/hpl_sysctrl.o \
+hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
 stdio_redirect/gcc/read.o \
 hpl/gclk/hpl_gclk.o \
 stdio_start.o \
 hal/src/hal_init.o \
 main.o \
+hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
 hpl/sercom/hpl_sercom.o \
@@ -82,24 +85,26 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
 "stdio_redirect/stdio_io.o" \
 "hpl/systick/hpl_systick.o" \
+"hal/src/hal_calendar.o" \
 "stdio_redirect/gcc/write.o" \
 "hal/utils/src/utils_syscalls.o" \
 "hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
-"hpl/pm/hpl_pm.o" \
+"hpl/sysctrl/hpl_sysctrl.o" \
 "hpl/core/hpl_init.o" \
 "samda1b/gcc/system_samda1.o" \
 "hal/utils/src/utils_list.o" \
 "hpl/core/hpl_core_m0plus_base.o" \
 "hal/utils/src/utils_assert.o" \
 "hpl/dmac/hpl_dmac.o" \
-"hpl/sysctrl/hpl_sysctrl.o" \
+"hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
 "stdio_redirect/gcc/read.o" \
 "hpl/gclk/hpl_gclk.o" \
 "stdio_start.o" \
 "hal/src/hal_init.o" \
 "main.o" \
+"hpl/rtc/hpl_rtc.o" \
 "examples/driver_examples.o" \
 "driver_init.o" \
 "hpl/sercom/hpl_sercom.o" \
@@ -122,6 +127,7 @@ DIR_INCLUDES +=  \
 -I"../hpl/gclk" \
 -I"../hpl/pm" \
 -I"../hpl/port" \
+-I"../hpl/rtc" \
 -I"../hpl/sercom" \
 -I"../hpl/sysctrl" \
 -I"../hpl/systick" \
@@ -135,8 +141,9 @@ DIR_INCLUDES +=  \
 DEPS := $(OBJS:%.o=%.d)
 
 DEPS_AS_ARGS +=  \
+"hal/src/hal_calendar.d" \
 "stdio_redirect/stdio_io.d" \
-"hal/src/hal_gpio.d" \
+"hal/utils/src/utils_event.d" \
 "hal/src/hal_io.d" \
 "samda1b/gcc/system_samda1.d" \
 "hpl/systick/hpl_systick.d" \
@@ -158,9 +165,10 @@ DEPS_AS_ARGS +=  \
 "driver_init.d" \
 "main.d" \
 "examples/driver_examples.d" \
+"hpl/rtc/hpl_rtc.d" \
 "hal/src/hal_sleep.d" \
 "hpl/sercom/hpl_sercom.d" \
-"hal/utils/src/utils_event.d" \
+"hal/src/hal_gpio.d" \
 "hal/src/hal_atomic.d" \
 "hpl/pm/hpl_pm.d" \
 "atmel_start.d" \

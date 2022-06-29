@@ -17,6 +17,8 @@ struct i2c_m_sync_desc I2C_0;
 
 struct usart_sync_descriptor USART_0;
 
+struct calendar_descriptor CALENDAR_0;
+
 void I2C_0_PORT_init(void)
 {
 
@@ -79,6 +81,18 @@ void USART_0_init(void)
 void delay_driver_init(void)
 {
 	delay_init(SysTick);
+}
+
+void CALENDAR_0_CLOCK_init(void)
+{
+	_pm_enable_bus_clock(PM_BUS_APBA, RTC);
+	_gclk_enable_channel(RTC_GCLK_ID, CONF_GCLK_RTC_SRC);
+}
+
+void CALENDAR_0_init(void)
+{
+	CALENDAR_0_CLOCK_init();
+	calendar_init(&CALENDAR_0, RTC);
 }
 
 void system_init(void)
@@ -269,4 +283,6 @@ void system_init(void)
 	USART_0_init();
 
 	delay_driver_init();
+
+	CALENDAR_0_init();
 }
