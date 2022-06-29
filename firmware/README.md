@@ -5,12 +5,14 @@ This directory contains the firmware for the radio-controlled clock.
 ## Requirements
 
 * ARM-GCC toolchain
-* SWD programmer device (e.g. Atmel-ICE)
+* [OpenOCD](https://openocd.org/)
+* SWD programmer device (e.g. [Atmel-ICE](https://www.microchip.com/en-us/development-tool/ATATMEL-ICE))
 
-On Mac, install the GCC ARM toolchain through [Homebrew](https://brew.sh/):
+On Mac, install the GCC ARM toolchain and OpenOCD through [Homebrew](https://brew.sh/):
 
 ```shell
 $ brew install --cask gcc-arm-embedded
+$ brew install open-ocd
 ```
 
 
