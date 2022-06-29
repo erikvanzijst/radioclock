@@ -52,12 +52,16 @@ int main(void)
 
 	/* Replace with your application code */
 	while (1) {
+        int32_t retval;
         gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
         io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
         delay_ms(100);  // wait for the sensor to acquire a measurement
-        io_read(I2C_0_io, (uint8_t *)&measurement, sizeof (measurement));
+        retval = io_read(I2C_0_io, (uint8_t *)&measurement, sizeof (measurement));
 
-        if ((measurement.status & 0x1) == 0x0) {
+        if (retval < 0) {
+            printf("ERR: I2C read failed: %d (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
+
+        } else if ((measurement.status & 0x1) == 0x0) {
             int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
             int temperature = (((tmp * 2000) >> 20) - 500);
 
@@ -70,7 +74,7 @@ int main(void)
             printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
 
         } else {
-            printf("ERR: DHT20 I2C reading failed (status: %x)\r\n", measurement.status);
+            printf("ERR: DHT20 sensor returned an error (status: %x)\r\n", measurement.status);
         }
         delay_ms(1000);
     }
