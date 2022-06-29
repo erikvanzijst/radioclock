@@ -41,7 +41,7 @@ int main(void)
     usart_sync_get_io_descriptor(&USART_0, &io);
     usart_sync_enable(&USART_0);
 
-    printf("Radio clock firmware build: %s\r\n", VERSION_STR);
+    printf("\r\n\r\nRadio clock firmware build: %s\r\n", VERSION_STR);
     printf("https://github.com/erikvanzijst/radioclock\r\n");
     printf("Erik van Zijst <erik.van.zijst@gmail.com>\r\n\r\n");
 
@@ -59,8 +59,12 @@ int main(void)
 
         if ((measurement.status & 0x1) == 0x0) {
             int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
-            int temperature = (((tmp * 2000) / 1048576) - 500);
-            printf("Temperature: %d.%dC\r\n", temperature / 10, temperature % 10);
+            int temperature = (((tmp * 2000) >> 20) - 500);
+
+            tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
+            int humidity = (tmp * 100) >> 20;
+
+            printf("Temperature: %d.%dC Humidity: %d%%\r\n", temperature / 10, temperature % 10, humidity);
 
         } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
             printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
