@@ -28,7 +28,6 @@ uint8_t crc8(uint8_t *ptr, uint8_t len) {
 }
 
 static void alarm_cb(struct calendar_descriptor *const descr) {
-    printf("RTC alarm\r\n");
 }
 
 int init_cal() {
@@ -60,6 +59,8 @@ int main(void)
 {
     struct io_descriptor *io;
     struct io_descriptor *I2C_0_io;
+    struct calendar_date_time datetime;
+
 //    uint8_t buf[7];
     dht_measurement_t measurement;
 
@@ -91,6 +92,8 @@ int main(void)
         delay_ms(100);  // wait for the sensor to acquire a measurement
         retval = io_read(I2C_0_io, (uint8_t *)&measurement, sizeof (measurement));
 
+        calendar_get_date_time(&CALENDAR_0, &datetime);
+
         if (retval < 0) {
             printf("ERR: I2C read failed: %d (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
 
@@ -101,7 +104,8 @@ int main(void)
             tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
             int humidity = (tmp * 100) >> 20;
 
-            printf("Temperature: %d.%dC Humidity: %d%%\r\n", temperature / 10, temperature % 10, humidity);
+
+            printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%%\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity);
 
         } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
             printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
