@@ -1,4 +1,4 @@
-VERSION=1.0
+VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
 
 MK_DIR = mkdir -p

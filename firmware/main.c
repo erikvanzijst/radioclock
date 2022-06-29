@@ -9,6 +9,8 @@ int main(void)
 
     atmel_start_init();
     gpio_set_pin_level(LED, true);
+    gpio_set_pin_level(DCF_CTL, true);  // turn off power to DCF module
+    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to DHT20 module
 
     usart_sync_get_io_descriptor(&USART_0, &io);
     usart_sync_enable(&USART_0);
