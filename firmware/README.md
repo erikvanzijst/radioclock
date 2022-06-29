@@ -106,7 +106,10 @@ Info : starting gdb server for at91samda1e16b.cpu on 3333
 Info : Listening on port 3333 for gdb connections
 ```
 
-Now create a "Remote Debug" session in CLion as per: https://www.jetbrains.com/help/clion/remote-debug.html#start-remote-debug
+Now open the `firmware/` directory as project root in
+[CLion](https://www.jetbrains.com/clion/) and create a "Remote Debug" session
+as per:
+https://www.jetbrains.com/help/clion/remote-debug.html#start-remote-debug
 
 ![](../media/clion_debugger.png)
 
