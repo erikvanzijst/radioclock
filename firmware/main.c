@@ -86,10 +86,34 @@ int main(void)
 
     init_cal();
 
+    // DHT20 initialization
     io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
 
-	while (1) {
+    // Display initialization
+    gpio_set_pin_level(DSPL_SS, false); // Leave shutdown mode:
+    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0c, 0x01, 0x0c, 0x01}), 4);
+    gpio_set_pin_level(DSPL_SS, true);
+
+    gpio_set_pin_level(DSPL_SS, false); // set intensity:
+    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0x08, 0x0a, 0x08}), 4);
+    gpio_set_pin_level(DSPL_SS, true);
+
+    gpio_set_pin_level(DSPL_SS, false); // set scan-limit register to all segments:
+    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0b, 0x07, 0x0b, 0x07}), 4);
+    gpio_set_pin_level(DSPL_SS, true);
+
+    gpio_set_pin_level(DSPL_SS, false); // enable BCD decode mode:
+    io_write(spi_io, (uint8_t *)((uint8_t[]){0x09, 0xff, 0x09, 0xff}), 4);
+    gpio_set_pin_level(DSPL_SS, true);
+
+    for (uint8_t i = 1; i <= 8; i++) {   // set a value for each segment
+        gpio_set_pin_level(DSPL_SS, false); // set intensity:
+        io_write(spi_io, (uint8_t *)((uint8_t[]){i, i+8-1, i, i-1}), 4);
+        gpio_set_pin_level(DSPL_SS, true);
+    }
+
+    while (1) {
         int32_t retval;
         gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
         io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
@@ -119,9 +143,9 @@ int main(void)
         }
 
         // SPI
-        gpio_set_pin_level(DSPL_SS, false);
-        io_write(spi_io, (uint8_t *)"Hello world", strlen("Hello world"));
-        gpio_set_pin_level(DSPL_SS, true);
+//        gpio_set_pin_level(DSPL_SS, false);
+//        io_write(spi_io, (uint8_t *)"Hello world", strlen("Hello world"));
+//        gpio_set_pin_level(DSPL_SS, true);
 
         delay_ms(1000);
     }
