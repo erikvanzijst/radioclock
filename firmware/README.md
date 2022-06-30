@@ -81,17 +81,17 @@ firmware/gcc $
 
 Interactive, on-chip debugging is supported though OpenOCD's built-in gdbserver.
 
-After compiling and flashing the current firmware onto the board, run OpenOCD in a terminal:
+After compiling and flashing the current firmware onto the board, run `make debug` in a terminal:
 
 ```shell
-firmware/gcc $ openocd -f ../openocd.cfg
+firmware/gcc $ make debug
+Starting OpenOCD debug server...
+openocd -f ../openocd.cfg -c "init; reset halt"
 Open On-Chip Debugger 0.11.0
 Licensed under GNU GPL v2
 For bug reports, read
 	http://openocd.org/doc/doxygen/bugs.html
 DEPRECATED! use 'adapter driver' not 'interface'
-Info : Listening on port 6666 for tcl connections
-Info : Listening on port 4444 for telnet connections
 Info : CMSIS-DAP: SWD  Supported
 Info : CMSIS-DAP: JTAG Supported
 Info : CMSIS-DAP: FW Version = 1.0
@@ -104,7 +104,15 @@ Info : SWD DPIDR 0x0bc11477
 Info : at91samda1e16b.cpu: hardware has 4 breakpoints, 2 watchpoints
 Info : starting gdb server for at91samda1e16b.cpu on 3333
 Info : Listening on port 3333 for gdb connections
+target halted due to debug-request, current mode: Thread 
+xPSR: 0x41000000 pc: 0x000019e4 msp: 0x20000900
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+Connect CLion Remote Debug session now...
 ```
+
+Leave this process running while debugging. Kill it before flashing new
+firmware, as only one OpenOCD server can be connected to the target at a time.
 
 Now open the `firmware/` directory as project root in
 [CLion](https://www.jetbrains.com/clion/) and create a "Remote Debug" session

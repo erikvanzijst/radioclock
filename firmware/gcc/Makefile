@@ -259,6 +259,7 @@ debug: $(OUTPUT_FILE_PATH)
 	@echo Starting OpenOCD debug server...
 	@( sleep 1 && echo Connect CLion Remote Debug session now...) &
 	openocd -f ../openocd.cfg -c "init; reset halt"
+	#openocd -f ../openocd.cfg -c "init; resume; exit"	# make does not propagate interrupts unfortunately
 
 $(SUB_DIRS):
 	$(MK_DIR) "$@"
