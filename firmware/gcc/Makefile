@@ -252,8 +252,13 @@ program: $(SUB_DIRS) $(OUTPUT_FILE_PATH)
 	@echo Writing flash...
 	openocd -f ../openocd.cfg -c "program $(OUTPUT_FILE_PATH) verify reset exit"
 
-debug: $(OUTPUT_FILE_PATH)
+gdb: $(OUTPUT_FILE_PATH)
 	arm-none-eabi-gdb -iex "target extended-remote localhost:3333" $(OUTPUT_FILE_PATH)
+
+debug: $(OUTPUT_FILE_PATH)
+	@echo Starting OpenOCD debug server...
+	@( sleep 1 && echo Connect CLion Remote Debug session now...) &
+	openocd -f ../openocd.cfg -c "init; reset halt"
 
 $(SUB_DIRS):
 	$(MK_DIR) "$@"

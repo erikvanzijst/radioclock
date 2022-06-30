@@ -84,12 +84,14 @@ int main(void)
 
     init_cal();
 
-	/* Replace with your application code */
+    io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
+    delay_ms(20);  // wait for the sensor reset
+
 	while (1) {
         int32_t retval;
         gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
         io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
-        delay_ms(100);  // wait for the sensor to acquire a measurement
+        delay_ms(85);  // wait for the sensor to acquire a measurement
         retval = io_read(I2C_0_io, (uint8_t *)&measurement, sizeof (measurement));
 
         calendar_get_date_time(&CALENDAR_0, &datetime);
