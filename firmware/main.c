@@ -113,7 +113,8 @@ int main(void)
         gpio_set_pin_level(DSPL_SS, true);
     }
 
-    while (1) {
+
+    for (int step = 0;;) {
         int32_t retval;
         gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
         io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
@@ -143,10 +144,17 @@ int main(void)
         }
 
         // SPI
-//        gpio_set_pin_level(DSPL_SS, false);
-//        io_write(spi_io, (uint8_t *)"Hello world", strlen("Hello world"));
-//        gpio_set_pin_level(DSPL_SS, true);
 
-        delay_ms(1000);
+        for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
+            uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
+//            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
+
+            gpio_set_pin_level(DSPL_SS, false); // set intensity:
+            io_write(spi_io, (uint8_t *)&buf, 4);
+            gpio_set_pin_level(DSPL_SS, true);
+        }
+
+        step = (step + 1 % 8);
+        delay_ms(200);
     }
 }
