@@ -13,11 +13,67 @@
 #include <hpl_gclk_base.h>
 #include <hpl_pm_base.h>
 
+struct spi_m_sync_descriptor SPI_0;
+
 struct i2c_m_sync_desc I2C_0;
 
 struct usart_sync_descriptor USART_0;
 
 struct calendar_descriptor CALENDAR_0;
+
+void SPI_0_PORT_init(void)
+{
+
+	gpio_set_pin_level(DSPL_DO,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(DSPL_DO, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(DSPL_DO, PINMUX_PA08C_SERCOM0_PAD0);
+
+	gpio_set_pin_level(DSPL_SCK,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(DSPL_SCK, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(DSPL_SCK, PINMUX_PA09C_SERCOM0_PAD1);
+
+	// Set pin direction to input
+	gpio_set_pin_direction(DSPL_MISO, GPIO_DIRECTION_IN);
+
+	gpio_set_pin_pull_mode(DSPL_MISO,
+	                       // <y> Pull configuration
+	                       // <id> pad_pull_config
+	                       // <GPIO_PULL_OFF"> Off
+	                       // <GPIO_PULL_UP"> Pull-up
+	                       // <GPIO_PULL_DOWN"> Pull-down
+	                       GPIO_PULL_OFF);
+
+	gpio_set_pin_function(DSPL_MISO, PINMUX_PA11C_SERCOM0_PAD3);
+}
+
+void SPI_0_CLOCK_init(void)
+{
+	_pm_enable_bus_clock(PM_BUS_APBC, SERCOM0);
+	_gclk_enable_channel(SERCOM0_GCLK_ID_CORE, CONF_GCLK_SERCOM0_CORE_SRC);
+}
+
+void SPI_0_init(void)
+{
+	SPI_0_CLOCK_init();
+	spi_m_sync_init(&SPI_0, SERCOM0);
+	SPI_0_PORT_init();
+}
 
 void I2C_0_PORT_init(void)
 {
@@ -185,34 +241,6 @@ void system_init(void)
 
 	gpio_set_pin_function(DCF_PDN, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PA08
-
-	gpio_set_pin_level(DSPL_DO,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(DSPL_DO, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(DSPL_DO, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA09
-
-	gpio_set_pin_level(DSPL_SCK,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(DSPL_SCK, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(DSPL_SCK, GPIO_PIN_FUNCTION_OFF);
-
 	// GPIO on PA10
 
 	gpio_set_pin_level(DSPL_SS,
@@ -277,6 +305,8 @@ void system_init(void)
 	gpio_set_pin_direction(LDR_SINK, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(LDR_SINK, GPIO_PIN_FUNCTION_OFF);
+
+	SPI_0_init();
 
 	I2C_0_init();
 

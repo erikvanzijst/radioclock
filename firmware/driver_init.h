@@ -21,6 +21,8 @@ extern "C" {
 #include <hal_io.h>
 #include <hal_sleep.h>
 
+#include <hal_spi_m_sync.h>
+
 #include <hal_i2c_m_sync.h>
 
 #include <hal_usart_sync.h>
@@ -29,11 +31,17 @@ extern "C" {
 
 #include <hal_calendar.h>
 
+extern struct spi_m_sync_descriptor SPI_0;
+
 extern struct i2c_m_sync_desc I2C_0;
 
 extern struct usart_sync_descriptor USART_0;
 
 extern struct calendar_descriptor CALENDAR_0;
+
+void SPI_0_PORT_init(void);
+void SPI_0_CLOCK_init(void);
+void SPI_0_init(void);
 
 void I2C_0_CLOCK_init(void);
 void I2C_0_init(void);

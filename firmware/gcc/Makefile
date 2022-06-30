@@ -54,6 +54,7 @@ hpl/systick/hpl_systick.o \
 hal/src/hal_calendar.o \
 stdio_redirect/gcc/write.o \
 hal/utils/src/utils_syscalls.o \
+hal/src/hal_spi_m_sync.o \
 hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 hpl/sysctrl/hpl_sysctrl.o \
@@ -88,6 +89,7 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_calendar.o" \
 "stdio_redirect/gcc/write.o" \
 "hal/utils/src/utils_syscalls.o" \
+"hal/src/hal_spi_m_sync.o" \
 "hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
@@ -150,6 +152,7 @@ DEPS_AS_ARGS +=  \
 "hal/utils/src/utils_syscalls.d" \
 "stdio_redirect/gcc/write.d" \
 "hal/src/hal_i2c_m_sync.d" \
+"hal/src/hal_spi_m_sync.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
 "hpl/dmac/hpl_dmac.d" \

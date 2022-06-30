@@ -2,3 +2,10 @@
 
 **/cmake-build-debug/
 .idea/
+firmware/gcc/*.elf
+firmware/gcc/*.bin
+firmware/gcc/*.eep
+firmware/gcc/*.hex
+firmware/gcc/*.lss
+firmware/gcc/*.map
+

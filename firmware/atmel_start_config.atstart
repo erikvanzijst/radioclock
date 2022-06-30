@@ -158,6 +158,50 @@ drivers:
           external: false
           external_frequency: 0
         configuration: {}
+  SPI_0:
+    user_label: SPI_0
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM0::driver_config_definition::SPI.Master::HAL:Driver:SPI.Master.Sync
+    functionality: SPI
+    api: HAL:Driver:SPI_Master_Sync
+    configuration:
+      spi_master_advanced: false
+      spi_master_arch_cpha: Sample input on leading edge
+      spi_master_arch_cpol: SCK is low when idle
+      spi_master_arch_dbgstop: Keep running
+      spi_master_arch_dord: MSB first
+      spi_master_arch_ibon: In data stream
+      spi_master_arch_runstdby: false
+      spi_master_baud_rate: 50000
+      spi_master_character_size: 8 bits
+      spi_master_dummybyte: 511
+      spi_master_rx_enable: true
+    optional_signals: []
+    variant:
+      specification: TXPO=0, RXPO=3
+      required_signals:
+      - name: SERCOM0/PAD/0
+        pad: PA08
+        label: MOSI
+      - name: SERCOM0/PAD/1
+        pad: PA09
+        label: SCK
+      - name: SERCOM0/PAD/3
+        pad: DSPL_MISO
+        label: MISO
+    clocks:
+      domain_group:
+        nodes:
+        - name: Core
+          input: Generic clock generator 0
+          external: false
+          external_frequency: 0
+        - name: Slow
+          input: Generic clock generator 0
+          external: false
+          external_frequency: 0
+        configuration:
+          core_gclk_selection: Generic clock generator 0
+          slow_gclk_selection: Generic clock generator 0
   I2C_0:
     user_label: I2C_0
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM1::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Sync
@@ -714,6 +758,12 @@ pads:
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA10
     mode: Digital output
     user_label: DSPL_SS
+    configuration: null
+  DSPL_MISO:
+    name: DSPL_MISO
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::DSPL_MISO
+    mode: Digital input
+    user_label: DSPL_MISO
     configuration: null
   LED:
     name: PA14

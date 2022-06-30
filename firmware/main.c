@@ -1,4 +1,5 @@
 #include <atmel_start.h>
+#include <string.h>
 #include "atmel_start_pins.h"
 #include "hal_delay.h"
 #include "version.h"
@@ -30,7 +31,7 @@ uint8_t crc8(uint8_t *ptr, uint8_t len) {
 static void alarm_cb(struct calendar_descriptor *const descr) {
 }
 
-int init_cal() {
+void init_cal() {
 
     struct calendar_date date;
     struct calendar_time time;
@@ -57,47 +58,48 @@ int init_cal() {
 
 int main(void)
 {
-    struct io_descriptor *io;
-    struct io_descriptor *I2C_0_io;
+    struct io_descriptor *uart_io;
+    struct io_descriptor *i2c_io;
+    struct io_descriptor *spi_io;
     struct calendar_date_time datetime;
-
-//    uint8_t buf[7];
     dht_measurement_t measurement;
-
 
     atmel_start_init();
     gpio_set_pin_level(LED, true);
     gpio_set_pin_level(DCF_CTL, true);  // turn off power to DCF module
-    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to DHT20 module
+    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
 
-    usart_sync_get_io_descriptor(&USART_0, &io);
+    spi_m_sync_get_io_descriptor(&SPI_0, &spi_io);
+    spi_m_sync_enable(&SPI_0);
+
+    usart_sync_get_io_descriptor(&USART_0, &uart_io);
     usart_sync_enable(&USART_0);
+
+    delay_ms(100);  // Wait for DHT20 module to initialize
+    i2c_m_sync_get_io_descriptor(&I2C_0, &i2c_io);
+    i2c_m_sync_enable(&I2C_0);
+    i2c_m_sync_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
 
     printf("\r\n\r\nRadio clock firmware build: %s\r\n", VERSION_STR);
     printf("https://github.com/erikvanzijst/radioclock\r\n");
     printf("Erik van Zijst <erik.van.zijst@gmail.com>\r\n\r\n");
 
-    delay_ms(100);  // Wait for DHT20 module to initialize
-    i2c_m_sync_get_io_descriptor(&I2C_0, &I2C_0_io);
-    i2c_m_sync_enable(&I2C_0);
-    i2c_m_sync_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
-
     init_cal();
 
-    io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
+    io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
 
 	while (1) {
         int32_t retval;
         gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
-        io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
+        io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
         delay_ms(85);  // wait for the sensor to acquire a measurement
-        retval = io_read(I2C_0_io, (uint8_t *)&measurement, sizeof (measurement));
+        retval = io_read(i2c_io, (uint8_t *)&measurement, sizeof (measurement));
 
         calendar_get_date_time(&CALENDAR_0, &datetime);
 
         if (retval < 0) {
-            printf("ERR: I2C read failed: %d (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
+            printf("ERR: I2C read failed: %ld (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
 
         } else if ((measurement.status & 0x1) == 0x0) {
             int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
@@ -115,6 +117,12 @@ int main(void)
         } else {
             printf("ERR: DHT20 sensor returned an error (status: %x)\r\n", measurement.status);
         }
+
+        // SPI
+        gpio_set_pin_level(DSPL_SS, false);
+        io_write(spi_io, (uint8_t *)"Hello world", strlen("Hello world"));
+        gpio_set_pin_level(DSPL_SS, true);
+
         delay_ms(1000);
     }
 }
