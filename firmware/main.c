@@ -66,8 +66,9 @@ int main(void)
 
     atmel_start_init();
     gpio_set_pin_level(LED, true);
-    gpio_set_pin_level(DCF_CTL, true);  // turn off power to DCF module
+    gpio_set_pin_level(DCF_CTL, true);          // turn off power to DCF module
     gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
+    gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
     spi_m_sync_get_io_descriptor(&SPI_0, &spi_io);
     spi_m_sync_enable(&SPI_0);
