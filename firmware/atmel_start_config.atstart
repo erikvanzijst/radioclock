@@ -28,6 +28,59 @@ middlewares:
     dependencies:
       Target IO: USART_0
 drivers:
+  ADC_0:
+    user_label: ADC_0
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::ADC::driver_config_definition::ADC::HAL:Driver:ADC.Sync
+    functionality: ADC
+    api: HAL:Driver:ADC_Sync
+    configuration:
+      adc_advanced_settings: true
+      adc_arch_adjres: 0
+      adc_arch_corren: false
+      adc_arch_dbgrun: false
+      adc_arch_event_settings: false
+      adc_arch_gain: 1x
+      adc_arch_gaincorr: 0
+      adc_arch_inputoffset: 0
+      adc_arch_inputscan: 0
+      adc_arch_leftadj: false
+      adc_arch_offsetcorr: 0
+      adc_arch_refcomp: false
+      adc_arch_resrdyeo: false
+      adc_arch_runstdby: false
+      adc_arch_samplen: 0
+      adc_arch_samplenum: 1 sample
+      adc_arch_startei: false
+      adc_arch_syncei: false
+      adc_arch_winlt: 0
+      adc_arch_winmode: No window mode
+      adc_arch_winmoneo: false
+      adc_arch_winut: 0
+      adc_differential_mode: false
+      adc_freerunning_mode: false
+      adc_pinmux_negative: ADC AIN0 pin
+      adc_pinmux_positive: ADC AIN0 pin
+      adc_prescaler: Peripheral clock divided by 4
+      adc_reference: 1.0V voltage reference
+      adc_resolution: 12-bit
+    optional_signals:
+    - identifier: ADC_0:AIN/0
+      pad: PA02
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::ADC.AIN.0
+      name: ADC/AIN/0
+      label: AIN/0
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: ADC
+          input: Generic clock generator 0
+          external: false
+          external_frequency: 0
+        configuration:
+          adc_gclk_selection: Generic clock generator 0
   GCLK:
     user_label: GCLK
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::GCLK::driver_config_definition::GCLK::HAL:HPL:GCLK
@@ -186,7 +239,7 @@ drivers:
         pad: PA09
         label: SCK
       - name: SERCOM0/PAD/3
-        pad: DSPL_MISO
+        pad: PA11
         label: MISO
     clocks:
       domain_group:
@@ -760,8 +813,8 @@ pads:
     user_label: DSPL_SS
     configuration: null
   DSPL_MISO:
-    name: DSPL_MISO
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::DSPL_MISO
+    name: PA11
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA11
     mode: Digital input
     user_label: DSPL_MISO
     configuration: null

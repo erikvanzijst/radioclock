@@ -30,7 +30,7 @@ endif
 # List the subdirectories for creating object files
 SUB_DIRS +=  \
  \
-stdio_redirect/gcc \
+hpl/adc \
 samda1b/gcc \
 hpl/systick \
 hpl/dmac \
@@ -43,6 +43,7 @@ hal/utils/src \
 hpl/sercom \
 examples \
 hpl/gclk \
+stdio_redirect/gcc \
 hpl/rtc \
 hpl/core
 
@@ -74,13 +75,15 @@ main.o \
 hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
+hal/src/hal_adc_sync.o \
 hpl/sercom/hpl_sercom.o \
 hal/src/hal_gpio.o \
 hal/utils/src/utils_event.o \
 hal/src/hal_sleep.o \
 samda1b/gcc/gcc/startup_samda1.o \
 atmel_start.o \
-hal/src/hal_atomic.o
+hal/src/hal_atomic.o \
+hpl/adc/hpl_adc.o
 
 OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
@@ -109,13 +112,15 @@ OBJS_AS_ARGS +=  \
 "hpl/rtc/hpl_rtc.o" \
 "examples/driver_examples.o" \
 "driver_init.o" \
+"hal/src/hal_adc_sync.o" \
 "hpl/sercom/hpl_sercom.o" \
 "hal/src/hal_gpio.o" \
 "hal/utils/src/utils_event.o" \
 "hal/src/hal_sleep.o" \
 "samda1b/gcc/gcc/startup_samda1.o" \
 "atmel_start.o" \
-"hal/src/hal_atomic.o"
+"hal/src/hal_atomic.o" \
+"hpl/adc/hpl_adc.o"
 
 # List the directories containing header files
 DIR_INCLUDES +=  \
@@ -124,6 +129,7 @@ DIR_INCLUDES +=  \
 -I"../examples" \
 -I"../hal/include" \
 -I"../hal/utils/include" \
+-I"../hpl/adc" \
 -I"../hpl/core" \
 -I"../hpl/dmac" \
 -I"../hpl/gclk" \
@@ -166,6 +172,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_usart_sync.d" \
 "stdio_redirect/gcc/read.d" \
 "driver_init.d" \
+"hal/src/hal_adc_sync.d" \
 "main.d" \
 "examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \
@@ -174,6 +181,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_gpio.d" \
 "hal/src/hal_atomic.d" \
 "hpl/pm/hpl_pm.d" \
+"hpl/adc/hpl_adc.d" \
 "atmel_start.d" \
 "samda1b/gcc/gcc/startup_samda1.d"
 

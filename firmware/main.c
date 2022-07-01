@@ -70,6 +70,8 @@ int main(void)
     gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
+    adc_sync_enable_channel(&ADC_0, 0);
+
     spi_m_sync_get_io_descriptor(&SPI_0, &spi_io);
     spi_m_sync_enable(&SPI_0);
 
@@ -114,6 +116,7 @@ int main(void)
         gpio_set_pin_level(DSPL_SS, true);
     }
 
+    uint8_t ldr[2];
 
     for (int step = 0;;) {
         int32_t retval;
@@ -134,8 +137,11 @@ int main(void)
             tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
             int humidity = (tmp * 100) >> 20;
 
+            if (adc_sync_read_channel(&ADC_0, 0, ldr, 2) != 2) {
+                printf("ERR: adc_sync_read_channel() failed\r\n");
+            }
 
-            printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%%\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity);
+            printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, (ldr[1] << 8) + ldr[0]);
 
         } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
             printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));

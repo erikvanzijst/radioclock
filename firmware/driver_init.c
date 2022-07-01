@@ -13,13 +13,39 @@
 #include <hpl_gclk_base.h>
 #include <hpl_pm_base.h>
 
+#include <hpl_adc_base.h>
+
 struct spi_m_sync_descriptor SPI_0;
+
+struct adc_sync_descriptor ADC_0;
 
 struct i2c_m_sync_desc I2C_0;
 
 struct usart_sync_descriptor USART_0;
 
 struct calendar_descriptor CALENDAR_0;
+
+void ADC_0_PORT_init(void)
+{
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(LDR, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(LDR, PINMUX_PA02B_ADC_AIN0);
+}
+
+void ADC_0_CLOCK_init(void)
+{
+	_pm_enable_bus_clock(PM_BUS_APBC, ADC);
+	_gclk_enable_channel(ADC_GCLK_ID, CONF_GCLK_ADC_SRC);
+}
+
+void ADC_0_init(void)
+{
+	ADC_0_CLOCK_init();
+	ADC_0_PORT_init();
+	adc_sync_init(&ADC_0, ADC, (void *)NULL);
+}
 
 void SPI_0_PORT_init(void)
 {
@@ -170,13 +196,6 @@ void system_init(void)
 
 	gpio_set_pin_function(XIN32, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PA02
-
-	// Disable digital pin circuitry
-	gpio_set_pin_direction(LDR, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(LDR, GPIO_PIN_FUNCTION_OFF);
-
 	// GPIO on PA03
 
 	gpio_set_pin_level(DCF_CTL,
@@ -248,7 +267,7 @@ void system_init(void)
 	                   // <id> pad_initial_level
 	                   // <false"> Low
 	                   // <true"> High
-	                   true);
+	                   false);
 
 	// Set pin direction to output
 	gpio_set_pin_direction(DSPL_SS, GPIO_DIRECTION_OUT);
@@ -305,6 +324,8 @@ void system_init(void)
 	gpio_set_pin_direction(LDR_SINK, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(LDR_SINK, GPIO_PIN_FUNCTION_OFF);
+
+	ADC_0_init();
 
 	SPI_0_init();
 
