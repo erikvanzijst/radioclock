@@ -18,7 +18,7 @@
 // <i> Defines the bit resolution for the ADC sample values (RESSEL)
 // <id> adc_resolution
 #ifndef CONF_ADC_0_RESSEL
-#define CONF_ADC_0_RESSEL 0x0
+#define CONF_ADC_0_RESSEL 0x3
 #endif
 
 // <o> Reference Selection
@@ -30,7 +30,7 @@
 // <i> Select the reference for the ADC (REFSEL)
 // <id> adc_reference
 #ifndef CONF_ADC_0_REFSEL
-#define CONF_ADC_0_REFSEL 0x0
+#define CONF_ADC_0_REFSEL 0x1
 #endif
 
 // <o> Prescaler configuration
@@ -108,7 +108,7 @@
 // <i> These bits define the Mux selection for the negative ADC input. (MUXNEG)
 // <id> adc_pinmux_negative
 #ifndef CONF_ADC_0_MUXNEG
-#define CONF_ADC_0_MUXNEG 0x0
+#define CONF_ADC_0_MUXNEG 0x19
 #endif
 
 // </h>

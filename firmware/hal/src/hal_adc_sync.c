@@ -91,8 +91,6 @@ int32_t adc_sync_disable_channel(struct adc_sync_descriptor *const descr, const 
 	return ERR_NONE;
 }
 
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
 /*
  * \brief Read data from ADC
  */
@@ -123,7 +121,6 @@ int32_t adc_sync_read_channel(struct adc_sync_descriptor *const descr, const uin
 
 	return offset;
 }
-#pragma GCC pop_options
 
 /**
  * \brief Set ADC reference source
