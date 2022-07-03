@@ -161,7 +161,11 @@ int main(void)
             gpio_set_pin_level(DSPL_SS, true);
         }
 
+        gpio_set_pin_level(DSPL_SS, false); // set intensity:
+        io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
+        gpio_set_pin_level(DSPL_SS, true);
+
         step = (step + 1 % 8);
-        delay_ms(200);
+        delay_ms(20);
     }
 }
