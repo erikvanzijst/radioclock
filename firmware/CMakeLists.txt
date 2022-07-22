@@ -3,6 +3,8 @@ project(firmware C)
 
 set(CMAKE_C_STANDARD 11)
 
+add_compile_definitions(__SAMDA1E16B__)
+
 include_directories(.)
 include_directories(config)
 include_directories(hal/include)
@@ -60,4 +62,5 @@ add_executable(firmware
         examples/driver_examples.c
         driver_init.c
         src/dcf.c
+        src/switch.c
 )

@@ -644,7 +644,7 @@
 // <e> Interrupt 15 Settings
 // <id> eic_arch_enable_irq_setting15
 #ifndef CONF_EIC_ENABLE_IRQ_SETTING15
-#define CONF_EIC_ENABLE_IRQ_SETTING15 0
+#define CONF_EIC_ENABLE_IRQ_SETTING15 1
 #endif
 
 // <q> External Interrupt 15 Event Output Enable
@@ -678,12 +678,12 @@
 // <i> This defines input sense trigger
 // <id> eic_arch_sense15
 #ifndef CONF_EIC_SENSE15
-#define CONF_EIC_SENSE15 EIC_NMICTRL_NMISENSE_NONE_Val
+#define CONF_EIC_SENSE15 EIC_NMICTRL_NMISENSE_BOTH_Val
 #endif
 // </e>
 
 #ifndef CONFIG_EIC_EXTINT_MAP
-#define CONFIG_EIC_EXTINT_MAP {6, PIN_PA06},
+#define CONFIG_EIC_EXTINT_MAP {6, PIN_PA06}, {15, PIN_PA15},
 #endif
 
 // <<< end of configuration section >>>

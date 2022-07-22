@@ -94,7 +94,7 @@ drivers:
       eic_arch_enable_irq_setting12: false
       eic_arch_enable_irq_setting13: false
       eic_arch_enable_irq_setting14: false
-      eic_arch_enable_irq_setting15: false
+      eic_arch_enable_irq_setting15: true
       eic_arch_enable_irq_setting2: false
       eic_arch_enable_irq_setting3: false
       eic_arch_enable_irq_setting4: false
@@ -144,7 +144,7 @@ drivers:
       eic_arch_sense12: No detection
       eic_arch_sense13: No detection
       eic_arch_sense14: No detection
-      eic_arch_sense15: No detection
+      eic_arch_sense15: Both-edges detection
       eic_arch_sense2: No detection
       eic_arch_sense3: No detection
       eic_arch_sense4: No detection
@@ -177,6 +177,13 @@ drivers:
       definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.6
       name: EIC/EXTINT/6
       label: EXTINT/6
+    - identifier: EXTERNAL_IRQ_0:EXTINT/15
+      pad: PA15
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.15
+      name: EIC/EXTINT/15
+      label: EXTINT/15
     variant: null
     clocks:
       domain_group:
@@ -936,8 +943,7 @@ pads:
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA15
     mode: Digital input
     user_label: SWITCH
-    configuration:
-      pad_pull_config: Pull-up
+    configuration: null
   DHT_SDA:
     name: PA16
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA16

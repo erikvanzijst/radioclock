@@ -88,7 +88,8 @@ samda1b/gcc/gcc/startup_samda1.o \
 atmel_start.o \
 hal/src/hal_atomic.o \
 hpl/adc/hpl_adc.o \
-src/dcf.o
+src/dcf.o \
+src/switch.o
 
 OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
@@ -128,7 +129,8 @@ OBJS_AS_ARGS +=  \
 "atmel_start.o" \
 "hal/src/hal_atomic.o" \
 "hpl/adc/hpl_adc.o" \
-"src/dcf.o"
+"src/dcf.o" \
+"src/switch.o"
 
 # List the directories containing header files
 DIR_INCLUDES +=  \
@@ -197,7 +199,8 @@ DEPS_AS_ARGS +=  \
 "hpl/adc/hpl_adc.d" \
 "hal/src/hal_ext_irq.d" \
 "samda1b/gcc/gcc/startup_samda1.d" \
-"src/dcf.d"
+"src/dcf.d" \
+"src/switch.d"
 
 OUTPUT_FILE_NAME :=radioclock
 QUOTE := "

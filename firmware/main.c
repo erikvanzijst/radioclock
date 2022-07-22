@@ -4,6 +4,7 @@
 #include "hal_delay.h"
 #include "version.h"
 #include "include/dcf.h"
+#include "include/switch.h"
 
 typedef struct {
     uint8_t status;
@@ -69,7 +70,7 @@ int main(void)
     atmel_start_init();
     gpio_set_pin_level(LED, true);
     gpio_set_pin_level(DCF_CTL, false);          // turn on power to DCF module
-    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
+    gpio_set_pin_level(PERIPHERAL_CTL, true);  // turn off power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
     adc_sync_enable_channel(&ADC_0, 0);
@@ -100,7 +101,8 @@ int main(void)
     delay_ms(20);  // wait for the sensor reset
 
     // Register interrupt handler on DCF_DATA pin
-    ext_irq_register(6, dcf_data_isr);
+    ext_irq_register(PIN_PA06, dcf_data_isr);
+    ext_irq_register(PIN_PA15, switch_isr);
 
     // Display initialization
     gpio_set_pin_level(DSPL_SS, false); // Leave shutdown mode:
