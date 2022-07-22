@@ -97,7 +97,7 @@ int32_t adc_sync_disable_channel(struct adc_sync_descriptor *const descr, const 
 int32_t adc_sync_read_channel(struct adc_sync_descriptor *const descr, const uint8_t channel, uint8_t *const buffer,
                               const uint16_t length)
 {
-    uint8_t  data_size;
+	uint8_t  data_size;
 	uint16_t offset = 0;
 
 	ASSERT(descr && buffer && length);

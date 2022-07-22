@@ -39,13 +39,15 @@ hal/src \
 samda1b/gcc/gcc \
 hpl/pm \
 hpl/sysctrl \
-hal/utils/src \
+hpl/eic \
 hpl/sercom \
 examples \
 hpl/gclk \
 stdio_redirect/gcc \
+hal/utils/src \
 hpl/rtc \
-hpl/core
+hpl/core \
+src
 
 # List the object files
 OBJS +=  \
@@ -54,6 +56,7 @@ stdio_redirect/stdio_io.o \
 hpl/systick/hpl_systick.o \
 hal/src/hal_calendar.o \
 stdio_redirect/gcc/write.o \
+hpl/eic/hpl_eic.o \
 hal/utils/src/utils_syscalls.o \
 hal/src/hal_spi_m_sync.o \
 hal/src/hal_i2c_m_sync.o \
@@ -68,6 +71,7 @@ hpl/dmac/hpl_dmac.o \
 hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
 stdio_redirect/gcc/read.o \
+hpl/sercom/hpl_sercom.o \
 hpl/gclk/hpl_gclk.o \
 stdio_start.o \
 hal/src/hal_init.o \
@@ -76,14 +80,15 @@ hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
 hal/src/hal_adc_sync.o \
-hpl/sercom/hpl_sercom.o \
+hal/src/hal_ext_irq.o \
 hal/src/hal_gpio.o \
 hal/utils/src/utils_event.o \
 hal/src/hal_sleep.o \
 samda1b/gcc/gcc/startup_samda1.o \
 atmel_start.o \
 hal/src/hal_atomic.o \
-hpl/adc/hpl_adc.o
+hpl/adc/hpl_adc.o \
+src/dcf.o
 
 OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
@@ -91,6 +96,7 @@ OBJS_AS_ARGS +=  \
 "hpl/systick/hpl_systick.o" \
 "hal/src/hal_calendar.o" \
 "stdio_redirect/gcc/write.o" \
+"hpl/eic/hpl_eic.o" \
 "hal/utils/src/utils_syscalls.o" \
 "hal/src/hal_spi_m_sync.o" \
 "hal/src/hal_i2c_m_sync.o" \
@@ -105,6 +111,7 @@ OBJS_AS_ARGS +=  \
 "hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
 "stdio_redirect/gcc/read.o" \
+"hpl/sercom/hpl_sercom.o" \
 "hpl/gclk/hpl_gclk.o" \
 "stdio_start.o" \
 "hal/src/hal_init.o" \
@@ -113,14 +120,15 @@ OBJS_AS_ARGS +=  \
 "examples/driver_examples.o" \
 "driver_init.o" \
 "hal/src/hal_adc_sync.o" \
-"hpl/sercom/hpl_sercom.o" \
+"hal/src/hal_ext_irq.o" \
 "hal/src/hal_gpio.o" \
 "hal/utils/src/utils_event.o" \
 "hal/src/hal_sleep.o" \
 "samda1b/gcc/gcc/startup_samda1.o" \
 "atmel_start.o" \
 "hal/src/hal_atomic.o" \
-"hpl/adc/hpl_adc.o"
+"hpl/adc/hpl_adc.o" \
+"src/dcf.o"
 
 # List the directories containing header files
 DIR_INCLUDES +=  \
@@ -132,6 +140,7 @@ DIR_INCLUDES +=  \
 -I"../hpl/adc" \
 -I"../hpl/core" \
 -I"../hpl/dmac" \
+-I"../hpl/eic" \
 -I"../hpl/gclk" \
 -I"../hpl/pm" \
 -I"../hpl/port" \
@@ -140,8 +149,10 @@ DIR_INCLUDES +=  \
 -I"../hpl/sysctrl" \
 -I"../hpl/systick" \
 -I"../hri" \
+-I"../include" \
 -I"../config" \
 -I"../stdio_redirect" \
+-I"../" \
 -I"../CMSIS/Core/Include" \
 -I"../samda1b/include"
 
@@ -155,6 +166,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_io.d" \
 "samda1b/gcc/system_samda1.d" \
 "hpl/systick/hpl_systick.d" \
+"hpl/eic/hpl_eic.d" \
 "hal/utils/src/utils_syscalls.d" \
 "stdio_redirect/gcc/write.d" \
 "hal/src/hal_i2c_m_sync.d" \
@@ -179,11 +191,13 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_sleep.d" \
 "hpl/sercom/hpl_sercom.d" \
 "hal/src/hal_gpio.d" \
+"atmel_start.d" \
 "hal/src/hal_atomic.d" \
 "hpl/pm/hpl_pm.d" \
 "hpl/adc/hpl_adc.d" \
-"atmel_start.d" \
-"samda1b/gcc/gcc/startup_samda1.d"
+"hal/src/hal_ext_irq.d" \
+"samda1b/gcc/gcc/startup_samda1.d" \
+"src/dcf.d"
 
 OUTPUT_FILE_NAME :=radioclock
 QUOTE := "

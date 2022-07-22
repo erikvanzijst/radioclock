@@ -3,6 +3,7 @@
 #include "atmel_start_pins.h"
 #include "hal_delay.h"
 #include "version.h"
+#include "include/dcf.h"
 
 typedef struct {
     uint8_t status;
@@ -56,6 +57,7 @@ void init_cal() {
     calendar_set_alarm(&CALENDAR_0, &alarm, alarm_cb);
 }
 
+
 int main(void)
 {
     struct io_descriptor *uart_io;
@@ -67,7 +69,7 @@ int main(void)
     atmel_start_init();
     gpio_set_pin_level(LED, true);
     gpio_set_pin_level(DCF_CTL, false);          // turn on power to DCF module
-    gpio_set_pin_level(PERIPHERAL_CTL, true);  // turn off power to displays and DHT20 module
+    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
     adc_sync_enable_channel(&ADC_0, 0);
@@ -96,6 +98,9 @@ int main(void)
     // DHT20 initialization
     io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
+
+    // Register interrupt handler on DCF_DATA pin
+    ext_irq_register(6, dcf_data_isr);
 
     // Display initialization
     gpio_set_pin_level(DSPL_SS, false); // Leave shutdown mode:
@@ -171,12 +176,6 @@ int main(void)
             gpio_set_pin_level(DSPL_SS, false); // set intensity:
             io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
             gpio_set_pin_level(DSPL_SS, true);
-        }
-
-        if (!gpio_get_pin_level(DCF_CTL)) {
-            bool val = gpio_get_pin_level(DCF_DATA);
-            printf("%d\r\n", val);
-            gpio_set_pin_level(LED, val);
         }
 
         step = (step + 1 % 8);

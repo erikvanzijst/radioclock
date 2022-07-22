@@ -47,6 +47,26 @@ void ADC_0_init(void)
 	adc_sync_init(&ADC_0, ADC, (void *)NULL);
 }
 
+void EXTERNAL_IRQ_0_init(void)
+{
+	_gclk_enable_channel(EIC_GCLK_ID, CONF_GCLK_EIC_SRC);
+
+	// Set pin direction to input
+	gpio_set_pin_direction(DCF_DATA, GPIO_DIRECTION_IN);
+
+	gpio_set_pin_pull_mode(DCF_DATA,
+	                       // <y> Pull configuration
+	                       // <id> pad_pull_config
+	                       // <GPIO_PULL_OFF"> Off
+	                       // <GPIO_PULL_UP"> Pull-up
+	                       // <GPIO_PULL_DOWN"> Pull-down
+	                       GPIO_PULL_OFF);
+
+	gpio_set_pin_function(DCF_DATA, PINMUX_PA06A_EIC_EXTINT6);
+
+	ext_irq_init();
+}
+
 void SPI_0_PORT_init(void)
 {
 
@@ -231,21 +251,6 @@ void system_init(void)
 
 	gpio_set_pin_function(PWR_SENSE, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PA06
-
-	// Set pin direction to input
-	gpio_set_pin_direction(DCF_DATA, GPIO_DIRECTION_IN);
-
-	gpio_set_pin_pull_mode(DCF_DATA,
-	                       // <y> Pull configuration
-	                       // <id> pad_pull_config
-	                       // <GPIO_PULL_OFF"> Off
-	                       // <GPIO_PULL_UP"> Pull-up
-	                       // <GPIO_PULL_DOWN"> Pull-down
-	                       GPIO_PULL_OFF);
-
-	gpio_set_pin_function(DCF_DATA, GPIO_PIN_FUNCTION_OFF);
-
 	// GPIO on PA07
 
 	gpio_set_pin_level(DCF_PDN,
@@ -326,6 +331,7 @@ void system_init(void)
 	gpio_set_pin_function(LDR_SINK, GPIO_PIN_FUNCTION_OFF);
 
 	ADC_0_init();
+	EXTERNAL_IRQ_0_init();
 
 	SPI_0_init();
 

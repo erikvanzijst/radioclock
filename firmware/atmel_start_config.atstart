@@ -58,11 +58,11 @@ drivers:
       adc_arch_winut: 0
       adc_differential_mode: false
       adc_freerunning_mode: false
-      adc_pinmux_negative: ADC AIN0 pin
+      adc_pinmux_negative: I/O ground
       adc_pinmux_positive: ADC AIN0 pin
       adc_prescaler: Peripheral clock divided by 4
-      adc_reference: 1.0V voltage reference
-      adc_resolution: 12-bit
+      adc_reference: 1/1.48 VDDANA
+      adc_resolution: 8-bit
     optional_signals:
     - identifier: ADC_0:AIN/0
       pad: PA02
@@ -81,6 +81,112 @@ drivers:
           external_frequency: 0
         configuration:
           adc_gclk_selection: Generic clock generator 0
+  EXTERNAL_IRQ_0:
+    user_label: EXTERNAL_IRQ_0
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::EIC::driver_config_definition::Default::HAL:Driver:Ext.IRQ
+    functionality: External_IRQ
+    api: HAL:Driver:Ext_IRQ
+    configuration:
+      eic_arch_enable_irq_setting0: false
+      eic_arch_enable_irq_setting1: false
+      eic_arch_enable_irq_setting10: false
+      eic_arch_enable_irq_setting11: false
+      eic_arch_enable_irq_setting12: false
+      eic_arch_enable_irq_setting13: false
+      eic_arch_enable_irq_setting14: false
+      eic_arch_enable_irq_setting15: false
+      eic_arch_enable_irq_setting2: false
+      eic_arch_enable_irq_setting3: false
+      eic_arch_enable_irq_setting4: false
+      eic_arch_enable_irq_setting5: false
+      eic_arch_enable_irq_setting6: true
+      eic_arch_enable_irq_setting7: false
+      eic_arch_enable_irq_setting8: false
+      eic_arch_enable_irq_setting9: false
+      eic_arch_extinteo0: false
+      eic_arch_extinteo1: false
+      eic_arch_extinteo10: false
+      eic_arch_extinteo11: false
+      eic_arch_extinteo12: false
+      eic_arch_extinteo13: false
+      eic_arch_extinteo14: false
+      eic_arch_extinteo15: false
+      eic_arch_extinteo2: false
+      eic_arch_extinteo3: false
+      eic_arch_extinteo4: false
+      eic_arch_extinteo5: false
+      eic_arch_extinteo6: false
+      eic_arch_extinteo7: false
+      eic_arch_extinteo8: false
+      eic_arch_extinteo9: false
+      eic_arch_filten0: false
+      eic_arch_filten1: false
+      eic_arch_filten10: false
+      eic_arch_filten11: false
+      eic_arch_filten12: false
+      eic_arch_filten13: false
+      eic_arch_filten14: false
+      eic_arch_filten15: false
+      eic_arch_filten2: false
+      eic_arch_filten3: false
+      eic_arch_filten4: false
+      eic_arch_filten5: false
+      eic_arch_filten6: false
+      eic_arch_filten7: false
+      eic_arch_filten8: false
+      eic_arch_filten9: false
+      eic_arch_nmifilten: false
+      eic_arch_nmisense: No detection
+      eic_arch_sense0: No detection
+      eic_arch_sense1: No detection
+      eic_arch_sense10: No detection
+      eic_arch_sense11: No detection
+      eic_arch_sense12: No detection
+      eic_arch_sense13: No detection
+      eic_arch_sense14: No detection
+      eic_arch_sense15: No detection
+      eic_arch_sense2: No detection
+      eic_arch_sense3: No detection
+      eic_arch_sense4: No detection
+      eic_arch_sense5: No detection
+      eic_arch_sense6: Both-edges detection
+      eic_arch_sense7: No detection
+      eic_arch_sense8: No detection
+      eic_arch_sense9: No detection
+      eic_arch_wakeupen0: false
+      eic_arch_wakeupen1: false
+      eic_arch_wakeupen10: false
+      eic_arch_wakeupen11: false
+      eic_arch_wakeupen12: false
+      eic_arch_wakeupen13: false
+      eic_arch_wakeupen14: false
+      eic_arch_wakeupen15: false
+      eic_arch_wakeupen2: false
+      eic_arch_wakeupen3: false
+      eic_arch_wakeupen4: false
+      eic_arch_wakeupen5: false
+      eic_arch_wakeupen6: false
+      eic_arch_wakeupen7: false
+      eic_arch_wakeupen8: false
+      eic_arch_wakeupen9: false
+    optional_signals:
+    - identifier: EXTERNAL_IRQ_0:EXTINT/6
+      pad: PA06
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.6
+      name: EIC/EXTINT/6
+      label: EXTINT/6
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: EIC
+          input: Generic clock generator 0
+          external: false
+          external_frequency: 0
+        configuration:
+          eic_gclk_selection: Generic clock generator 0
   GCLK:
     user_label: GCLK
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::GCLK::driver_config_definition::GCLK::HAL:HPL:GCLK
@@ -677,7 +783,7 @@ drivers:
       RESERVED_InputFreq_id: Generic clock generator 3
       _$freq_output_8MHz Internal Oscillator (OSC8M): 8000000
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
-      _$freq_output_External Crystal Oscillator 0.4-32MHz (XOSC): '400000'
+      _$freq_output_External Crystal Oscillator 0.4-32MHz (XOSC): 400000
       _$freq_output_Fractional Digital Phase Locked Loop (FDPLL96M): 70311000000
       dfll48m_arch_bplckc: false
       dfll48m_arch_calibration: false

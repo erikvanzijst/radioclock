@@ -24,6 +24,19 @@ void ADC_0_example(void)
 	}
 }
 
+static void button_on_PA06_pressed(void)
+{
+}
+
+/**
+ * Example of using EXTERNAL_IRQ_0
+ */
+void EXTERNAL_IRQ_0_example(void)
+{
+
+	ext_irq_register(PIN_PA06, button_on_PA06_pressed);
+}
+
 /**
  * Example of using SPI_0 to write "Hello World" using the IO abstraction.
  */
