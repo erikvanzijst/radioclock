@@ -66,8 +66,8 @@ int main(void)
 
     atmel_start_init();
     gpio_set_pin_level(LED, true);
-    gpio_set_pin_level(DCF_CTL, true);          // turn off power to DCF module
-    gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
+    gpio_set_pin_level(DCF_CTL, false);          // turn on power to DCF module
+    gpio_set_pin_level(PERIPHERAL_CTL, true);  // turn off power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
     adc_sync_enable_channel(&ADC_0, 0);
@@ -82,6 +82,10 @@ int main(void)
     i2c_m_sync_get_io_descriptor(&I2C_0, &i2c_io);
     i2c_m_sync_enable(&I2C_0);
     i2c_m_sync_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
+
+    // trigger fast DCF fast sync:
+    gpio_set_pin_level(DCF_PDN, true);
+    gpio_set_pin_level(DCF_PDN, false);
 
     printf("\r\n\r\nRadio clock firmware build: %s\r\n", VERSION_STR);
     printf("https://github.com/erikvanzijst/radioclock\r\n");
@@ -120,50 +124,60 @@ int main(void)
 
     for (int step = 0;;) {
         int32_t retval;
-        gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
-        io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
-        delay_ms(85);  // wait for the sensor to acquire a measurement
-        retval = io_read(i2c_io, (uint8_t *)&measurement, sizeof (measurement));
 
-        calendar_get_date_time(&CALENDAR_0, &datetime);
+        if (!gpio_get_pin_level(PERIPHERAL_CTL)) {
+//            gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
 
-        if (retval < 0) {
-            printf("ERR: I2C read failed: %ld (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
+            io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
+            delay_ms(85);  // wait for the sensor to acquire a measurement
+            retval = io_read(i2c_io, (uint8_t *)&measurement, sizeof (measurement));
 
-        } else if ((measurement.status & 0x1) == 0x0) {
-            int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
-            int temperature = (((tmp * 2000) >> 20) - 500);
+            calendar_get_date_time(&CALENDAR_0, &datetime);
 
-            tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
-            int humidity = (tmp * 100) >> 20;
+            if (retval < 0) {
+                printf("ERR: I2C read failed: %ld (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
 
-            if (adc_sync_read_channel(&ADC_0, 0, ldr, 1) != 1) {
-                printf("ERR: adc_sync_read_channel() failed\r\n");
+            } else if ((measurement.status & 0x1) == 0x0) {
+                int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
+                int temperature = (((tmp * 2000) >> 20) - 500);
+
+                tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
+                int humidity = (tmp * 100) >> 20;
+
+                if (adc_sync_read_channel(&ADC_0, 0, ldr, 1) != 1) {
+                    printf("ERR: adc_sync_read_channel() failed\r\n");
+                }
+
+                printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, ldr[0]);
+
+            } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
+                printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
+
+            } else {
+                printf("ERR: DHT20 sensor returned an error (status: %x)\r\n", measurement.status);
             }
 
-            printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, ldr[0]);
+            // SPI
 
-        } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
-            printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
+            for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
+                uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
+    //            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
 
-        } else {
-            printf("ERR: DHT20 sensor returned an error (status: %x)\r\n", measurement.status);
-        }
-
-        // SPI
-
-        for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
-            uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
-//            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
+                gpio_set_pin_level(DSPL_SS, false); // set intensity:
+                io_write(spi_io, (uint8_t *)&buf, 4);
+                gpio_set_pin_level(DSPL_SS, true);
+            }
 
             gpio_set_pin_level(DSPL_SS, false); // set intensity:
-            io_write(spi_io, (uint8_t *)&buf, 4);
+            io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
             gpio_set_pin_level(DSPL_SS, true);
         }
 
-        gpio_set_pin_level(DSPL_SS, false); // set intensity:
-        io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
-        gpio_set_pin_level(DSPL_SS, true);
+        if (!gpio_get_pin_level(DCF_CTL)) {
+            bool val = gpio_get_pin_level(DCF_DATA);
+            printf("%d\r\n", val);
+            gpio_set_pin_level(LED, val);
+        }
 
         step = (step + 1 % 8);
         delay_ms(20);
