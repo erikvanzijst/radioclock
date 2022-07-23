@@ -200,13 +200,13 @@ drivers:
     functionality: System
     api: HAL:HPL:GCLK
     configuration:
-      $input: 32768
-      $input_id: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
-      RESERVED_InputFreq: 32768
-      RESERVED_InputFreq_id: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
-      _$freq_output_Generic clock generator 0: 8000000
+      $input: 48000000
+      $input_id: Digital Frequency Locked Loop (DFLL48M)
+      RESERVED_InputFreq: 48000000
+      RESERVED_InputFreq_id: Digital Frequency Locked Loop (DFLL48M)
+      _$freq_output_Generic clock generator 0: 24000000
       _$freq_output_Generic clock generator 1: 32768
-      _$freq_output_Generic clock generator 2: 400000
+      _$freq_output_Generic clock generator 2: 32768
       _$freq_output_Generic clock generator 3: 48000000
       _$freq_output_Generic clock generator 4: 400000
       _$freq_output_Generic clock generator 5: 400000
@@ -268,15 +268,15 @@ drivers:
       gclk_arch_gen_7_idc: false
       gclk_arch_gen_7_oe: false
       gclk_arch_gen_7_oov: false
-      gclk_gen_0_div: 1
+      gclk_gen_0_div: 2
       gclk_gen_0_div_sel: false
-      gclk_gen_0_oscillator: 8MHz Internal Oscillator (OSC8M)
+      gclk_gen_0_oscillator: Digital Frequency Locked Loop (DFLL48M)
       gclk_gen_1_div: 1
       gclk_gen_1_div_sel: false
       gclk_gen_1_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
       gclk_gen_2_div: 1
       gclk_gen_2_div_sel: false
-      gclk_gen_2_oscillator: External Crystal Oscillator 0.4-32MHz (XOSC)
+      gclk_gen_2_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
       gclk_gen_3_div: 1
       gclk_gen_3_div_sel: false
       gclk_gen_3_oscillator: Digital Frequency Locked Loop (DFLL48M)
@@ -302,11 +302,11 @@ drivers:
     functionality: System
     api: HAL:HPL:PM
     configuration:
-      $input: 8000000
+      $input: 24000000
       $input_id: Generic clock generator 0
-      RESERVED_InputFreq: 8000000
+      RESERVED_InputFreq: 24000000
       RESERVED_InputFreq_id: Generic clock generator 0
-      _$freq_output_CPU: 8000000
+      _$freq_output_CPU: 24000000
       apba_div: '1'
       apbb_div: '1'
       apbc_div: '1'
@@ -784,10 +784,10 @@ drivers:
     functionality: System
     api: HAL:HPL:SYSCTRL
     configuration:
-      $input: 48000000
-      $input_id: Generic clock generator 3
-      RESERVED_InputFreq: 48000000
-      RESERVED_InputFreq_id: Generic clock generator 3
+      $input: 32768
+      $input_id: Generic clock generator 1
+      RESERVED_InputFreq: 32768
+      RESERVED_InputFreq_id: Generic clock generator 1
       _$freq_output_8MHz Internal Oscillator (OSC8M): 8000000
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
       _$freq_output_External Crystal Oscillator 0.4-32MHz (XOSC): 400000
@@ -796,10 +796,10 @@ drivers:
       dfll48m_arch_calibration: false
       dfll48m_arch_ccdis: false
       dfll48m_arch_coarse: 31
-      dfll48m_arch_enable: false
+      dfll48m_arch_enable: true
       dfll48m_arch_fine: 512
       dfll48m_arch_llaw: false
-      dfll48m_arch_ondemand: true
+      dfll48m_arch_ondemand: false
       dfll48m_arch_qldis: false
       dfll48m_arch_runstdby: false
       dfll48m_arch_stable: false
@@ -810,10 +810,10 @@ drivers:
       dfll48m_ref_clock: Generic clock generator 1
       dfll_arch_cstep: 1
       dfll_arch_fstep: 1
-      enable_dfll48m: false
+      enable_dfll48m: true
       enable_fdpll96m: false
       enable_osc32k: false
-      enable_osc8m: true
+      enable_osc8m: false
       enable_osculp32k: true
       enable_xosc: false
       enable_xosc32k: false
@@ -835,7 +835,7 @@ drivers:
       osc32k_arch_startup: 3 Clock Cycles (92us)
       osc32k_arch_wrtlock: false
       osc8m_arch_calib: 0
-      osc8m_arch_enable: true
+      osc8m_arch_enable: false
       osc8m_arch_ondemand: true
       osc8m_arch_overwrite_calibration: false
       osc8m_arch_runstdby: false

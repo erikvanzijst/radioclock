@@ -46,7 +46,7 @@
 // <i> Indicates whether configuration for OSC8M is enabled or not
 // <id> enable_osc8m
 #ifndef CONF_OSC8M_CONFIG
-#define CONF_OSC8M_CONFIG 1
+#define CONF_OSC8M_CONFIG 0
 #endif
 
 // <h> 8MHz Internal Oscillator (OSC8M) Control
@@ -54,7 +54,7 @@
 // <i> Indicates whether Internal 8 Mhz Oscillator is enabled or not
 // <id> osc8m_arch_enable
 #ifndef CONF_OSC8M_ENABLE
-#define CONF_OSC8M_ENABLE 1
+#define CONF_OSC8M_ENABLE 0
 #endif
 
 // <q> On Demand Control
@@ -410,7 +410,7 @@
 // <i> Indicates whether configuration for DFLL is enabled or not
 // <id> enable_dfll48m
 #ifndef CONF_DFLL_CONFIG
-#define CONF_DFLL_CONFIG 0
+#define CONF_DFLL_CONFIG 1
 #endif
 
 // <y> Reference Clock Source
@@ -433,7 +433,7 @@
 // <i> Indicates whether DFLL is enabled or not
 // <id> dfll48m_arch_enable
 #ifndef CONF_DFLL_ENABLE
-#define CONF_DFLL_ENABLE 0
+#define CONF_DFLL_ENABLE 1
 #endif
 
 // <q> Wait Lock
@@ -470,7 +470,7 @@
 // <i> If this bit is 1: the DFLL will only be running when requested by a peripheral.
 // <id> dfll48m_arch_ondemand
 #ifndef CONF_DFLL_ONDEMAND
-#define CONF_DFLL_ONDEMAND 1
+#define CONF_DFLL_ONDEMAND 0
 #endif
 
 // <q> Run In Standby
