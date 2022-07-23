@@ -204,7 +204,7 @@ drivers:
       $input_id: Digital Frequency Locked Loop (DFLL48M)
       RESERVED_InputFreq: 48000000
       RESERVED_InputFreq_id: Digital Frequency Locked Loop (DFLL48M)
-      _$freq_output_Generic clock generator 0: 24000000
+      _$freq_output_Generic clock generator 0: 48000000
       _$freq_output_Generic clock generator 1: 32768
       _$freq_output_Generic clock generator 2: 32768
       _$freq_output_Generic clock generator 3: 48000000
@@ -268,7 +268,7 @@ drivers:
       gclk_arch_gen_7_idc: false
       gclk_arch_gen_7_oe: false
       gclk_arch_gen_7_oov: false
-      gclk_gen_0_div: 2
+      gclk_gen_0_div: 1
       gclk_gen_0_div_sel: false
       gclk_gen_0_oscillator: Digital Frequency Locked Loop (DFLL48M)
       gclk_gen_1_div: 1
@@ -302,18 +302,18 @@ drivers:
     functionality: System
     api: HAL:HPL:PM
     configuration:
-      $input: 24000000
+      $input: 48000000
       $input_id: Generic clock generator 0
-      RESERVED_InputFreq: 24000000
+      RESERVED_InputFreq: 48000000
       RESERVED_InputFreq_id: Generic clock generator 0
-      _$freq_output_CPU: 24000000
+      _$freq_output_CPU: 48000000
       apba_div: '1'
       apbb_div: '1'
       apbc_div: '1'
       cpu_clock_source: Generic clock generator 0
       cpu_div: '1'
       enable_cpu_clock: true
-      nvm_wait_states: '0'
+      nvm_wait_states: '1'
     optional_signals: []
     variant: null
     clocks:
