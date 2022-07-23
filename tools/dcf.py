@@ -41,18 +41,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     dev = args.port
-    if not args.port:
-        try:
-            dev = next(
-                filter(lambda p: p.product == 'FT232R USB UART' or p.manufacturer == 'FTDI',
-                       list_ports.comports())).device
-            print(f"UART found at {dev}")
-        except StopIteration:
-            print('Cannot find FTDI UART. If it is connected, specify the port manually.')
-            exit(1)
-
     logfile = None if args.nolog else open('dcf.log', 'a')
-    board = Serial(port=dev, baudrate=115200, timeout=30)
 
     def log(line):
         print(line)
@@ -60,10 +49,21 @@ if __name__ == '__main__':
             logfile.write(line)
             logfile.write('\n')
 
+    if not args.port:
+        try:
+            dev = next(
+                filter(lambda p: p.product == 'FT232R USB UART' or p.manufacturer == 'FTDI',
+                       list_ports.comports())).device
+            log(f"UART found at {dev}")
+        except StopIteration:
+            log('Cannot find FTDI UART. If it is connected, specify the port manually.')
+            exit(1)
+
+    board = Serial(port=dev, baudrate=115200, timeout=30)
+
     prev_up, up, down = 0, 0, 0
     i, prev_val, val = 0, 0, 0
     start = 0
-
     bits = []
 
     while True:

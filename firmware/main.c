@@ -182,6 +182,7 @@ int main(void)
         }
 
         step = (step + 1 % 8);
-        delay_ms(20);
+        delay_ms(1000);
+        gpio_toggle_pin_level(LED);
     }
 }
