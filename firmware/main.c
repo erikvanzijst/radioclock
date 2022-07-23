@@ -68,7 +68,7 @@ int main(void)
     dht_measurement_t measurement;
 
     atmel_start_init();
-    gpio_set_pin_level(LED, true);
+    gpio_set_pin_level(LED, false);
     gpio_set_pin_level(DCF_CTL, false);          // turn on power to DCF module
     gpio_set_pin_level(PERIPHERAL_CTL, true);  // turn off power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
@@ -88,6 +88,7 @@ int main(void)
 
     // trigger fast DCF fast sync:
     gpio_set_pin_level(DCF_PDN, true);
+    delay_ms(100);
     gpio_set_pin_level(DCF_PDN, false);
 
     printf("\r\n\r\nRadio clock firmware build: %s\r\n", VERSION_STR);
