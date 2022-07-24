@@ -39,6 +39,7 @@ add_executable(firmware
         hal/src/hal_sleep.c
         hal/src/hal_calendar.c
         hal/src/hal_atomic.c
+        hal/src/hal_timer.c
         hpl/sysctrl/hpl_sysctrl.c
         hpl/pm/hpl_pm.c
         hpl/gclk/hpl_gclk.c
@@ -50,6 +51,7 @@ add_executable(firmware
         hpl/rtc/hpl_rtc.c
         hpl/systick/hpl_systick.c
         hpl/eic/hpl_eic.c
+        hpl/tc/hpl_tc.c
         stdio_redirect/iar/read.c
         stdio_redirect/iar/write.c
         stdio_redirect/stdio_io.c
@@ -63,4 +65,4 @@ add_executable(firmware
         driver_init.c
         src/dcf.c
         src/switch.c
-)
+        src/millis.c)

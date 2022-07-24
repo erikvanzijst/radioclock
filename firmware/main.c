@@ -5,6 +5,8 @@
 #include "version.h"
 #include "include/dcf.h"
 #include "include/switch.h"
+#include "examples/driver_examples.h"
+#include "millis.h"
 
 typedef struct {
     uint8_t status;
@@ -97,6 +99,10 @@ int main(void)
 
     init_cal();
 
+    if (millis_init()) {
+        printf("ERR: Failed to start TIMER_0!\r\n");
+    }
+
     // DHT20 initialization
     io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
@@ -129,6 +135,7 @@ int main(void)
     }
 
     uint8_t ldr[1];
+    uint64_t prev_millis = 0;
 
     for (int step = 0;;) {
         int32_t retval;
@@ -183,6 +190,11 @@ int main(void)
 
         step = (step + 1 % 8);
         delay_ms(1000);
-        gpio_toggle_pin_level(LED);
+
+        uint32_t now = millis();
+//        printf("%lu\r\n", (unsigned long)(now - prev_millis));
+        prev_millis = now;
+
+        //        gpio_toggle_pin_level(LED);
     }
 }

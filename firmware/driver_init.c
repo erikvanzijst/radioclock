@@ -16,6 +16,7 @@
 #include <hpl_adc_base.h>
 
 struct spi_m_sync_descriptor SPI_0;
+struct timer_descriptor      TIMER_0;
 
 struct adc_sync_descriptor ADC_0;
 
@@ -210,6 +211,19 @@ void CALENDAR_0_init(void)
 	calendar_init(&CALENDAR_0, RTC);
 }
 
+/**
+ * \brief Timer initialization function
+ *
+ * Enables Timer peripheral, clocks and initializes Timer driver
+ */
+static void TIMER_0_init(void)
+{
+	_pm_enable_bus_clock(PM_BUS_APBC, TC3);
+	_gclk_enable_channel(TC3_GCLK_ID, CONF_GCLK_TC3_SRC);
+
+	timer_init(&TIMER_0, TC3, _tc_get_timer());
+}
+
 void system_init(void)
 {
 	init_mcu();
@@ -340,4 +354,6 @@ void system_init(void)
 	delay_driver_init();
 
 	CALENDAR_0_init();
+
+	TIMER_0_init();
 }

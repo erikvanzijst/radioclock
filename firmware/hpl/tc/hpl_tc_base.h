@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief HPL initialization related functionality implementation.
+ * \brief SAM Timer/Counter
  *
  * Copyright (c) 2014-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -28,44 +28,50 @@
  * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  * \asf_license_stop
- *
  */
 
-#include <hpl_gpio.h>
-#include <hpl_init.h>
-#include <hpl_gclk_base.h>
-#include <hpl_pm_config.h>
-#include <hpl_pm_base.h>
+#ifndef _HPL_TC_BASE_H_INCLUDED
+#define _HPL_TC_BASE_H_INCLUDED
 
-#include <hpl_dma.h>
-#include <hpl_dmac_config.h>
+#include <hpl_timer.h>
+#include <hpl_pwm.h>
 
-/* Referenced GCLKs (out of 0~7), should be initialized firstly
- * - GCLK 2 for DFLL48M
- * - GCLK 3 for FDPLL96M
- */
-#define _GCLK_INIT_1ST 0x0000000C
-/* Not referenced GCLKs, initialized last */
-#define _GCLK_INIT_LAST 0x000000F3
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
- * \brief Initialize the hardware abstraction layer
+ * \addtogroup tc_group TC Hardware Proxy Layer
+ *
+ * \section tc_hpl_rev Revision History
+ * - v0.0.0.1 Initial Commit
+ *
+ *@{
  */
-void _init_chip(void)
-{
-	hri_nvmctrl_set_CTRLB_RWS_bf(NVMCTRL, CONF_NVM_WAIT_STATE);
 
-	_pm_init();
-	_sysctrl_init_sources();
-#if _GCLK_INIT_1ST
-	_gclk_init_generators_by_fref(_GCLK_INIT_1ST);
-#endif
-	_sysctrl_init_referenced_generators();
-	_gclk_init_generators_by_fref(_GCLK_INIT_LAST);
+/**
+ * \name HPL functions
+ */
+//@{
 
-#if CONF_DMAC_ENABLE
-	_pm_enable_bus_clock(PM_BUS_AHB, DMAC);
-	_pm_enable_bus_clock(PM_BUS_APBB, DMAC);
-	_dma_init();
-#endif
+/**
+ * \brief Retrieve timer helper functions
+ *
+ * \return A pointer to set of timer helper functions
+ */
+struct _timer_hpl_interface *_tc_get_timer(void);
+
+/**
+ * \brief Retrieve pwm helper functions
+ *
+ * \return A pointer to set of pwm helper functions
+ */
+struct _pwm_hpl_interface *_tc_get_pwm(void);
+
+//@}
+/**@}*/
+
+#ifdef __cplusplus
 }
+#endif
+#endif /* _HPL_TC_BASE_H_INCLUDED */

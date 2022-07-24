@@ -205,7 +205,7 @@ drivers:
       RESERVED_InputFreq: 48000000
       RESERVED_InputFreq_id: Digital Frequency Locked Loop (DFLL48M)
       _$freq_output_Generic clock generator 0: 48000000
-      _$freq_output_Generic clock generator 1: 32768
+      _$freq_output_Generic clock generator 1: 2000
       _$freq_output_Generic clock generator 2: 32768
       _$freq_output_Generic clock generator 3: 48000000
       _$freq_output_Generic clock generator 4: 400000
@@ -216,7 +216,7 @@ drivers:
       enable_gclk_gen_0__externalclock: 1000000
       enable_gclk_gen_1: true
       enable_gclk_gen_1__externalclock: 1000000
-      enable_gclk_gen_2: false
+      enable_gclk_gen_2: true
       enable_gclk_gen_2__externalclock: 1000000
       enable_gclk_gen_3: false
       enable_gclk_gen_3__externalclock: 1000000
@@ -239,7 +239,7 @@ drivers:
       gclk_arch_gen_1_oe: false
       gclk_arch_gen_1_oov: false
       gclk_arch_gen_2_RUNSTDBY: false
-      gclk_arch_gen_2_enable: false
+      gclk_arch_gen_2_enable: true
       gclk_arch_gen_2_idc: false
       gclk_arch_gen_2_oe: false
       gclk_arch_gen_2_oov: false
@@ -271,9 +271,9 @@ drivers:
       gclk_gen_0_div: 1
       gclk_gen_0_div_sel: false
       gclk_gen_0_oscillator: Digital Frequency Locked Loop (DFLL48M)
-      gclk_gen_1_div: 1
+      gclk_gen_1_div: 24000
       gclk_gen_1_div_sel: false
-      gclk_gen_1_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
+      gclk_gen_1_oscillator: Digital Frequency Locked Loop (DFLL48M)
       gclk_gen_2_div: 1
       gclk_gen_2_div_sel: false
       gclk_gen_2_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
@@ -493,11 +493,41 @@ drivers:
       domain_group:
         nodes:
         - name: RTC
+          input: Generic clock generator 2
+          external: false
+          external_frequency: 0
+        configuration:
+          rtc_clk_selection: Generic clock generator 2
+  TIMER_0:
+    user_label: TIMER_0
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::TC3::driver_config_definition::Timer::HAL:Driver:Timer
+    functionality: Timer
+    api: HAL:Driver:Timer
+    configuration:
+      tc_arch_dbgrun: false
+      tc_arch_evact: Event action disabled
+      tc_arch_mceo0: false
+      tc_arch_mceo1: false
+      tc_arch_ovfeo: false
+      tc_arch_presync: Reload or reset counter on next GCLK
+      tc_arch_runstdby: false
+      tc_arch_tcei: false
+      tc_arch_tceinv: false
+      timer_advanced_configuration: true
+      timer_event_control: false
+      timer_prescaler: No division
+      timer_tick: 1000
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC
           input: Generic clock generator 1
           external: false
           external_frequency: 0
         configuration:
-          rtc_clk_selection: Generic clock generator 1
+          tc_gclk_selection: Generic clock generator 1
   DMAC:
     user_label: DMAC
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::DMAC::driver_config_definition::DMAC::HAL:HPL:DMAC
@@ -784,10 +814,10 @@ drivers:
     functionality: System
     api: HAL:HPL:SYSCTRL
     configuration:
-      $input: 32768
-      $input_id: Generic clock generator 1
-      RESERVED_InputFreq: 32768
-      RESERVED_InputFreq_id: Generic clock generator 1
+      $input: 48000000
+      $input_id: Generic clock generator 3
+      RESERVED_InputFreq: 48000000
+      RESERVED_InputFreq_id: Generic clock generator 3
       _$freq_output_8MHz Internal Oscillator (OSC8M): 8000000
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
       _$freq_output_External Crystal Oscillator 0.4-32MHz (XOSC): 400000
@@ -807,7 +837,7 @@ drivers:
       dfll48m_arch_waitlock: false
       dfll48m_mode: Open Loop Mode
       dfll48m_mul: 0
-      dfll48m_ref_clock: Generic clock generator 1
+      dfll48m_ref_clock: Generic clock generator 2
       dfll_arch_cstep: 1
       dfll_arch_fstep: 1
       enable_dfll48m: true

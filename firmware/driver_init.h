@@ -33,6 +33,8 @@ extern "C" {
 #include <hal_delay.h>
 
 #include <hal_calendar.h>
+#include <hal_timer.h>
+#include <hpl_tc_base.h>
 
 extern struct adc_sync_descriptor   ADC_0;
 extern struct spi_m_sync_descriptor SPI_0;
@@ -42,6 +44,7 @@ extern struct i2c_m_sync_desc I2C_0;
 extern struct usart_sync_descriptor USART_0;
 
 extern struct calendar_descriptor CALENDAR_0;
+extern struct timer_descriptor    TIMER_0;
 
 void ADC_0_PORT_init(void);
 void ADC_0_CLOCK_init(void);

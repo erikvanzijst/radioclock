@@ -31,6 +31,7 @@ endif
 SUB_DIRS +=  \
  \
 hpl/adc \
+hpl/tc \
 samda1b/gcc \
 hpl/systick \
 hpl/dmac \
@@ -59,6 +60,7 @@ stdio_redirect/gcc/write.o \
 hpl/eic/hpl_eic.o \
 hal/utils/src/utils_syscalls.o \
 hal/src/hal_spi_m_sync.o \
+hal/src/hal_timer.o \
 hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 hpl/sysctrl/hpl_sysctrl.o \
@@ -86,10 +88,12 @@ hal/utils/src/utils_event.o \
 hal/src/hal_sleep.o \
 samda1b/gcc/gcc/startup_samda1.o \
 atmel_start.o \
+hpl/tc/hpl_tc.o \
 hal/src/hal_atomic.o \
 hpl/adc/hpl_adc.o \
 src/dcf.o \
-src/switch.o
+src/switch.o \
+src/millis.o
 
 OBJS_AS_ARGS +=  \
 "hal/src/hal_io.o" \
@@ -100,6 +104,7 @@ OBJS_AS_ARGS +=  \
 "hpl/eic/hpl_eic.o" \
 "hal/utils/src/utils_syscalls.o" \
 "hal/src/hal_spi_m_sync.o" \
+"hal/src/hal_timer.o" \
 "hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
@@ -127,10 +132,12 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_sleep.o" \
 "samda1b/gcc/gcc/startup_samda1.o" \
 "atmel_start.o" \
+"hpl/tc/hpl_tc.o" \
 "hal/src/hal_atomic.o" \
 "hpl/adc/hpl_adc.o" \
 "src/dcf.o" \
-"src/switch.o"
+"src/switch.o" \
+"src/millis.o"
 
 # List the directories containing header files
 DIR_INCLUDES +=  \
@@ -150,6 +157,7 @@ DIR_INCLUDES +=  \
 -I"../hpl/sercom" \
 -I"../hpl/sysctrl" \
 -I"../hpl/systick" \
+-I"../hpl/tc" \
 -I"../hri" \
 -I"../include" \
 -I"../config" \
@@ -172,6 +180,7 @@ DEPS_AS_ARGS +=  \
 "hal/utils/src/utils_syscalls.d" \
 "stdio_redirect/gcc/write.d" \
 "hal/src/hal_i2c_m_sync.d" \
+"hal/src/hal_timer.d" \
 "hal/src/hal_spi_m_sync.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
@@ -195,12 +204,14 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_gpio.d" \
 "atmel_start.d" \
 "hal/src/hal_atomic.d" \
+"hpl/tc/hpl_tc.d" \
 "hpl/pm/hpl_pm.d" \
 "hpl/adc/hpl_adc.d" \
 "hal/src/hal_ext_irq.d" \
 "samda1b/gcc/gcc/startup_samda1.d" \
 "src/dcf.d" \
-"src/switch.d"
+"src/switch.d" \
+"src/millis.d"
 
 OUTPUT_FILE_NAME :=radioclock
 QUOTE := "
