@@ -289,7 +289,7 @@
 
 // <i> Select the clock source for RTC.
 #ifndef CONF_GCLK_RTC_SRC
-#define CONF_GCLK_RTC_SRC GCLK_CLKCTRL_GEN_GCLK2_Val
+#define CONF_GCLK_RTC_SRC GCLK_CLKCTRL_GEN_GCLK3_Val
 #endif
 
 /**
@@ -297,7 +297,7 @@
  * \brief RTC's Clock frequency
  */
 #ifndef CONF_GCLK_RTC_FREQUENCY
-#define CONF_GCLK_RTC_FREQUENCY 32768
+#define CONF_GCLK_RTC_FREQUENCY 1024
 #endif
 
 // <y> TC Clock Source

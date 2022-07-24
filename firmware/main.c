@@ -191,6 +191,9 @@ int main(void)
         step = (step + 1 % 8);
         delay_ms(1000);
 
+        calendar_get_date_time(&CALENDAR_0, &datetime);
+//        printf("RTC: %02d:%02d:%02d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec);
+
         uint32_t now = millis();
 //        printf("%lu\r\n", (unsigned long)(now - prev_millis));
         prev_millis = now;
