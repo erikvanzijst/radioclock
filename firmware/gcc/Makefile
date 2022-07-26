@@ -92,6 +92,7 @@ hpl/tc/hpl_tc.o \
 hal/src/hal_atomic.o \
 hpl/adc/hpl_adc.o \
 src/dcf.o \
+src/dcf_parser.o \
 src/switch.o \
 src/millis.o
 
@@ -136,6 +137,7 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_atomic.o" \
 "hpl/adc/hpl_adc.o" \
 "src/dcf.o" \
+"src/dcf_parser.o" \
 "src/switch.o" \
 "src/millis.o"
 
@@ -210,6 +212,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_ext_irq.d" \
 "samda1b/gcc/gcc/startup_samda1.d" \
 "src/dcf.d" \
+"src/dcf_parser.d" \
 "src/switch.d" \
 "src/millis.d"
 

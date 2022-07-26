@@ -8,4 +8,7 @@ firmware/gcc/*.eep
 firmware/gcc/*.hex
 firmware/gcc/*.lss
 firmware/gcc/*.map
-
+firmware/**/*.o
+firmware/**/*.d
+firmware/tests/test.dSYM/
+firmware/tests/testrunner

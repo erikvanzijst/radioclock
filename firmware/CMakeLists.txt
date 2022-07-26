@@ -65,4 +65,5 @@ add_executable(firmware
         driver_init.c
         src/dcf.c
         src/switch.c
-        src/millis.c)
+        src/millis.c
+        src/dcf_parser.c)
