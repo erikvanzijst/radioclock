@@ -6,7 +6,7 @@
 /**
  * Call this once at system initialization to start the wallclock (this is not the RTC).
  */
-int32_t millis_init();
+void millis_init();
 
 /**
  * @return  the number of milliseconds since boot.

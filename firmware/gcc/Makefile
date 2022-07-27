@@ -1,5 +1,6 @@
 VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
+LOG_LEVEL=INFO
 
 MK_DIR = mkdir -p
 ifdef SystemRoot
@@ -93,6 +94,7 @@ hal/src/hal_atomic.o \
 hpl/adc/hpl_adc.o \
 src/dcf.o \
 src/dcf_parser.o \
+src/display.o \
 src/log.o \
 src/switch.o \
 src/millis.o
@@ -139,6 +141,7 @@ OBJS_AS_ARGS +=  \
 "hpl/adc/hpl_adc.o" \
 "src/dcf.o" \
 "src/dcf_parser.o" \
+"src/display.o" \
 "src/log.o" \
 "src/switch.o" \
 "src/millis.o"
@@ -215,6 +218,7 @@ DEPS_AS_ARGS +=  \
 "samda1b/gcc/gcc/startup_samda1.d" \
 "src/dcf.d" \
 "src/dcf_parser.d" \
+"src/display.d" \
 "src/log.d" \
 "src/switch.d" \
 "src/millis.d"
@@ -262,7 +266,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.c
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU C Compiler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
@@ -271,7 +275,7 @@ $(DIR_INCLUDES) \
 %.o: %.s
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Assembler
-	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
@@ -280,7 +284,7 @@ $(DIR_INCLUDES) \
 %.o: %.S
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Preprocessing Assembler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
 -D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"

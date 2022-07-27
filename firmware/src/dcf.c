@@ -10,20 +10,30 @@
 uint64_t dcf_bits = 0;
 uint64_t dcf_prev_posedge = 0;
 bool dcf_corrupt = true;
+void (*sync_callback)(struct calendar_date_time *cal_dt) = NULL;
+void (*fail_cb)(void) = NULL;
 
-void set_rtc(struct date_time_t *dt) {
-    struct calendar_time time;
-    struct calendar_date date;
+struct calendar_date_time * dt_to_calendar(struct date_time_t *dt, struct calendar_date_time *cal_dt) {
+    cal_dt->time.sec = dt->sec;
+    cal_dt->time.min = dt->min;
+    cal_dt->time.hour = dt->hour;
+    cal_dt->date.day = dt->day;
+    cal_dt->date.month = dt->month;
+    cal_dt->date.year = dt->year;
 
-    time.sec = 0;
-    time.min = dt->min;
-    time.hour = dt->hour;
-    date.day = dt->day;
-    date.month = dt->month;
-    date.year = dt->year;
+    return cal_dt;
+}
 
-    calendar_set_time(&CALENDAR_0, &time);
-    calendar_set_date(&CALENDAR_0, &date);
+void dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
+    sync_callback = sync_cb;
+
+    // trigger fast DCF fast sync:
+    gpio_set_pin_level(DCF_PDN, true);
+    delay_ms(100);
+    gpio_set_pin_level(DCF_PDN, false);
+
+    // Register interrupt handler on DCF_DATA pin
+    ext_irq_register(PIN_PA06, dcf_data_isr);
 }
 
 void dcf_data_isr(void) {
@@ -37,11 +47,19 @@ void dcf_data_isr(void) {
         } else if (duration > 1900 && duration < 2100) {
             // minute mark, capture complete
             if (!dcf_corrupt) {
+                struct calendar_date_time cal_dt;
                 struct date_time_t dt;
+
                 switch (parse_dcf(dcf_bits, &dt)) {
                     case 0:
-                        ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", dt.year, dt.month, dt.day, dt.hour, dt.min);
-                        set_rtc(&dt);
+                        dt_to_calendar(&dt, &cal_dt);   // convert to hal format
+
+                        // set RTC:
+                        calendar_set_time(&CALENDAR_0, &cal_dt.time);
+                        calendar_set_date(&CALENDAR_0, &cal_dt.date);
+
+                        // notify listeners:
+                        if (sync_callback) sync_callback(&cal_dt);
                         break;
                     case DCF_ERR_START:
                         ulog(WARN, "DCF invalid start-of-minute mark");
@@ -61,7 +79,7 @@ void dcf_data_isr(void) {
                         ulog(ERROR, "unknown error in parse_dcf()");
                 }
             } else {
-                ulog(WARN, "DCF capture corrupt");
+                ulog(WARN, "DCF: capture corrupt");
             }
             dcf_corrupt = false;
             dcf_bits = 0;

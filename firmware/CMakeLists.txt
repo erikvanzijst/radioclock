@@ -68,4 +68,5 @@ add_executable(firmware
         src/millis.c
         src/dcf_parser.c
         src/log.c
+        src/display.c
 )

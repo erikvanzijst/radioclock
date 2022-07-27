@@ -6,6 +6,7 @@
 #include "include/switch.h"
 #include "millis.h"
 #include "log.h"
+#include "display.h"
 
 typedef struct {
     uint8_t status;
@@ -29,33 +30,39 @@ uint8_t crc8(uint8_t *ptr, uint8_t len) {
     return crc;
 }
 
-void init_cal() {
-
-    struct calendar_date date;
-    struct calendar_time time;
-
+void cal_init() {
     calendar_enable(&CALENDAR_0);
 }
 
+void dcf_sync(struct calendar_date_time *cal_dt) {
+    ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", cal_dt->date.year, cal_dt->date.month, cal_dt->date.day, cal_dt->time.hour, cal_dt->time.min);
+
+    // TODO: do from main loop?
+    if (gpio_get_pin_level(PERIPHERAL_CTL)) {
+        gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
+        display_init();
+    }
+}
 
 int main(void)
 {
     struct io_descriptor *uart_io;
     struct io_descriptor *i2c_io;
-    struct io_descriptor *spi_io;
     struct calendar_date_time datetime;
     dht_measurement_t measurement;
 
     atmel_start_init();
     gpio_set_pin_level(LED, false);
-    gpio_set_pin_level(DCF_CTL, false);          // turn on power to DCF module
-    gpio_set_pin_level(PERIPHERAL_CTL, true);  // turn off power to displays and DHT20 module
+    gpio_set_pin_level(DCF_CTL, false);         // turn on power to DCF module
+    gpio_set_pin_level(PERIPHERAL_CTL, true);   // turn off power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
-    adc_sync_enable_channel(&ADC_0, 0);
+    if (timer_start(&TIMER_0)) {
+        ulog(ERROR, "Failed to start TIMER_0!");
+    }
+    millis_init();
 
-    spi_m_sync_get_io_descriptor(&SPI_0, &spi_io);
-    spi_m_sync_enable(&SPI_0);
+    adc_sync_enable_channel(&ADC_0, 0);
 
     usart_sync_get_io_descriptor(&USART_0, &uart_io);
     usart_sync_enable(&USART_0);
@@ -65,52 +72,19 @@ int main(void)
     i2c_m_sync_enable(&I2C_0);
     i2c_m_sync_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
 
-    // trigger fast DCF fast sync:
-    gpio_set_pin_level(DCF_PDN, true);
-    delay_ms(100);
-    gpio_set_pin_level(DCF_PDN, false);
-
     printf("\r\n\r\n");
     ulog(INFO, "Radio clock firmware build: %s", VERSION_STR);
     ulog(INFO, "https://github.com/erikvanzijst/radioclock");
     ulog(INFO, "Erik van Zijst <erik.van.zijst@gmail.com>\r\n");
 
-    init_cal();
-
-    if (millis_init()) {
-        ulog(ERROR, "Failed to start TIMER_0!");
-    }
+    cal_init();
+    dcf_init(dcf_sync);
 
     // DHT20 initialization
     io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
 
-    // Register interrupt handler on DCF_DATA pin
-    ext_irq_register(PIN_PA06, dcf_data_isr);
     ext_irq_register(PIN_PA15, switch_isr);
-
-    // Display initialization
-    gpio_set_pin_level(DSPL_SS, false); // Leave shutdown mode:
-    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0c, 0x01, 0x0c, 0x01}), 4);
-    gpio_set_pin_level(DSPL_SS, true);
-
-    gpio_set_pin_level(DSPL_SS, false); // set intensity:
-    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0x08, 0x0a, 0x08}), 4);
-    gpio_set_pin_level(DSPL_SS, true);
-
-    gpio_set_pin_level(DSPL_SS, false); // set scan-limit register to all segments:
-    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0b, 0x07, 0x0b, 0x07}), 4);
-    gpio_set_pin_level(DSPL_SS, true);
-
-    gpio_set_pin_level(DSPL_SS, false); // enable BCD decode mode:
-    io_write(spi_io, (uint8_t *)((uint8_t[]){0x09, 0xff, 0x09, 0xff}), 4);
-    gpio_set_pin_level(DSPL_SS, true);
-
-    for (uint8_t i = 1; i <= 8; i++) {   // set a value for each segment
-        gpio_set_pin_level(DSPL_SS, false); // set intensity:
-        io_write(spi_io, (uint8_t *)((uint8_t[]){i, i+8-1, i, i-1}), 4);
-        gpio_set_pin_level(DSPL_SS, true);
-    }
 
     uint8_t ldr[1];
     uint64_t prev_millis = 0;
@@ -152,18 +126,18 @@ int main(void)
 
             // SPI
 
-            for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
-                uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
-    //            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
-
-                gpio_set_pin_level(DSPL_SS, false); // set intensity:
-                io_write(spi_io, (uint8_t *)&buf, 4);
-                gpio_set_pin_level(DSPL_SS, true);
-            }
-
-            gpio_set_pin_level(DSPL_SS, false); // set intensity:
-            io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
-            gpio_set_pin_level(DSPL_SS, true);
+//            for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
+//                uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
+//    //            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
+//
+//                gpio_set_pin_level(DSPL_SS, false);
+//                io_write(spi_io, (uint8_t *)&buf, 4);
+//                gpio_set_pin_level(DSPL_SS, true);
+//            }
+//
+//            gpio_set_pin_level(DSPL_SS, false); // set intensity:
+//            io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
+//            gpio_set_pin_level(DSPL_SS, true);
         }
 
         step = (step + 1 % 8);
