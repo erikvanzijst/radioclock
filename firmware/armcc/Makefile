@@ -61,6 +61,7 @@ hal/utils/src/utils_list.o \
 hpl/core/hpl_core_m0plus_base.o \
 hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
+hal/src/hal_adc_async.o \
 hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
 stdio_redirect/keil/Retarget.o \
@@ -72,8 +73,8 @@ main.o \
 hpl/rtc/hpl_rtc.o \
 examples/driver_examples.o \
 driver_init.o \
-hal/src/hal_adc_sync.o \
 hal/src/hal_ext_irq.o \
+hal/utils/src/utils_ringbuffer.o \
 hal/src/hal_gpio.o \
 hal/utils/src/utils_event.o \
 hal/src/hal_sleep.o \
@@ -98,6 +99,7 @@ OBJS_AS_ARGS +=  \
 "hpl/core/hpl_core_m0plus_base.o" \
 "hal/utils/src/utils_assert.o" \
 "hpl/dmac/hpl_dmac.o" \
+"hal/src/hal_adc_async.o" \
 "hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
 "stdio_redirect/keil/Retarget.o" \
@@ -109,8 +111,8 @@ OBJS_AS_ARGS +=  \
 "hpl/rtc/hpl_rtc.o" \
 "examples/driver_examples.o" \
 "driver_init.o" \
-"hal/src/hal_adc_sync.o" \
 "hal/src/hal_ext_irq.o" \
+"hal/utils/src/utils_ringbuffer.o" \
 "hal/src/hal_gpio.o" \
 "hal/utils/src/utils_event.o" \
 "hal/src/hal_sleep.o" \
@@ -134,6 +136,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_spi_m_sync.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
+"hal/src/hal_adc_async.d" \
 "hpl/dmac/hpl_dmac.d" \
 "hal/utils/src/utils_assert.d" \
 "hal/src/hal_delay.d" \
@@ -145,11 +148,11 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_usart_sync.d" \
 "stdio_redirect/keil/Retarget.d" \
 "driver_init.d" \
-"hal/src/hal_adc_sync.d" \
 "main.d" \
 "examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \
 "hal/src/hal_sleep.d" \
+"hal/utils/src/utils_ringbuffer.d" \
 "hpl/sercom/hpl_sercom.d" \
 "hal/src/hal_gpio.d" \
 "atmel_start.d" \

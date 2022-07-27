@@ -10,18 +10,18 @@
 #include "driver_init.h"
 #include "utils.h"
 
+static void convert_cb_ADC_0(const struct adc_async_descriptor *const descr, const uint8_t channel)
+{
+}
+
 /**
  * Example of using ADC_0 to generate waveform.
  */
 void ADC_0_example(void)
 {
-	uint8_t buffer[2];
-
-	adc_sync_enable_channel(&ADC_0, 0);
-
-	while (1) {
-		adc_sync_read_channel(&ADC_0, 0, buffer, 2);
-	}
+	adc_async_register_callback(&ADC_0, 0, ADC_ASYNC_CONVERT_CB, convert_cb_ADC_0);
+	adc_async_enable_channel(&ADC_0, 0);
+	adc_async_start_conversion(&ADC_0);
 }
 
 static void button_on_PA06_pressed(void)

@@ -31,7 +31,7 @@ add_executable(firmware
         hal/src/hal_i2c_m_sync.c
         hal/src/hal_delay.c
         hal/src/hal_ext_irq.c
-        hal/src/hal_adc_sync.c
+        hal/src/hal_adc_async.c
         hal/src/hal_gpio.c
         hal/src/hal_io.c
         hal/src/hal_usart_sync.c
@@ -69,4 +69,5 @@ add_executable(firmware
         src/dcf_parser.c
         src/display.c
         src/utils.c
+        src/ldr.c
 )

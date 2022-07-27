@@ -696,6 +696,26 @@ void _adc_async_set_irq_state(struct _adc_async_device *const device, const uint
 }
 
 /**
+ * \internal ADC interrupt handler
+ */
+void ADC_Handler(void)
+{
+	void *const hw      = _adc_dev->hw;
+	uint8_t     intflag = hri_adc_read_INTFLAG_reg(hw);
+	intflag &= hri_adc_read_INTEN_reg(hw);
+	if (intflag & ADC_INTFLAG_RESRDY) {
+		hri_adc_clear_interrupt_RESRDY_bit(hw);
+		_adc_dev->adc_async_ch_cb.convert_done(_adc_dev, 0, hri_adc_read_RESULT_reg(hw));
+	} else if (intflag & ADC_INTFLAG_OVERRUN) {
+		hri_adc_clear_interrupt_OVERRUN_bit(hw);
+		_adc_dev->adc_async_cb.error_cb(_adc_dev, 0);
+	} else if (intflag & ADC_INTFLAG_WINMON) {
+		hri_adc_clear_interrupt_WINMON_bit(hw);
+		_adc_dev->adc_async_cb.window_cb(_adc_dev, 0);
+	}
+}
+
+/**
  * \brief SetADC resolution
  *
  * \param[in] hw The pointer to hardware instance

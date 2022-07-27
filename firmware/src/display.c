@@ -1,6 +1,7 @@
 #include <string.h>
 #include "atmel_start.h"
 #include "display.h"
+#include "ldr.h"
 
 struct io_descriptor *spi_io;
 static struct timer_task TIMER_0_display_task;
@@ -40,7 +41,11 @@ void update_display(const struct timer_task *const timer_task) {
         io_write(spi_io, (uint8_t *)((uint8_t[]){i, text[i+8-1], i, text[i-1]}), 4);
         gpio_set_pin_level(DSPL_SS, true);
     }
-    // TODO: LDR and intensity
+
+    // set brightness
+    gpio_set_pin_level(DSPL_SS, false); // set intensity:
+    io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
+    gpio_set_pin_level(DSPL_SS, true);
 
     dp_countdown--;
     memcpy(&prev_dt, &dt, sizeof(dt));

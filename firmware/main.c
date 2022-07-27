@@ -7,7 +7,7 @@
 #include "millis.h"
 #include "log.h"
 #include "display.h"
-#include "utils.h"
+#include "ldr.h"
 
 typedef struct {
     uint8_t status;
@@ -47,8 +47,6 @@ int main(void)
     }
     millis_init();
 
-    adc_sync_enable_channel(&ADC_0, 0);
-
     usart_sync_get_io_descriptor(&USART_0, &uart_io);
     usart_sync_enable(&USART_0);
 
@@ -64,6 +62,7 @@ int main(void)
 
     cal_init();
     dcf_init(dcf_sync);
+    ldr_init();
 
     // DHT20 initialization
     io_write(i2c_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
@@ -71,13 +70,10 @@ int main(void)
 
     ext_irq_register(PIN_PA15, switch_isr);
 
-    uint8_t ldr[1];
-    uint64_t prev_millis = 0;
-
     for (int step = 0;;) {
         int32_t retval;
 
-        if (!gpio_get_pin_level(PERIPHERAL_CTL)) {
+        if (!gpio_get_pin_level(PERIPHERAL_CTL) && false) {
 //            gpio_set_pin_level(LED, !gpio_get_pin_level(LED));
 
             io_write(i2c_io, (uint8_t*)((uint8_t []){0xac, 0x33, 0x0}), 3);
@@ -96,9 +92,9 @@ int main(void)
                 tmp = ((measurement.data[2] & 0xf0) >> 4) + (measurement.data[1] << 4) + (measurement.data[0] << 12);
                 int humidity = (tmp * 100) >> 20;
 
-                if (adc_sync_read_channel(&ADC_0, 0, ldr, 1) != 1) {
-                    ulog(ERROR, "adc_sync_read_channel() failed");
-                }
+//                if (adc_sync_read_channel(&ADC_0, 0, ldr, 1) != 1) {
+//                    ulog(ERROR, "adc_sync_read_channel() failed");
+//                }
 
                 ulog(INFO, "%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, ldr[0]);
 
@@ -108,32 +104,12 @@ int main(void)
             } else {
                 ulog(ERROR, "DHT20 sensor returned an error (status: %x)", measurement.status);
             }
-
-            // SPI
-
-//            for (uint8_t i = 0; i < 8; i++) {   // set a value for each segment
-//                uint8_t buf[] = {i+1, i+8+step, i+1, i + step};
-//    //            printf("Display %d -> %d %d %d %d\r\n", step, buf[0], buf[1], buf[2], buf[3]);
-//
-//                gpio_set_pin_level(DSPL_SS, false);
-//                io_write(spi_io, (uint8_t *)&buf, 4);
-//                gpio_set_pin_level(DSPL_SS, true);
-//            }
-//
-//            gpio_set_pin_level(DSPL_SS, false); // set intensity:
-//            io_write(spi_io, (uint8_t *)((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}), 4);
-//            gpio_set_pin_level(DSPL_SS, true);
         }
 
         step = (step + 1 % 8);
         delay_ms(1000);
 
-        calendar_get_date_time(&CALENDAR_0, &datetime);
-//        printf("RTC: %02d:%02d:%02d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec);
-
-        uint32_t now = millis();
-//        printf("%lu\r\n", (unsigned long)(now - prev_millis));
-        prev_millis = now;
+//        ulog(INFO, "LDR: %d\r\n", ldr[0]);
 
         //        gpio_toggle_pin_level(LED);
     }

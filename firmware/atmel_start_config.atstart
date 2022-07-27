@@ -30,11 +30,11 @@ middlewares:
 drivers:
   ADC_0:
     user_label: ADC_0
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::ADC::driver_config_definition::ADC::HAL:Driver:ADC.Sync
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::ADC::driver_config_definition::ADC::HAL:Driver:ADC.Async
     functionality: ADC
-    api: HAL:Driver:ADC_Sync
+    api: HAL:Driver:ADC_Async
     configuration:
-      adc_advanced_settings: true
+      adc_advanced_settings: false
       adc_arch_adjres: 0
       adc_arch_corren: false
       adc_arch_dbgrun: false
