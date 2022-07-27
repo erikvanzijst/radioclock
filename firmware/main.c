@@ -7,28 +7,13 @@
 #include "millis.h"
 #include "log.h"
 #include "display.h"
+#include "utils.h"
 
 typedef struct {
     uint8_t status;
     uint8_t data[5];
     uint8_t crc;
 } dht_measurement_t;
-
-uint8_t crc8(uint8_t *ptr, uint8_t len) {
-    uint8_t crc = 0xFF;
-    while (len--) {
-        crc ^= *ptr++;
-        for (uint8_t i = 0; i < 8; i++) {
-            if (crc & 0x80) {
-                crc <<= 1;
-                crc ^= 0x31;
-            } else {
-                crc <<= 1;
-            }
-        }
-    }
-    return crc;
-}
 
 void cal_init() {
     calendar_enable(&CALENDAR_0);

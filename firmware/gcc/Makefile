@@ -95,7 +95,7 @@ hpl/adc/hpl_adc.o \
 src/dcf.o \
 src/dcf_parser.o \
 src/display.o \
-src/log.o \
+src/utils.o \
 src/switch.o \
 src/millis.o
 
@@ -142,7 +142,7 @@ OBJS_AS_ARGS +=  \
 "src/dcf.o" \
 "src/dcf_parser.o" \
 "src/display.o" \
-"src/log.o" \
+"src/utils.o" \
 "src/switch.o" \
 "src/millis.o"
 
@@ -219,7 +219,7 @@ DEPS_AS_ARGS +=  \
 "src/dcf.d" \
 "src/dcf_parser.d" \
 "src/display.d" \
-"src/log.d" \
+"src/utils.d" \
 "src/switch.d" \
 "src/millis.d"
 

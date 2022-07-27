@@ -4,6 +4,8 @@
 #include "atmel_start.h"
 #include "hal_calendar.h"
 
+#include "utils.h"
+
 enum log_level_t {
     INFO,
     WARN,

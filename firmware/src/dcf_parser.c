@@ -1,19 +1,8 @@
 #include <stdint.h>
 #include "dcf_parser.h"
+#include "utils.h"
 
 #define BIT_VAL(bits, n) ((bits >> n) & 0x1)
-
-/**
- * Computes the bit parity for the given 32-bit value.
- */
-uint32_t parity(uint32_t v) {
-    // Taken from: http://www.graphics.stanford.edu/~seander/bithacks.html#ParityParallel
-    v ^= v >> 16;
-    v ^= v >> 8;
-    v ^= v >> 4;
-    v &= 0xf;
-    return (0x6996 >> v) & 1;
-}
 
 int32_t parse_dcf(uint64_t bits, struct date_time_t *const date_time) {
     if (bits & 0x01) {
