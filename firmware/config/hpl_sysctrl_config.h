@@ -197,7 +197,7 @@
 // <i> Indicates whether configuration for External 32K Osc is enabled or not
 // <id> enable_xosc32k
 #ifndef CONF_XOSC32K_CONFIG
-#define CONF_XOSC32K_CONFIG 0
+#define CONF_XOSC32K_CONFIG 1
 #endif
 
 // <h> 32kHz External Crystal Oscillator (XOSC32K) Control
@@ -205,7 +205,7 @@
 // <i> Indicates whether External 32K Oscillator is enabled or not
 // <id> xosc32k_arch_enable
 #ifndef CONF_XOSC32K_ENABLE
-#define CONF_XOSC32K_ENABLE 0
+#define CONF_XOSC32K_ENABLE 1
 #endif
 
 // <q> On Demand
@@ -214,7 +214,7 @@
 // <i> If this bit is 1: the oscillator will only be running when requested by a peripheral.
 // <id> xosc32k_arch_ondemand
 #ifndef CONF_XOSC32K_ONDEMAND
-#define CONF_XOSC32K_ONDEMAND 1
+#define CONF_XOSC32K_ONDEMAND 0
 #endif
 
 // <q> Run In Standby
@@ -223,7 +223,7 @@
 // <i> If this bit is 1: The oscillator is not stopped in standby sleep mode.
 // <id> xosc32k_arch_runstdby
 #ifndef CONF_XOSC32K_RUNSTDBY
-#define CONF_XOSC32K_RUNSTDBY 0
+#define CONF_XOSC32K_RUNSTDBY 1
 #endif
 
 // <q> Enable 1K

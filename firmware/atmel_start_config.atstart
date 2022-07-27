@@ -34,7 +34,7 @@ drivers:
     functionality: ADC
     api: HAL:Driver:ADC_Async
     configuration:
-      adc_advanced_settings: false
+      adc_advanced_settings: true
       adc_arch_adjres: 0
       adc_arch_corren: false
       adc_arch_dbgrun: false
@@ -201,9 +201,9 @@ drivers:
     api: HAL:HPL:GCLK
     configuration:
       $input: 32768
-      $input_id: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
+      $input_id: 32kHz External Crystal Oscillator (XOSC32K)
       RESERVED_InputFreq: 32768
-      RESERVED_InputFreq_id: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
+      RESERVED_InputFreq_id: 32kHz External Crystal Oscillator (XOSC32K)
       _$freq_output_Generic clock generator 0: 48000000
       _$freq_output_Generic clock generator 1: 2000
       _$freq_output_Generic clock generator 2: 32768
@@ -243,7 +243,7 @@ drivers:
       gclk_arch_gen_2_idc: false
       gclk_arch_gen_2_oe: false
       gclk_arch_gen_2_oov: false
-      gclk_arch_gen_3_RUNSTDBY: false
+      gclk_arch_gen_3_RUNSTDBY: true
       gclk_arch_gen_3_enable: true
       gclk_arch_gen_3_idc: false
       gclk_arch_gen_3_oe: false
@@ -279,7 +279,7 @@ drivers:
       gclk_gen_2_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
       gclk_gen_3_div: 32
       gclk_gen_3_div_sel: false
-      gclk_gen_3_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
+      gclk_gen_3_oscillator: 32kHz External Crystal Oscillator (XOSC32K)
       gclk_gen_4_div: 1
       gclk_gen_4_div_sel: false
       gclk_gen_4_oscillator: External Crystal Oscillator 0.4-32MHz (XOSC)
@@ -846,7 +846,7 @@ drivers:
       enable_osc8m: false
       enable_osculp32k: true
       enable_xosc: false
-      enable_xosc32k: false
+      enable_xosc32k: true
       fdpll96m_arch_enable: false
       fdpll96m_arch_lbypass: false
       fdpll96m_arch_ondemand: true
@@ -876,9 +876,9 @@ drivers:
       xosc32k_arch_aampen: false
       xosc32k_arch_en1k: false
       xosc32k_arch_en32k: false
-      xosc32k_arch_enable: false
-      xosc32k_arch_ondemand: true
-      xosc32k_arch_runstdby: false
+      xosc32k_arch_enable: true
+      xosc32k_arch_ondemand: false
+      xosc32k_arch_runstdby: true
       xosc32k_arch_startup: 122 us
       xosc32k_arch_wrtlock: false
       xosc32k_arch_xtalen: false
