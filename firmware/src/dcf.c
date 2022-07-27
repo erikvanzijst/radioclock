@@ -1,12 +1,11 @@
-#include <stdio.h>
-
+#include "atmel_start.h"
 #include "atmel_start_pins.h"
 #include "hal_calendar.h"
 
 #include "dcf.h"
 #include "dcf_parser.h"
+#include "log.h"
 #include "millis.h"
-#include "atmel_start.h"
 
 uint64_t dcf_bits = 0;
 uint64_t dcf_prev_posedge = 0;
@@ -41,34 +40,34 @@ void dcf_data_isr(void) {
                 struct date_time_t dt;
                 switch (parse_dcf(dcf_bits, &dt)) {
                     case 0:
-                        printf("Time sync: %04d-%02d-%02d %02d:%02d:00\r\n", dt.year, dt.month, dt.day, dt.hour, dt.min);
+                        ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", dt.year, dt.month, dt.day, dt.hour, dt.min);
                         set_rtc(&dt);
                         break;
                     case DCF_ERR_START:
-                        printf("ERR: DCF invalid start-of-minute mark\r\n");
+                        ulog(WARN, "DCF invalid start-of-minute mark");
                         break;
                     case DCF_ERR_START_OF_TIME:
-                        printf("ERR: DCF invalid start-of-time mark\r\n");
+                        ulog(WARN, "DCF invalid start-of-time mark");
                         break;
                     case DCF_ERR_CORRUPT:
-                        printf("ERR: DCF reception corrupt\r\n");
+                        ulog(WARN, "DCF reception corrupt");
                         break;
                     case DCF_ERR_PARITY_MINUTES:
                     case DCF_ERR_PARITY_HOURS:
                     case DCF_ERR_PARITY_DATE:
-                        printf("ERR: DCF parity error\r\n");
+                        ulog(WARN, "DCF parity error");
                         break;
                     default:
-                        printf("ERR: unknown error in parse_dcf()\r\n");
+                        ulog(ERROR, "unknown error in parse_dcf()");
                 }
             } else {
-                printf("DCF capture corrupt.\r\n");
+                ulog(WARN, "DCF capture corrupt");
             }
             dcf_corrupt = false;
             dcf_bits = 0;
 
         } else {
-            printf("ERR: DCF pulse length mismatch (%lums)\r\n", (unsigned long)duration);
+            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration);
             dcf_corrupt = true;
         }
         dcf_prev_posedge = now;
@@ -76,13 +75,13 @@ void dcf_data_isr(void) {
     } else {    // negative edge
         uint64_t bit = 0;
         if (duration > 60 && duration < 140) {          // logic 0
-            printf("DCF: 0\r\n");
+            ulog(INFO, "DCF: 0");
             bit = 0;
         } else if (duration > 160 && duration < 240) {  // logic 1
-            printf("DCF: 1\r\n");
+            ulog(INFO, "DCF: 1");
             bit = 0x400000000000000;                    // bit 58 set to 1
         } else {
-            printf("ERR: DCF interval length mismatch (%lums)\r\n", (unsigned long)duration);
+            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration);
             dcf_corrupt = true;
         }
         dcf_bits >>= 1;

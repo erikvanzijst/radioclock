@@ -1,20 +1,17 @@
 #include <atmel_start.h>
-#include <string.h>
 #include "atmel_start_pins.h"
 #include "hal_delay.h"
 #include "version.h"
 #include "include/dcf.h"
 #include "include/switch.h"
-#include "examples/driver_examples.h"
 #include "millis.h"
+#include "log.h"
 
 typedef struct {
     uint8_t status;
     uint8_t data[5];
     uint8_t crc;
 } dht_measurement_t;
-
-static struct calendar_alarm alarm;
 
 uint8_t crc8(uint8_t *ptr, uint8_t len) {
     uint8_t crc = 0xFF;
@@ -32,32 +29,12 @@ uint8_t crc8(uint8_t *ptr, uint8_t len) {
     return crc;
 }
 
-static void alarm_cb(struct calendar_descriptor *const descr) {
-}
-
 void init_cal() {
 
     struct calendar_date date;
     struct calendar_time time;
 
     calendar_enable(&CALENDAR_0);
-
-    date.year  = 2022;
-    date.month = 6;
-    date.day   = 29;
-
-    time.hour = 22;
-    time.min  = 00;
-    time.sec  = 00;
-
-    calendar_set_date(&CALENDAR_0, &date);
-    calendar_set_time(&CALENDAR_0, &time);
-
-    alarm.cal_alarm.datetime.time.sec = 4;
-    alarm.cal_alarm.option            = CALENDAR_ALARM_MATCH_SEC;
-    alarm.cal_alarm.mode              = REPEAT;
-
-    calendar_set_alarm(&CALENDAR_0, &alarm, alarm_cb);
 }
 
 
@@ -93,14 +70,15 @@ int main(void)
     delay_ms(100);
     gpio_set_pin_level(DCF_PDN, false);
 
-    printf("\r\n\r\nRadio clock firmware build: %s\r\n", VERSION_STR);
-    printf("https://github.com/erikvanzijst/radioclock\r\n");
-    printf("Erik van Zijst <erik.van.zijst@gmail.com>\r\n\r\n");
+    printf("\r\n\r\n");
+    ulog(INFO, "Radio clock firmware build: %s", VERSION_STR);
+    ulog(INFO, "https://github.com/erikvanzijst/radioclock");
+    ulog(INFO, "Erik van Zijst <erik.van.zijst@gmail.com>\r\n");
 
     init_cal();
 
     if (millis_init()) {
-        printf("ERR: Failed to start TIMER_0!\r\n");
+        ulog(ERROR, "Failed to start TIMER_0!");
     }
 
     // DHT20 initialization
@@ -150,7 +128,7 @@ int main(void)
             calendar_get_date_time(&CALENDAR_0, &datetime);
 
             if (retval < 0) {
-                printf("ERR: I2C read failed: %ld (see: hal/include/hpl_i2c_m_sync.h)\r\n", retval);
+                ulog(ERROR, "I2C read failed: %ld (see: hal/include/hpl_i2c_m_sync.h)", retval);
 
             } else if ((measurement.status & 0x1) == 0x0) {
                 int32_t tmp = measurement.data[4] + (measurement.data[3] << 8) + ((measurement.data[2] & 0xf) << 16);
@@ -160,16 +138,16 @@ int main(void)
                 int humidity = (tmp * 100) >> 20;
 
                 if (adc_sync_read_channel(&ADC_0, 0, ldr, 1) != 1) {
-                    printf("ERR: adc_sync_read_channel() failed\r\n");
+                    ulog(ERROR, "adc_sync_read_channel() failed");
                 }
 
-                printf("%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d\r\n", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, ldr[0]);
+                ulog(INFO, "%02d:%02d:%02d - Temperature: %d.%dC Humidity: %d%% Brightness: %d", datetime.time.hour, datetime.time.min, datetime.time.sec, temperature / 10, temperature % 10, humidity, ldr[0]);
 
             } else if (measurement.crc != crc8((uint8_t *)&measurement, 6)) {
-                printf("ERR: DHT20 I2C CRC mismatch (%d != %d)\r\n", measurement.crc, crc8((uint8_t *)&measurement, 6));
+                ulog(ERROR, "DHT20 I2C CRC mismatch (%d != %d)", measurement.crc, crc8((uint8_t *)&measurement, 6));
 
             } else {
-                printf("ERR: DHT20 sensor returned an error (status: %x)\r\n", measurement.status);
+                ulog(ERROR, "DHT20 sensor returned an error (status: %x)", measurement.status);
             }
 
             // SPI
