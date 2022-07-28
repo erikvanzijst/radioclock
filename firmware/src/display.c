@@ -3,6 +3,7 @@
 #include "display.h"
 #include "ldr.h"
 #include "log.h"
+#include "font.h"
 
 struct io_descriptor *spi_io;
 static struct timer_task TIMER_0_display_task;
@@ -58,7 +59,7 @@ static void complete_cb_SPI_0(const struct spi_m_async_descriptor *const io_desc
 
 void update_display(const struct timer_task *const timer_task) {
     struct calendar_date_time dt;
-    uint8_t text[16];
+    char text[17];
     int32_t err;
 
     calendar_get_date_time(&CALENDAR_0, &dt);
@@ -66,34 +67,23 @@ void update_display(const struct timer_task *const timer_task) {
         dp_countdown = (int8_t)((1000 / timer_task->interval) / 2);
     }
 
-    text[0] = dt.date.year / 1000 % 10;
-    text[1] = dt.date.year / 100 % 10;
-    text[2] = dt.date.year / 10 % 10;
-    text[3] = dt.date.year % 10;
-    text[4] = 10;
-    text[5] = dt.date.month / 10 % 10;
-    text[6] = dt.date.month % 10;
-    text[7] = 10;
-    text[8] = dt.date.day / 10 % 10;
-    text[9] = dt.date.day % 10;
-
-    text[10] = (dt.time.hour / 10 % 10) | (dp_countdown > 0 ? 0x80 : 0x0);
-    text[11] = (dt.time.hour % 10)      | (dp_countdown > 0 ? 0x80 : 0x0);
-    text[12] = (dt.time.min / 10 % 10)  | (dp_countdown > 0 ? 0x80 : 0x0);
-    text[13] = (dt.time.min % 10)       | (dp_countdown > 0 ? 0x80 : 0x0);
-    text[14] = dt.time.sec / 10 % 10;
-    text[15] = dt.time.sec % 10;
+    snprintf(text, sizeof text, "%04d-%02d-%02d%02d%02d%02d", dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min, dt.time.sec);
+    encode(text, text);
+    text[10] |= (dp_countdown > 0 ? 0x80 : 0x0);
+    text[11] |= (dp_countdown > 0 ? 0x80 : 0x0);
+    text[12] |= (dp_countdown > 0 ? 0x80 : 0x0);
+    text[13] |= (dp_countdown > 0 ? 0x80 : 0x0);
 
     for (uint8_t i = 1; i <= 8; i++) {
         // TODO: do differential updates
         if ((err = enqueue_command((uint8_t[]){i, text[i+8-1], i, text[i-1]}))) {
-            ulog(ERROR, "enqueue_command() failed (%d)", err)
+            ulog(ERROR, "enqueue_command() failed (%ld)", err)
         }
     }
 
     // set brightness
     if ((err = enqueue_command((uint8_t[]){0x0a, 0xff - (ldr[0] >> 4), 0x0a, 0xff - (ldr[0] >> 4)}))) {
-        ulog(ERROR, "enqueue_command() failed (%d)", err)
+        ulog(ERROR, "enqueue_command() failed (%ld)", err)
     }
 
     dp_countdown--;
@@ -114,9 +104,9 @@ int32_t display_init(void) {
             // set scan-limit register to all segments:
             enqueue_command((uint8_t[]){0x0b, 0x07, 0x0b, 0x07}) |
             // enable BCD decode mode:
-            enqueue_command((uint8_t[]){0x09, 0xff, 0x09, 0xff})))) {
+            enqueue_command((uint8_t[]){0x09, 0x00, 0x09, 0x00})))) {
 
-        ulog(ERROR, "enqueue_command() failed (%d)", err)
+        ulog(ERROR, "enqueue_command() failed (%ld)", err)
     }
 
     TIMER_0_display_task.interval = 50;     // 20Hz

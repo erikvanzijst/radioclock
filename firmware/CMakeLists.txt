@@ -71,4 +71,6 @@ add_executable(firmware
         src/utils.c
         src/ldr.c
         src/dht.c
+        src/font.c
+        tests/test.c
 )

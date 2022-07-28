@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "dcf_parser.h"
+#include "font.h"
 
 /**
  * 64-bit version of strtol (even when compiled for 32bit systems).
@@ -101,6 +102,13 @@ int main(int argc, char **argv) {
     char ts7[] = "01001100100010000100101001000000110011000101111100010001001";
     str_reverse(ts7);
     assert(DCF_ERR_PARITY_DATE == parse_dcf(strtol(ts7, NULL, 2), &dt));
+
+
+    // 7-segment font
+    char *str = "0123456789";
+    char buf[11];
+    encode(str, buf);
+    assert(0 == memcmp((char[]){126, 96, 109, 121, 51, 91, 95, 112, 127, 123, 0}, buf, strlen(str)));
 
     printf("All tests passed!\n");
     return 0;

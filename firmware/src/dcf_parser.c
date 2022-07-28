@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include "dcf_parser.h"
-#include "utils.h"
 
 #define BIT_VAL(bits, n) ((bits >> n) & 0x1)
 

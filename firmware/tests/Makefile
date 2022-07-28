@@ -4,6 +4,8 @@ OUTPUT_FILE_NAME := testrunner
 
 OBJS += \
 	dcf_parser.o \
+	font.o \
+	utils.o \
 	test.o
 
 default: all

@@ -97,6 +97,7 @@ src/dcf.o \
 src/dcf_parser.o \
 src/dht.o \
 src/display.o \
+src/font.o \
 src/ldr.o \
 src/utils.o \
 src/switch.o \
@@ -147,6 +148,7 @@ OBJS_AS_ARGS +=  \
 "src/dcf_parser.o" \
 "src/dht.o" \
 "src/display.o" \
+"src/font.o" \
 "src/ldr.o" \
 "src/utils.o" \
 "src/switch.o" \
@@ -227,6 +229,7 @@ DEPS_AS_ARGS +=  \
 "src/dcf_parser.d" \
 "src/display.d" \
 "src/dht.d" \
+"src/font.d" \
 "src/ldr.d" \
 "src/utils.d" \
 "src/switch.d" \
