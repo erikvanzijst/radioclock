@@ -200,10 +200,10 @@ drivers:
     functionality: System
     api: HAL:HPL:GCLK
     configuration:
-      $input: 32768
-      $input_id: 32kHz External Crystal Oscillator (XOSC32K)
-      RESERVED_InputFreq: 32768
-      RESERVED_InputFreq_id: 32kHz External Crystal Oscillator (XOSC32K)
+      $input: 400000
+      $input_id: External Crystal Oscillator 0.4-32MHz (XOSC)
+      RESERVED_InputFreq: 400000
+      RESERVED_InputFreq_id: External Crystal Oscillator 0.4-32MHz (XOSC)
       _$freq_output_Generic clock generator 0: 48000000
       _$freq_output_Generic clock generator 1: 2000
       _$freq_output_Generic clock generator 2: 32768
@@ -340,7 +340,7 @@ drivers:
       spi_master_baud_rate: 1000000
       spi_master_character_size: 8 bits
       spi_master_dummybyte: 511
-      spi_master_rx_enable: true
+      spi_master_rx_enable: false
     optional_signals: []
     variant:
       specification: TXPO=0, RXPO=3
@@ -370,11 +370,11 @@ drivers:
           slow_gclk_selection: Generic clock generator 0
   I2C_0:
     user_label: I2C_0
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM1::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Sync
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM1::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Async
     functionality: I2C
-    api: HAL:Driver:I2C_Master_Sync
+    api: HAL:Driver:I2C_Master_Async
     configuration:
-      i2c_master_advanced: true
+      i2c_master_advanced: false
       i2c_master_arch_dbgstop: Keep running
       i2c_master_arch_inactout: Disabled
       i2c_master_arch_lowtout: false
@@ -414,7 +414,7 @@ drivers:
     functionality: USART
     api: HAL:Driver:USART_Sync
     configuration:
-      usart_advanced: true
+      usart_advanced: false
       usart_arch_clock_mode: USART with internal clock
       usart_arch_cloden: false
       usart_arch_dbgstop: Keep running
@@ -616,7 +616,7 @@ drivers:
       dmac_dstinc_8: false
       dmac_dstinc_9: false
       dmac_enable: false
-      dmac_enable_0: true
+      dmac_enable_0: false
       dmac_enable_1: false
       dmac_enable_10: false
       dmac_enable_11: false
@@ -712,7 +712,7 @@ drivers:
       dmac_lvl_7: Channel priority 0
       dmac_lvl_8: Channel priority 0
       dmac_lvl_9: Channel priority 0
-      dmac_lvlen0: true
+      dmac_lvlen0: false
       dmac_lvlen1: false
       dmac_lvlen2: false
       dmac_lvlen3: false
@@ -772,7 +772,7 @@ drivers:
       dmac_stepsize_7: Next ADDR = ADDR + (BEATSIZE + 1) * 1
       dmac_stepsize_8: Next ADDR = ADDR + (BEATSIZE + 1) * 1
       dmac_stepsize_9: Next ADDR = ADDR + (BEATSIZE + 1) * 1
-      dmac_trifsrc_0: SERCOM0 TX Trigger
+      dmac_trifsrc_0: Only software/event triggers
       dmac_trifsrc_1: Only software/event triggers
       dmac_trifsrc_10: Only software/event triggers
       dmac_trifsrc_11: Only software/event triggers

@@ -22,7 +22,7 @@
 // <i> Enable receive buffer to receive data from slave (RXEN)
 // <id> spi_master_rx_enable
 #ifndef CONF_SERCOM_0_SPI_RXEN
-#define CONF_SERCOM_0_SPI_RXEN 0x1
+#define CONF_SERCOM_0_SPI_RXEN 0x0
 #endif
 
 // <o> Character Size
@@ -187,7 +187,7 @@
 // <e> Advanced
 // <id> i2c_master_advanced
 #ifndef CONF_SERCOM_1_I2CM_ADVANCED_CONFIG
-#define CONF_SERCOM_1_I2CM_ADVANCED_CONFIG 1
+#define CONF_SERCOM_1_I2CM_ADVANCED_CONFIG 0
 #endif
 
 // <o> TRise (ns) <0-300>
@@ -363,7 +363,7 @@
 // <e> Advanced configuration
 // <id> usart_advanced
 #ifndef CONF_SERCOM_3_USART_ADVANCED_CONFIG
-#define CONF_SERCOM_3_USART_ADVANCED_CONFIG 1
+#define CONF_SERCOM_3_USART_ADVANCED_CONFIG 0
 #endif
 
 // <q> Run in stand-by

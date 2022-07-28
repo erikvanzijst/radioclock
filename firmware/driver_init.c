@@ -33,7 +33,7 @@ static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
 
 struct spi_m_async_descriptor SPI_0;
 
-struct i2c_m_sync_desc I2C_0;
+struct i2c_m_async_desc I2C_0;
 
 struct usart_sync_descriptor USART_0;
 
@@ -178,7 +178,7 @@ void I2C_0_CLOCK_init(void)
 void I2C_0_init(void)
 {
 	I2C_0_CLOCK_init();
-	i2c_m_sync_init(&I2C_0, SERCOM1);
+	i2c_m_async_init(&I2C_0, SERCOM1);
 	I2C_0_PORT_init();
 }
 

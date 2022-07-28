@@ -28,7 +28,7 @@ add_executable(firmware
         hal/utils/src/utils_syscalls.c
         hal/utils/src/utils_event.c
         hal/src/hal_init.c
-        hal/src/hal_i2c_m_sync.c
+        hal/src/hal_i2c_m_async.c
         hal/src/hal_delay.c
         hal/src/hal_ext_irq.c
         hal/src/hal_adc_async.c
@@ -70,4 +70,5 @@ add_executable(firmware
         src/display.c
         src/utils.c
         src/ldr.c
+        src/dht.c
 )

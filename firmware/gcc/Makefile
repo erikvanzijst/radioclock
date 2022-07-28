@@ -61,8 +61,8 @@ stdio_redirect/gcc/write.o \
 hal/src/hal_init.o \
 hpl/eic/hpl_eic.o \
 hal/utils/src/utils_syscalls.o \
+stdio_redirect/gcc/read.o \
 hal/src/hal_timer.o \
-hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 hpl/sysctrl/hpl_sysctrl.o \
 hpl/core/hpl_init.o \
@@ -74,7 +74,7 @@ hpl/dmac/hpl_dmac.o \
 hal/src/hal_adc_async.o \
 hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
-stdio_redirect/gcc/read.o \
+hal/src/hal_i2c_m_async.o \
 hpl/sercom/hpl_sercom.o \
 hpl/gclk/hpl_gclk.o \
 stdio_start.o \
@@ -95,6 +95,7 @@ hal/src/hal_atomic.o \
 hpl/adc/hpl_adc.o \
 src/dcf.o \
 src/dcf_parser.o \
+src/dht.o \
 src/display.o \
 src/ldr.o \
 src/utils.o \
@@ -110,8 +111,8 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_init.o" \
 "hpl/eic/hpl_eic.o" \
 "hal/utils/src/utils_syscalls.o" \
+"stdio_redirect/gcc/read.o" \
 "hal/src/hal_timer.o" \
-"hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
 "hpl/core/hpl_init.o" \
@@ -123,7 +124,7 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_adc_async.o" \
 "hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
-"stdio_redirect/gcc/read.o" \
+"hal/src/hal_i2c_m_async.o" \
 "hpl/sercom/hpl_sercom.o" \
 "hpl/gclk/hpl_gclk.o" \
 "stdio_start.o" \
@@ -144,6 +145,7 @@ OBJS_AS_ARGS +=  \
 "hpl/adc/hpl_adc.o" \
 "src/dcf.o" \
 "src/dcf_parser.o" \
+"src/dht.o" \
 "src/display.o" \
 "src/ldr.o" \
 "src/utils.o" \
@@ -190,7 +192,6 @@ DEPS_AS_ARGS +=  \
 "hpl/eic/hpl_eic.d" \
 "hal/utils/src/utils_syscalls.d" \
 "stdio_redirect/gcc/write.d" \
-"hal/src/hal_i2c_m_sync.d" \
 "hal/src/hal_init.d" \
 "hal/src/hal_timer.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
@@ -207,6 +208,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_usart_sync.d" \
 "stdio_redirect/gcc/read.d" \
 "driver_init.d" \
+"hal/src/hal_i2c_m_async.d" \
 "main.d" \
 "examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \
@@ -224,6 +226,7 @@ DEPS_AS_ARGS +=  \
 "src/dcf.d" \
 "src/dcf_parser.d" \
 "src/display.d" \
+"src/dht.d" \
 "src/ldr.d" \
 "src/utils.d" \
 "src/switch.d" \

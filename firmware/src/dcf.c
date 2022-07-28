@@ -1,5 +1,4 @@
 #include "atmel_start.h"
-#include "atmel_start_pins.h"
 #include "hal_calendar.h"
 
 #include "dcf.h"
@@ -7,8 +6,8 @@
 #include "log.h"
 #include "millis.h"
 
-uint64_t dcf_bits = 0;
-uint64_t dcf_prev_posedge = 0;
+volatile uint64_t dcf_bits = 0;
+volatile uint64_t dcf_prev_posedge = 0;
 bool dcf_corrupt = true;
 void (*sync_callback)(struct calendar_date_time *cal_dt) = NULL;
 void (*fail_cb)(void) = NULL;

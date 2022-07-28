@@ -53,7 +53,6 @@ hal/src/hal_calendar.o \
 hal/src/hal_init.o \
 hpl/eic/hpl_eic.o \
 hal/src/hal_timer.o \
-hal/src/hal_i2c_m_sync.o \
 hal/src/hal_delay.o \
 hpl/sysctrl/hpl_sysctrl.o \
 hpl/core/hpl_init.o \
@@ -64,6 +63,7 @@ hpl/dmac/hpl_dmac.o \
 hal/src/hal_adc_async.o \
 hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
+hal/src/hal_i2c_m_async.o \
 stdio_redirect/keil/Retarget.o \
 hpl/sercom/hpl_sercom.o \
 hpl/gclk/hpl_gclk.o \
@@ -91,7 +91,6 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_init.o" \
 "hpl/eic/hpl_eic.o" \
 "hal/src/hal_timer.o" \
-"hal/src/hal_i2c_m_sync.o" \
 "hal/src/hal_delay.o" \
 "hpl/sysctrl/hpl_sysctrl.o" \
 "hpl/core/hpl_init.o" \
@@ -102,6 +101,7 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_adc_async.o" \
 "hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
+"hal/src/hal_i2c_m_async.o" \
 "stdio_redirect/keil/Retarget.o" \
 "hpl/sercom/hpl_sercom.o" \
 "hpl/gclk/hpl_gclk.o" \
@@ -131,7 +131,6 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_io.d" \
 "hpl/systick/hpl_systick.d" \
 "hpl/eic/hpl_eic.d" \
-"hal/src/hal_i2c_m_sync.d" \
 "hal/src/hal_init.d" \
 "hal/src/hal_timer.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
@@ -148,6 +147,7 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_usart_sync.d" \
 "stdio_redirect/keil/Retarget.d" \
 "driver_init.d" \
+"hal/src/hal_i2c_m_async.d" \
 "main.d" \
 "examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \
