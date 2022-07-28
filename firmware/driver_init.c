@@ -26,11 +26,12 @@
 
 struct adc_async_descriptor         ADC_0;
 struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
-struct spi_m_sync_descriptor        SPI_0;
 struct timer_descriptor             TIMER_0;
 
 static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
 static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
+
+struct spi_m_async_descriptor SPI_0;
 
 struct i2c_m_sync_desc I2C_0;
 
@@ -139,7 +140,7 @@ void SPI_0_CLOCK_init(void)
 void SPI_0_init(void)
 {
 	SPI_0_CLOCK_init();
-	spi_m_sync_init(&SPI_0, SERCOM0);
+	spi_m_async_init(&SPI_0, SERCOM0);
 	SPI_0_PORT_init();
 }
 

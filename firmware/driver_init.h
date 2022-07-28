@@ -24,7 +24,7 @@ extern "C" {
 #include <hal_adc_async.h>
 #include <hal_ext_irq.h>
 
-#include <hal_spi_m_sync.h>
+#include <hal_spi_m_async.h>
 
 #include <hal_i2c_m_sync.h>
 
@@ -36,8 +36,9 @@ extern "C" {
 #include <hal_timer.h>
 #include <hpl_tc_base.h>
 
-extern struct adc_async_descriptor  ADC_0;
-extern struct spi_m_sync_descriptor SPI_0;
+extern struct adc_async_descriptor ADC_0;
+
+extern struct spi_m_async_descriptor SPI_0;
 
 extern struct i2c_m_sync_desc I2C_0;
 

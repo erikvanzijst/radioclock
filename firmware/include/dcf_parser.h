@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 enum DCF_ERR {
+    DCF_ERR_NONE = 0,
     DCF_ERR_START = -1,
     DCF_ERR_START_OF_TIME = -2,
     DCF_ERR_PARITY_MINUTES = -3,

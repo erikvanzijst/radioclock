@@ -25,7 +25,11 @@ void dcf_sync(struct calendar_date_time *cal_dt) {
     // TODO: do from main loop?
     if (gpio_get_pin_level(PERIPHERAL_CTL)) {
         gpio_set_pin_level(PERIPHERAL_CTL, false);  // turn on power to displays and DHT20 module
-        display_init();
+
+        int32_t err;
+        if ((err = display_init())) {
+            ulog(ERROR, "display_init() failed (%d)", err)
+        }
     }
 }
 

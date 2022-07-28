@@ -37,7 +37,7 @@
 // <i> The SPI data transfer rate
 // <id> spi_master_baud_rate
 #ifndef CONF_SERCOM_0_SPI_BAUD
-#define CONF_SERCOM_0_SPI_BAUD 50000
+#define CONF_SERCOM_0_SPI_BAUD 1000000
 #endif
 
 // </h>
@@ -363,7 +363,7 @@
 // <e> Advanced configuration
 // <id> usart_advanced
 #ifndef CONF_SERCOM_3_USART_ADVANCED_CONFIG
-#define CONF_SERCOM_3_USART_ADVANCED_CONFIG 0
+#define CONF_SERCOM_3_USART_ADVANCED_CONFIG 1
 #endif
 
 // <q> Run in stand-by

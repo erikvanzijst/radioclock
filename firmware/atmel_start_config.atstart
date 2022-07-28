@@ -326,9 +326,9 @@ drivers:
         configuration: {}
   SPI_0:
     user_label: SPI_0
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM0::driver_config_definition::SPI.Master::HAL:Driver:SPI.Master.Sync
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::SERCOM0::driver_config_definition::SPI.Master::HAL:Driver:SPI.Master.Async
     functionality: SPI
-    api: HAL:Driver:SPI_Master_Sync
+    api: HAL:Driver:SPI_Master_Async
     configuration:
       spi_master_advanced: false
       spi_master_arch_cpha: Sample input on leading edge
@@ -337,7 +337,7 @@ drivers:
       spi_master_arch_dord: MSB first
       spi_master_arch_ibon: In data stream
       spi_master_arch_runstdby: false
-      spi_master_baud_rate: 50000
+      spi_master_baud_rate: 1000000
       spi_master_character_size: 8 bits
       spi_master_dummybyte: 511
       spi_master_rx_enable: true
@@ -414,7 +414,7 @@ drivers:
     functionality: USART
     api: HAL:Driver:USART_Sync
     configuration:
-      usart_advanced: false
+      usart_advanced: true
       usart_arch_clock_mode: USART with internal clock
       usart_arch_cloden: false
       usart_arch_dbgstop: Keep running
@@ -582,7 +582,7 @@ drivers:
         the transaction
       dmac_blockact_9: Channel will be disabled if it is the last block transfer in
         the transaction
-      dmac_channel_0_settings: false
+      dmac_channel_0_settings: true
       dmac_channel_10_settings: false
       dmac_channel_11_settings: false
       dmac_channel_12_settings: false
@@ -616,7 +616,7 @@ drivers:
       dmac_dstinc_8: false
       dmac_dstinc_9: false
       dmac_enable: false
-      dmac_enable_0: false
+      dmac_enable_0: true
       dmac_enable_1: false
       dmac_enable_10: false
       dmac_enable_11: false
@@ -712,7 +712,7 @@ drivers:
       dmac_lvl_7: Channel priority 0
       dmac_lvl_8: Channel priority 0
       dmac_lvl_9: Channel priority 0
-      dmac_lvlen0: false
+      dmac_lvlen0: true
       dmac_lvlen1: false
       dmac_lvlen2: false
       dmac_lvlen3: false
@@ -772,7 +772,7 @@ drivers:
       dmac_stepsize_7: Next ADDR = ADDR + (BEATSIZE + 1) * 1
       dmac_stepsize_8: Next ADDR = ADDR + (BEATSIZE + 1) * 1
       dmac_stepsize_9: Next ADDR = ADDR + (BEATSIZE + 1) * 1
-      dmac_trifsrc_0: Only software/event triggers
+      dmac_trifsrc_0: SERCOM0 TX Trigger
       dmac_trifsrc_1: Only software/event triggers
       dmac_trifsrc_10: Only software/event triggers
       dmac_trifsrc_11: Only software/event triggers

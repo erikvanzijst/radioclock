@@ -35,7 +35,7 @@ add_executable(firmware
         hal/src/hal_gpio.c
         hal/src/hal_io.c
         hal/src/hal_usart_sync.c
-        hal/src/hal_spi_m_sync.c
+        hal/src/hal_spi_m_async.c
         hal/src/hal_sleep.c
         hal/src/hal_calendar.c
         hal/src/hal_atomic.c
