@@ -33,6 +33,7 @@ const char font[] = {
     0,
     0,
     0,
+    0,      // space
     0,
     0,
     0,
@@ -42,8 +43,7 @@ const char font[] = {
     0,
     0,
     0,
-    0,
-    0,
+    0x63,   // * used as Celsius degree
     0,
     0,
     0x01,   // -

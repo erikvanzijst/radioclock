@@ -65,13 +65,5 @@ int main(void)
         }
     }
 
-    for (;;) {
-        delay_ms(1000);
-
-        int32_t temp = get_temperature();
-        ulog(INFO, "Temperature: %ld.%ldC Humidity: %ld%%", temp / 10, temp % 10, get_humidity())
-//        ulog(INFO, "LDR: %d\r\n", ldr[0]);
-
-        //        gpio_toggle_pin_level(LED);
-    }
+    for (;;);
 }

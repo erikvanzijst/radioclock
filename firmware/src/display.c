@@ -4,6 +4,7 @@
 #include "ldr.h"
 #include "log.h"
 #include "font.h"
+#include "dht.h"
 
 struct io_descriptor *spi_io;
 static struct timer_task TIMER_0_display_task;
@@ -67,8 +68,17 @@ void update_display(const struct timer_task *const timer_task) {
         dp_countdown = (int8_t)((1000 / timer_task->interval) / 2);
     }
 
-    snprintf(text, sizeof text, "%04d-%02d-%02d%02d%02d%02d", dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min, dt.time.sec);
-    encode(text, text);
+    if ((dt.time.sec / 3) % 2) {
+        snprintf(text, sizeof text, "%04d-%02d-%02d%02d%02d%02d",
+                 dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min, dt.time.sec);
+        encode(text, text);
+    } else {
+        const int32_t temp = get_temperature();
+        snprintf(text, sizeof text, "%2d%d* %2dPct%02d%02d%02d",
+                 temp / 10, temp % 10, get_humidity(), dt.time.hour, dt.time.min, dt.time.sec);
+        encode(text, text);
+        text[1] |= 0x80;    // temp decimal point
+    }
     text[10] |= (dp_countdown > 0 ? 0x80 : 0x0);
     text[11] |= (dp_countdown > 0 ? 0x80 : 0x0);
     text[12] |= (dp_countdown > 0 ? 0x80 : 0x0);
