@@ -37,7 +37,10 @@ static void init_sync(struct calendar_descriptor *const descr) {
 void button(void) {
     bool val = gpio_get_pin_level(SWITCH);
     ulog(INFO, "Switch %s", val ? "released" : "pressed")
-    if (val) do_sync = true;
+    if (val) {
+        last_dcf_sync = 0;
+        do_sync = true;
+    }
 }
 
 int main(void) {
@@ -48,19 +51,25 @@ int main(void) {
             // start a few seconds early, so we don't have to wait for the start of the minute
             .cal_alarm.datetime.time.hour = 1,
             .cal_alarm.datetime.time.min = 59,
-            .cal_alarm.datetime.time.sec = 56,
+            .cal_alarm.datetime.time.sec = 55,
+    };
+    static struct calendar_alarm alarm_3am = {
+            .cal_alarm.mode = REPEAT,
+            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
+            .cal_alarm.datetime.time.hour = 2,
+            .cal_alarm.datetime.time.min = 59,
+            .cal_alarm.datetime.time.sec = 55,
     };
     static struct calendar_alarm alarm_4am = {
             .cal_alarm.mode = REPEAT,
             .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
             .cal_alarm.datetime.time.hour = 3,
             .cal_alarm.datetime.time.min = 59,
-            .cal_alarm.datetime.time.sec = 56,
+            .cal_alarm.datetime.time.sec = 55,
     };
 
     atmel_start_init();
     gpio_set_pin_level(LED, false);
-    gpio_set_pin_level(DCF_CTL, false);         // turn on power to DCF module
     gpio_set_pin_level(PERIPHERAL_CTL, true);   // turn off power to displays and DHT20 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
@@ -82,10 +91,12 @@ int main(void) {
 
     ulog(INFO, "Time not set; starting sync...")
     while (!last_dcf_sync);
+    dcf_deinit();   // power down the DCF module; too much EMI from the display
 
     power_up_peripherals();
 
     calendar_set_alarm(&CALENDAR_0, &alarm_2am, init_sync);
+    calendar_set_alarm(&CALENDAR_0, &alarm_3am, init_sync);
     calendar_set_alarm(&CALENDAR_0, &alarm_4am, init_sync);
 
     for (;;) {
@@ -94,10 +105,12 @@ int main(void) {
             uint64_t now = millis();
             power_down_peripherals();
 
+            dcf_init(dcf_sync);
             while (time_is_stale() && millis() - now < MAX_SYNC_MILLIS);
             if (time_is_stale()) {
                 ulog(WARN, "Time sync failed (tried for %u sec)", MAX_SYNC_MILLIS / 1000)
             }
+            dcf_deinit();   // power down the DCF module; too much EMI from the display
 
             power_up_peripherals();
             do_sync = false;

@@ -23,7 +23,8 @@ struct calendar_date_time * dt_to_calendar(struct date_time_t *dt, struct calend
     return cal_dt;
 }
 
-void dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
+int32_t dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
+    gpio_set_pin_level(DCF_CTL, false);         // turn on power to DCF module
     sync_callback = sync_cb;
 
     // trigger fast DCF fast sync:
@@ -32,7 +33,21 @@ void dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
     gpio_set_pin_level(DCF_PDN, false);
 
     // Register interrupt handler on DCF_DATA pin
-    ext_irq_register(PIN_PA06, dcf_data_isr);
+    if (ext_irq_register(PIN_PA06, dcf_data_isr)) {
+        ulog(ERROR, "ext_irq_register() failed")
+        return -1;
+    }
+    return ERR_NONE;
+}
+
+int32_t dcf_deinit(void) {
+    gpio_set_pin_level(DCF_CTL, true);         // turn off power to DCF module
+    gpio_set_pin_level(LED, false);
+    if (ext_irq_register(PIN_PA06, NULL)) {
+        ulog(ERROR, "ext_irq_register() failed")
+        return -1;
+    }
+    return ERR_NONE;
 }
 
 void dcf_data_isr(void) {
