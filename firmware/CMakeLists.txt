@@ -73,4 +73,5 @@ add_executable(firmware
         src/dht.c
         src/font.c
         tests/test.c
+        src/peripherals.c
 )

@@ -70,6 +70,7 @@ int32_t dht_init(void) {
     i2c_m_async_set_slaveaddr(&I2C_0, 0x38, I2C_M_SEVEN);
 
     // DHT20 initialization
+    delay_ms(100);  // Wait for DHT20 module to initialize
     io_write(I2C_0_io, (uint8_t*)((uint8_t []){0xba}), 1);  // soft reset command
     delay_ms(20);  // wait for the sensor reset
 
@@ -86,6 +87,26 @@ int32_t dht_init(void) {
 
     if (timer_add_task(&TIMER_0, &TIMER_0_trigger_task) ||
         timer_add_task(&TIMER_0, &TIMER_0_read_task)) {
+        return -1;
+    }
+    return ERR_NONE;
+}
+
+int32_t dht_deinit(void) {
+    if (i2c_m_async_register_callback(&I2C_0, I2C_M_ASYNC_TX_COMPLETE, (FUNC_PTR)NULL) ||
+        i2c_m_async_register_callback(&I2C_0, I2C_M_ASYNC_RX_COMPLETE, (FUNC_PTR)NULL)) {
+        ulog(ERROR, "i2c_m_async_register_callback() failed")
+        return -1;
+    }
+
+    if (timer_remove_task(&TIMER_0, &TIMER_0_read_task) ||
+        timer_remove_task(&TIMER_0, &TIMER_0_trigger_task)) {
+        ulog(ERROR, "timer_remove_task() failed")
+        return -1;
+    }
+
+    if (i2c_m_async_disable(&I2C_0)) {
+        ulog(ERROR, "i2c_m_async_disable() failed")
         return -1;
     }
     return ERR_NONE;

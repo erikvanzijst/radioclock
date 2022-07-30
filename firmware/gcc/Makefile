@@ -99,8 +99,9 @@ src/dht.o \
 src/display.o \
 src/font.o \
 src/ldr.o \
-src/utils.o \
+src/peripherals.o \
 src/switch.o \
+src/utils.o \
 src/millis.o
 
 OBJS_AS_ARGS +=  \
@@ -150,8 +151,9 @@ OBJS_AS_ARGS +=  \
 "src/display.o" \
 "src/font.o" \
 "src/ldr.o" \
-"src/utils.o" \
+"src/peripherals.o" \
 "src/switch.o" \
+"src/utils.o" \
 "src/millis.o"
 
 # List the directories containing header files
@@ -231,8 +233,9 @@ DEPS_AS_ARGS +=  \
 "src/dht.d" \
 "src/font.d" \
 "src/ldr.d" \
-"src/utils.d" \
+"src/peripherals.d" \
 "src/switch.d" \
+"src/utils.d" \
 "src/millis.d"
 
 OUTPUT_FILE_NAME :=radioclock

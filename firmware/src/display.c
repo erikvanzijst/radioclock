@@ -127,5 +127,11 @@ int32_t display_init(void) {
 }
 
 int32_t display_deinit(void) {
-    return timer_remove_task(&TIMER_0, &TIMER_0_display_task);
+    if (timer_remove_task(&TIMER_0, &TIMER_0_display_task)) {
+        ulog(ERROR, "timer_remove_task() failed")
+        return -1;
+    }
+    spi_m_async_register_callback(&SPI_0, SPI_M_ASYNC_CB_XFER, (FUNC_PTR)NULL);
+    spi_m_async_disable(&SPI_0);
+    return ERR_NONE;
 }

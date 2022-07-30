@@ -5,6 +5,8 @@
 
 int32_t dht_init(void);
 
+int32_t dht_deinit(void);
+
 /**
  * Temperature is returned in Celsius times 10.
  * To get the temperature, divide by 10. Do modulo 10 for one decimal.
