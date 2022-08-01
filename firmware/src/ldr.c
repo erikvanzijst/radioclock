@@ -6,10 +6,20 @@
 volatile uint8_t ldr[1];
 static struct timer_task TIMER_0_adc_task;
 
+/**
+ * Maps and scales the raw, non-rail-to-rail ADC result to the the full 0-255
+ * range of a uint8_t.
+ */
 static void adc_conversion_complete(const struct adc_async_descriptor *const descr, const uint8_t channel) {
-    if (adc_async_read_channel(&ADC_0, 0, ldr, 1) != 1) {
+    uint8_t tmp1;
+    int32_t tmp2;
+    uint8_t tmp3;
+    if (adc_async_read_channel(&ADC_0, 0, &tmp1, 1) != 1) {
         ulog(ERROR, "adc_async_read_channel() failed")
     }
+    tmp2 = tmp1 - min(tmp1, 8);
+    tmp3 = min((int32_t)(((float)tmp2) * 1.1), 0xff);
+    ldr[0] = min(tmp3, 0xff);
 }
 
 static void start_conversion(const struct timer_task *const timer_task) {
@@ -26,7 +36,7 @@ int32_t ldr_init() {
         return -1;
     }
 
-    TIMER_0_adc_task.interval = 100;
+    TIMER_0_adc_task.interval = 50;
     TIMER_0_adc_task.cb       = start_conversion;
     TIMER_0_adc_task.mode     = TIMER_TASK_REPEAT;
 

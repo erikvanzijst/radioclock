@@ -60,7 +60,7 @@ drivers:
       adc_freerunning_mode: false
       adc_pinmux_negative: I/O ground
       adc_pinmux_positive: ADC AIN0 pin
-      adc_prescaler: Peripheral clock divided by 4
+      adc_prescaler: Peripheral clock divided by 512
       adc_reference: 1/1.48 VDDANA
       adc_resolution: 8-bit
     optional_signals:
