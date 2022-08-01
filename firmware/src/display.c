@@ -69,8 +69,8 @@ void update_display(const struct timer_task *const timer_task) {
     }
 
     if ((dt.time.sec / 3) % 2) {
-        snprintf(text, sizeof text, "%04d-%02d-%02d%02d%02d%02d",
-                 dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min, dt.time.sec);
+        snprintf(text, sizeof text, "%02d-%02d-%04d%02d%02d%02d",
+                 dt.date.day, dt.date.month, dt.date.year, dt.time.hour, dt.time.min, dt.time.sec);
         encode(text, text);
     } else {
         const int32_t temp = get_temperature();
