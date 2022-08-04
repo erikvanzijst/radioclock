@@ -289,7 +289,7 @@
 // <i> Indicates whether the external interrupt 6 wake-up is enabled or not
 // <id> eic_arch_wakeupen6
 #ifndef CONF_EIC_WAKEUPEN6
-#define CONF_EIC_WAKEUPEN6 0
+#define CONF_EIC_WAKEUPEN6 1
 #endif
 
 // <q> External Interrupt 6 Filter Enable
@@ -658,7 +658,7 @@
 // <i> Indicates whether the external interrupt 15 wake-up is enabled or not
 // <id> eic_arch_wakeupen15
 #ifndef CONF_EIC_WAKEUPEN15
-#define CONF_EIC_WAKEUPEN15 0
+#define CONF_EIC_WAKEUPEN15 1
 #endif
 
 // <q> External Interrupt 15 Filter Enable

@@ -35,6 +35,8 @@ extern "C" {
 #include <hal_calendar.h>
 #include <hal_timer.h>
 #include <hpl_tc_base.h>
+#include <hal_timer.h>
+#include <hpl_tc_base.h>
 
 extern struct adc_async_descriptor ADC_0;
 
@@ -46,6 +48,7 @@ extern struct usart_sync_descriptor USART_0;
 
 extern struct calendar_descriptor CALENDAR_0;
 extern struct timer_descriptor    TIMER_0;
+extern struct timer_descriptor    TIMER_1;
 
 void ADC_0_init(void);
 

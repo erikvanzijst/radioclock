@@ -160,12 +160,12 @@ drivers:
       eic_arch_wakeupen12: false
       eic_arch_wakeupen13: false
       eic_arch_wakeupen14: false
-      eic_arch_wakeupen15: false
+      eic_arch_wakeupen15: true
       eic_arch_wakeupen2: false
       eic_arch_wakeupen3: false
       eic_arch_wakeupen4: false
       eic_arch_wakeupen5: false
-      eic_arch_wakeupen6: false
+      eic_arch_wakeupen6: true
       eic_arch_wakeupen7: false
       eic_arch_wakeupen8: false
       eic_arch_wakeupen9: false
@@ -189,11 +189,11 @@ drivers:
       domain_group:
         nodes:
         - name: EIC
-          input: Generic clock generator 0
+          input: Generic clock generator 3
           external: false
           external_frequency: 0
         configuration:
-          eic_gclk_selection: Generic clock generator 0
+          eic_gclk_selection: Generic clock generator 3
   GCLK:
     user_label: GCLK
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::GCLK::driver_config_definition::GCLK::HAL:HPL:GCLK
@@ -276,7 +276,7 @@ drivers:
       gclk_gen_1_oscillator: Digital Frequency Locked Loop (DFLL48M)
       gclk_gen_2_div: 1
       gclk_gen_2_div_sel: false
-      gclk_gen_2_oscillator: 32kHz Ultra Low Power Internal Oscillator (OSCULP32K)
+      gclk_gen_2_oscillator: 32kHz External Crystal Oscillator (XOSC32K)
       gclk_gen_3_div: 32
       gclk_gen_3_div_sel: false
       gclk_gen_3_oscillator: 32kHz External Crystal Oscillator (XOSC32K)
@@ -528,6 +528,36 @@ drivers:
           external_frequency: 0
         configuration:
           tc_gclk_selection: Generic clock generator 1
+  TIMER_1:
+    user_label: TIMER_1
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::TC4::driver_config_definition::Timer::HAL:Driver:Timer
+    functionality: Timer
+    api: HAL:Driver:Timer
+    configuration:
+      tc_arch_dbgrun: false
+      tc_arch_evact: Event action disabled
+      tc_arch_mceo0: false
+      tc_arch_mceo1: false
+      tc_arch_ovfeo: false
+      tc_arch_presync: Reload or reset counter on next GCLK
+      tc_arch_runstdby: true
+      tc_arch_tcei: false
+      tc_arch_tceinv: false
+      timer_advanced_configuration: true
+      timer_event_control: false
+      timer_prescaler: No division
+      timer_tick: 10000000
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC
+          input: Generic clock generator 3
+          external: false
+          external_frequency: 0
+        configuration:
+          tc_gclk_selection: Generic clock generator 3
   DMAC:
     user_label: DMAC
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::DMAC::driver_config_definition::DMAC::HAL:HPL:DMAC
@@ -844,7 +874,7 @@ drivers:
       enable_fdpll96m: false
       enable_osc32k: false
       enable_osc8m: false
-      enable_osculp32k: true
+      enable_osculp32k: false
       enable_xosc: false
       enable_xosc32k: true
       fdpll96m_arch_enable: false
@@ -997,18 +1027,6 @@ pads:
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA23
     mode: Peripheral IO
     user_label: PA23
-    configuration: null
-  USB_N:
-    name: PA24
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA24
-    mode: Peripheral IO
-    user_label: USB_N
-    configuration: null
-  USB_P:
-    name: PA25
-    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA25
-    mode: Peripheral IO
-    user_label: USB_P
     configuration: null
   LDR_SINK:
     name: PA27

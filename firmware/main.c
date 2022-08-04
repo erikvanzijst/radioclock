@@ -71,9 +71,11 @@ int main(void) {
     atmel_start_init();
     gpio_set_pin_level(LED, false);
     gpio_set_pin_level(PERIPHERAL_CTL, true);   // turn off power to displays and DHT20 module
+    gpio_set_pin_level(DCF_CTL, true);          // turn off power to DCF77 module
     gpio_set_pin_level(LDR_SINK, false);        // enable LDR
 
     if (timer_start(&TIMER_0)) ulog(ERROR, "Failed to start TIMER_0!")
+    if (timer_start(&TIMER_1)) ulog(ERROR, "Failed to start TIMER_1!")
 
     usart_sync_get_io_descriptor(&USART_0, &uart_io);
     usart_sync_enable(&USART_0);

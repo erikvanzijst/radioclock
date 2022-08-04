@@ -377,7 +377,7 @@
 // <i> Indicates whether configuration for OSCULP32K is enabled or not
 // <id> enable_osculp32k
 #ifndef CONF_OSCULP32K_CONFIG
-#define CONF_OSCULP32K_CONFIG 1
+#define CONF_OSCULP32K_CONFIG 0
 #endif
 
 // <h> 32kHz Ultra Low Power Internal Oscillator (OSCULP32K) Control

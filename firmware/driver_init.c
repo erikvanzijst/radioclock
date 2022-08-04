@@ -27,6 +27,7 @@
 struct adc_async_descriptor         ADC_0;
 struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
 struct timer_descriptor             TIMER_0;
+struct timer_descriptor             TIMER_1;
 
 static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
 static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
@@ -233,6 +234,19 @@ static void TIMER_0_init(void)
 	timer_init(&TIMER_0, TC3, _tc_get_timer());
 }
 
+/**
+ * \brief Timer initialization function
+ *
+ * Enables Timer peripheral, clocks and initializes Timer driver
+ */
+static void TIMER_1_init(void)
+{
+	_pm_enable_bus_clock(PM_BUS_APBC, TC4);
+	_gclk_enable_channel(TC4_GCLK_ID, CONF_GCLK_TC4_SRC);
+
+	timer_init(&TIMER_1, TC4, _tc_get_timer());
+}
+
 void system_init(void)
 {
 	init_mcu();
@@ -329,14 +343,6 @@ void system_init(void)
 
 	gpio_set_pin_function(LED, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PA24
-
-	gpio_set_pin_function(USB_N, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA25
-
-	gpio_set_pin_function(USB_P, GPIO_PIN_FUNCTION_OFF);
-
 	// GPIO on PA27
 
 	gpio_set_pin_level(LDR_SINK,
@@ -365,4 +371,5 @@ void system_init(void)
 	CALENDAR_0_init();
 
 	TIMER_0_init();
+	TIMER_1_init();
 }
