@@ -4,13 +4,23 @@
 #include "dcf.h"
 #include "dcf_parser.h"
 #include "log.h"
-#include "millis.h"
 
-volatile uint64_t dcf_bits = 0;
-volatile uint64_t dcf_prev_posedge = 0;
-bool dcf_corrupt = true;
-void (*sync_callback)(struct calendar_date_time *cal_dt) = NULL;
-void (*fail_cb)(void) = NULL;
+struct sync_state_t {
+    volatile uint64_t dcf_bits;
+    volatile uint32_t dcf_prev_posedge;
+    volatile bool prev_edge;
+    bool dcf_corrupt;
+};
+
+enum dcf_isr_result_t {
+    BUSY,
+    SYNCED
+};
+
+void dcf_data_isr(void) {
+//    bool edge = gpio_get_pin_level(DCF_DATA);
+//    gpio_set_pin_level(LED, edge);
+}
 
 struct calendar_date_time * dt_to_calendar(struct date_time_t *dt, struct calendar_date_time *cal_dt) {
     cal_dt->time.sec = dt->sec;
@@ -23,9 +33,8 @@ struct calendar_date_time * dt_to_calendar(struct date_time_t *dt, struct calend
     return cal_dt;
 }
 
-int32_t dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
+int32_t dcf_init() {
     gpio_set_pin_level(DCF_CTL, false);         // turn on power to DCF module
-    sync_callback = sync_cb;
 
     // trigger fast DCF fast sync:
     gpio_set_pin_level(DCF_PDN, true);
@@ -33,8 +42,9 @@ int32_t dcf_init(void (* sync_cb)(struct calendar_date_time *cal_dt)) {
     gpio_set_pin_level(DCF_PDN, false);
 
     // Register interrupt handler on DCF_DATA pin
-    if (ext_irq_register(PIN_PA06, dcf_data_isr)) {
-        ulog(ERROR, "ext_irq_register() failed")
+    int32_t err;
+    if ((err = ext_irq_register(PIN_PA06, dcf_data_isr))) {
+        ulog(ERROR, "ext_irq_register() failed (%ld)", (unsigned long)err)
         return -1;
     }
     return ERR_NONE;
@@ -50,21 +60,33 @@ int32_t dcf_deinit(void) {
     return ERR_NONE;
 }
 
-void dcf_data_isr(void) {
-    bool edge = gpio_get_pin_level(DCF_DATA);
-    uint64_t now = millis();
-    uint64_t duration = now - dcf_prev_posedge;
+uint32_t dcf_millis() {
+    return hri_tccount32_get_COUNT_COUNT_bf(TC4, TC_COUNT32_COUNT_MASK);
+}
 
+void dcf_millis_reset() {
+    hri_tccount32_clear_COUNT_COUNT_bf(TC4, TC_COUNT32_COUNT_MASK);
+}
+
+enum dcf_isr_result_t process_data(struct sync_state_t *state) {
+    bool edge = gpio_get_pin_level(DCF_DATA);
+    if (edge == state->prev_edge) {
+        ulog(WARN, "Spurious wakeup")
+        return BUSY;
+    }
+
+    uint32_t now = dcf_millis();
+    uint32_t duration = now - state->dcf_prev_posedge;
     if (edge) { // positive edge
         if (duration > 900 && duration < 1100) {
             // end of second and start of new second
         } else if (duration > 1900 && duration < 2100) {
             // minute mark, capture complete
-            if (!dcf_corrupt) {
+            if (!state->dcf_corrupt) {
                 struct calendar_date_time cal_dt;
                 struct date_time_t dt;
 
-                switch (parse_dcf(dcf_bits, &dt)) {
+                switch (parse_dcf(state->dcf_bits, &dt)) {
                     case 0:
                         dt_to_calendar(&dt, &cal_dt);   // convert to hal format
 
@@ -73,8 +95,7 @@ void dcf_data_isr(void) {
                         calendar_set_date(&CALENDAR_0, &cal_dt.date);
 
                         // notify listeners:
-                        if (sync_callback) sync_callback(&cal_dt);
-                        break;
+                        return SYNCED;
                     case DCF_ERR_START:
                         ulog(WARN, "DCF invalid start-of-minute mark")
                         break;
@@ -95,30 +116,48 @@ void dcf_data_isr(void) {
             } else {
                 ulog(WARN, "DCF: capture corrupt")
             }
-            dcf_corrupt = false;
-            dcf_bits = 0;
+            state->dcf_corrupt = false;
+            state->dcf_bits = 0;
 
         } else {
             ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
-            dcf_corrupt = true;
+            state->dcf_corrupt = true;
         }
-        dcf_prev_posedge = now;
+        state->dcf_prev_posedge = now;
 
     } else {    // negative edge
         uint64_t bit = 0;
         if (duration > 60 && duration < 140) {          // logic 0
-            ulog(INFO, "DCF: 0");
+//            ulog(INFO, "DCF: 0");
             bit = 0;
         } else if (duration > 160 && duration < 240) {  // logic 1
-            ulog(INFO, "DCF: 1");
+//            ulog(INFO, "DCF: 1");
             bit = 0x400000000000000;                    // bit 58 set to 1
         } else {
             ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
-            dcf_corrupt = true;
+            state->dcf_corrupt = true;
         }
-        dcf_bits >>= 1;
-        dcf_bits |= bit;
+        state->dcf_bits >>= 1;
+        state->dcf_bits |= bit;
     }
 
     gpio_set_pin_level(LED, edge);
+    state->prev_edge = edge;
+
+    return BUSY;
+}
+
+enum dcf_error_t dcf_sync(int32_t max_millis) {
+    struct sync_state_t sync_state = {.dcf_bits = 0, .dcf_prev_posedge = 0, .dcf_corrupt = true, .prev_edge = false};
+
+    dcf_init();
+    dcf_millis_reset();
+
+    bool timeout;
+    while (process_data(&sync_state) != SYNCED && !(timeout = dcf_millis() > max_millis)) {
+        sleep(3);
+    }
+
+    dcf_deinit();
+    return timeout ? TIMEOUT : SUCCESSFUL;
 }

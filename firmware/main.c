@@ -23,11 +23,6 @@ bool time_is_stale() {
     return !last_dcf_sync || millis() - last_dcf_sync > STALE_TIMEOUT_MS;
 }
 
-void dcf_sync(struct calendar_date_time *cal_dt) {
-    ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", cal_dt->date.year, cal_dt->date.month, cal_dt->date.day, cal_dt->time.hour, cal_dt->time.min)
-    last_dcf_sync = millis();
-}
-
 static void init_sync(struct calendar_descriptor *const descr) {
     if (time_is_stale()) {
         do_sync = true;
@@ -82,7 +77,6 @@ int main(void) {
 
     millis_init();
     calendar_enable(&CALENDAR_0);
-    dcf_init(dcf_sync);
     ldr_init();
     ext_irq_register(PIN_PA15, button);
 
@@ -92,8 +86,8 @@ int main(void) {
     ulog(INFO, "Erik van Zijst <erik.van.zijst@gmail.com>\r\n")
 
     ulog(INFO, "Time not set; starting sync...")
-    while (!last_dcf_sync);
-    dcf_deinit();   // power down the DCF module; too much EMI from the display
+
+    dcf_sync(0x7FFFFFFF);
 
     power_up_peripherals();
 
@@ -104,15 +98,19 @@ int main(void) {
     for (;;) {
         if (do_sync) {
             ulog(INFO, "Starting time sync...")
-            uint64_t now = millis();
             power_down_peripherals();
 
-            dcf_init(dcf_sync);
-            while (time_is_stale() && millis() - now < MAX_SYNC_MILLIS);
-            if (time_is_stale()) {
-                ulog(WARN, "Time sync failed (tried for %u sec)", MAX_SYNC_MILLIS / 1000)
+            struct calendar_date_time dt;
+            switch (dcf_sync(MAX_SYNC_MILLIS)) {
+                case SUCCESSFUL:
+                    last_dcf_sync = millis();
+                    calendar_get_date_time(&CALENDAR_0, &dt);
+                    ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min)
+                    break;
+                case TIMEOUT:
+                    ulog(WARN, "Time sync failed (tried for %u sec)", MAX_SYNC_MILLIS / 1000)
+                    break;
             }
-            dcf_deinit();   // power down the DCF module; too much EMI from the display
 
             power_up_peripherals();
             do_sync = false;
