@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -u
 #
 # Connects to the radioclock PCB over USB-serial UART and reads the output of the PCB's DCF_DATA
 # line as output by the firmware as a 0 or 1 per line. Then decodes the time signal.

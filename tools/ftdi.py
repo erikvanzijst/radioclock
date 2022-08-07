@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -u
 
 import argparse
 import sys
@@ -15,10 +15,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     dev = args.port
-    logfile = None if args.nolog else open('uart.log', 'a')
+    logfile = None if args.nolog else open('uart.log', 'ab')
 
     def log(line):
-        print(line, end='')
+        if type(line) == str:
+            line = line.encode("utf-8")
+        sys.stdout.buffer.write(line)
         if logfile:
             logfile.write(line)
             logfile.flush()
@@ -28,13 +30,16 @@ if __name__ == '__main__':
             dev = next(
                 filter(lambda p: p.product == 'FT232R USB UART' or p.manufacturer == 'FTDI',
                        list_ports.comports())).device
-            log(f"UART found at {dev}")
+            log(f"UART found at {dev}\n")
         except StopIteration:
-            log('Cannot find FTDI UART. If it is connected, specify the port manually.')
+            log('Cannot find FTDI UART. If it is connected, specify the port manually.\n')
             exit(1)
 
     board = Serial(port=dev, baudrate=115200, timeout=30)
 
     while True:
-        line = board.readline()
-        log(line.decode('utf-8'))
+        data = board.read(1)
+        if len(data) == 0:
+            break
+        else:
+            log(data)
