@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 -u
+#!/usr/bin/env -S python3 -u
 
 import argparse
 import sys
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(sys.argv[0], description='USB Serial client for USB FTDI UART dongle.')
     parser.add_argument('-p', '--port', required=False,
                         help='the serial port (e.g. /dev/cu.usbserial-A10JX2C7); auto-detected when omitted')
-    parser.add_argument('--nolog', action=argparse.BooleanOptionalAction, help='do not write uart.log file')
+    parser.add_argument('--nolog', action='store_true', help='do not write uart.log file')
     args = parser.parse_args()
 
     dev = args.port
@@ -35,7 +35,7 @@ if __name__ == '__main__':
             log('Cannot find FTDI UART. If it is connected, specify the port manually.\n')
             exit(1)
 
-    board = Serial(port=dev, baudrate=115200, timeout=30)
+    board = Serial(port=dev, baudrate=115200)
 
     while True:
         data = board.read(1)
