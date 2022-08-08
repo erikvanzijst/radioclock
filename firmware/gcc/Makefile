@@ -100,6 +100,7 @@ src/display.o \
 src/font.o \
 src/ldr.o \
 src/peripherals.o \
+src/power.o \
 src/switch.o \
 src/utils.o \
 src/millis.o
@@ -152,6 +153,7 @@ OBJS_AS_ARGS +=  \
 "src/font.o" \
 "src/ldr.o" \
 "src/peripherals.o" \
+"src/power.o" \
 "src/switch.o" \
 "src/utils.o" \
 "src/millis.o"
@@ -234,6 +236,7 @@ DEPS_AS_ARGS +=  \
 "src/font.d" \
 "src/ldr.d" \
 "src/peripherals.d" \
+"src/power.d" \
 "src/switch.d" \
 "src/utils.d" \
 "src/millis.d"

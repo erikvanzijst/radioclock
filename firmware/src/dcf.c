@@ -4,6 +4,7 @@
 #include "dcf.h"
 #include "dcf_parser.h"
 #include "log.h"
+#include "power.h"
 
 struct sync_state_t {
     volatile uint64_t dcf_bits;
@@ -14,7 +15,8 @@ struct sync_state_t {
 
 enum dcf_isr_result_t {
     BUSY,
-    SYNCED
+    SYNCED,
+    POWER_FAIL
 };
 
 void dcf_data_isr(void) {
@@ -53,8 +55,14 @@ int32_t dcf_init() {
 int32_t dcf_deinit(void) {
     gpio_set_pin_level(DCF_CTL, true);         // turn off power to DCF module
     gpio_set_pin_level(LED, false);
-    if (ext_irq_register(PIN_PA06, NULL)) {
-        ulog(ERROR, "ext_irq_register() failed")
+
+    int32_t err;
+    if ((err = ext_irq_disable(PIN_PA06))) {
+        ulog(ERROR, "ext_irq_disable() failed (%ld)", (unsigned long)err)
+        return -1;
+    }
+    if ((err = ext_irq_register(PIN_PA06, NULL))) {
+        ulog(ERROR, "ext_irq_register() failed (%ld)", (unsigned long)err)
         return -1;
     }
     return ERR_NONE;
@@ -69,9 +77,12 @@ void dcf_millis_reset() {
 }
 
 enum dcf_isr_result_t process_data(struct sync_state_t *state) {
+    if (!usb_power()) {
+        return POWER_FAIL;
+    }
     bool edge = gpio_get_pin_level(DCF_DATA);
     if (edge == state->prev_edge) {
-        ulog(WARN, "Spurious wakeup")
+//        ulog(WARN, "Spurious wakeup")
         return BUSY;
     }
 
@@ -154,10 +165,11 @@ enum dcf_error_t dcf_sync(int32_t max_millis) {
     dcf_millis_reset();
 
     bool timeout;
-    while (process_data(&sync_state) != SYNCED && !(timeout = dcf_millis() > max_millis)) {
+    enum dcf_isr_result_t result;
+    while ((result = process_data(&sync_state)) == BUSY && !(timeout = dcf_millis() > max_millis)) {
         sleep(3);
     }
 
     dcf_deinit();
-    return timeout ? TIMEOUT : SUCCESSFUL;
+    return timeout ? DCF_TIMEOUT : result == SYNCED ? DCF_SUCCESSFUL : DCF_POWER_DOWN;
 }

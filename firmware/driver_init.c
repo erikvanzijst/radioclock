@@ -63,6 +63,19 @@ void EXTERNAL_IRQ_0_init(void)
 	_gclk_enable_channel(EIC_GCLK_ID, CONF_GCLK_EIC_SRC);
 
 	// Set pin direction to input
+	gpio_set_pin_direction(PWR_SENSE, GPIO_DIRECTION_IN);
+
+	gpio_set_pin_pull_mode(PWR_SENSE,
+	                       // <y> Pull configuration
+	                       // <id> pad_pull_config
+	                       // <GPIO_PULL_OFF"> Off
+	                       // <GPIO_PULL_UP"> Pull-up
+	                       // <GPIO_PULL_DOWN"> Pull-down
+	                       GPIO_PULL_OFF);
+
+	gpio_set_pin_function(PWR_SENSE, PINMUX_PA05A_EIC_EXTINT5);
+
+	// Set pin direction to input
 	gpio_set_pin_direction(DCF_DATA, GPIO_DIRECTION_IN);
 
 	gpio_set_pin_pull_mode(DCF_DATA,
@@ -293,13 +306,6 @@ void system_init(void)
 	gpio_set_pin_direction(PERIPHERAL_CTL, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(PERIPHERAL_CTL, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PA05
-
-	// Disable digital pin circuitry
-	gpio_set_pin_direction(PWR_SENSE, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(PWR_SENSE, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PA07
 

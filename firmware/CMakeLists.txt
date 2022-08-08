@@ -74,4 +74,5 @@ add_executable(firmware
         src/font.c
         tests/test.c
         src/peripherals.c
+        src/power.c
 )

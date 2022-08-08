@@ -8,6 +8,8 @@
 #include "log.h"
 #include "ldr.h"
 #include "peripherals.h"
+#include "power.h"
+#include "switch.h"
 
 // max time of a sync interval (5 minutes plus 10 seconds margin for early start)
 #define MAX_SYNC_MILLIS (5 * 60 * 1000 + 10000)
@@ -24,18 +26,20 @@ bool time_is_stale() {
 }
 
 static void init_sync(struct calendar_descriptor *const descr) {
-    if (time_is_stale()) {
+    if (usb_power() && time_is_stale()) {   // don't schedule to sync immediately after a power outage
         do_sync = true;
     }
 }
 
-void button(void) {
-    bool val = gpio_get_pin_level(SWITCH);
-    ulog(INFO, "Switch %s", val ? "released" : "pressed")
-    if (val) {
-        last_dcf_sync = 0;
-        do_sync = true;
-    }
+void short_press(void) {
+    ulog(INFO, "DCF time sync requested")
+    last_dcf_sync = 0;
+    do_sync = true;
+}
+
+void long_press(void) {
+    ulog(INFO, "Resetting MCU...")
+    _reset_mcu();
 }
 
 int main(void) {
@@ -75,10 +79,15 @@ int main(void) {
     usart_sync_get_io_descriptor(&USART_0, &uart_io);
     usart_sync_enable(&USART_0);
 
-    millis_init();
+    if (pwr_init()) {
+        ulog(ERROR, "pwr_init() failed")
+    }
+    if (millis_init()) {
+        ulog(ERROR, "millis_init() failed")
+    }
     calendar_enable(&CALENDAR_0);
     ldr_init();
-    ext_irq_register(PIN_PA15, button);
+    switch_init(short_press, long_press);
 
     printf("\r\n\r\n");
     ulog(INFO, "Radio clock firmware build: %s", VERSION_STR)
@@ -87,33 +96,44 @@ int main(void) {
 
     ulog(INFO, "Time not set; starting sync...")
 
-    dcf_sync(0x7FFFFFFF);
-
     power_up_peripherals();
 
     calendar_set_alarm(&CALENDAR_0, &alarm_2am, init_sync);
     calendar_set_alarm(&CALENDAR_0, &alarm_3am, init_sync);
     calendar_set_alarm(&CALENDAR_0, &alarm_4am, init_sync);
 
+    do_sync = false;
     for (;;) {
         if (do_sync) {
             ulog(INFO, "Starting time sync...")
             power_down_peripherals();
 
             struct calendar_date_time dt;
-            switch (dcf_sync(MAX_SYNC_MILLIS)) {
-                case SUCCESSFUL:
+            switch (dcf_sync(last_dcf_sync ? MAX_SYNC_MILLIS : 0x7FFFFFFF)) {
+                case DCF_SUCCESSFUL:
                     last_dcf_sync = millis();
                     calendar_get_date_time(&CALENDAR_0, &dt);
                     ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min)
                     break;
-                case TIMEOUT:
+                case DCF_TIMEOUT:
                     ulog(WARN, "Time sync failed (tried for %u sec)", MAX_SYNC_MILLIS / 1000)
+                    break;
+                case DCF_POWER_DOWN:
+                    ulog(ERROR, "Time sync interrupted by USB power fail")
                     break;
             }
 
             power_up_peripherals();
             do_sync = false;
+        }
+
+        if (!usb_power()) {
+            power_down_peripherals();
+            while (!usb_power()) {
+                ulog(INFO, "Entering STANDBY...")
+                sleep(3);
+            }
+            power_up_peripherals();
         }
     }
 }

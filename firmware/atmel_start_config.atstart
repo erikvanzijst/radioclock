@@ -98,7 +98,7 @@ drivers:
       eic_arch_enable_irq_setting2: false
       eic_arch_enable_irq_setting3: false
       eic_arch_enable_irq_setting4: false
-      eic_arch_enable_irq_setting5: false
+      eic_arch_enable_irq_setting5: true
       eic_arch_enable_irq_setting6: true
       eic_arch_enable_irq_setting7: false
       eic_arch_enable_irq_setting8: false
@@ -148,7 +148,7 @@ drivers:
       eic_arch_sense2: No detection
       eic_arch_sense3: No detection
       eic_arch_sense4: No detection
-      eic_arch_sense5: No detection
+      eic_arch_sense5: Both-edges detection
       eic_arch_sense6: Both-edges detection
       eic_arch_sense7: No detection
       eic_arch_sense8: No detection
@@ -164,12 +164,19 @@ drivers:
       eic_arch_wakeupen2: false
       eic_arch_wakeupen3: false
       eic_arch_wakeupen4: false
-      eic_arch_wakeupen5: false
+      eic_arch_wakeupen5: true
       eic_arch_wakeupen6: true
       eic_arch_wakeupen7: false
       eic_arch_wakeupen8: false
       eic_arch_wakeupen9: false
     optional_signals:
+    - identifier: EXTERNAL_IRQ_0:EXTINT/5
+      pad: PA05
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.5
+      name: EIC/EXTINT/5
+      label: EXTINT/5
     - identifier: EXTERNAL_IRQ_0:EXTINT/6
       pad: PA06
       mode: Enabled
@@ -952,7 +959,7 @@ pads:
   PWR_SENSE:
     name: PA05
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA05
-    mode: Analog
+    mode: Digital input
     user_label: PWR_SENSE
     configuration: null
   DCF_DATA:

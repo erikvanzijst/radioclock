@@ -5972,8 +5972,8 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 62080935-1757-4b88-a32e-f1e61343e903)
   )
-  (text "TODO:\n* Jumper to disconnect battery\n* Dipswitch/jumpers for EU timezone\n* Redo LDR\n* Micro to farthest board edge\n* ISET resistors MAXIM\n* 22uF capacitor on LED"
-    (at 234.95 55.245 0)
+  (text "TODO:\n* Jumper to disconnect battery\n* Dipswitch/jumpers for EU timezone\n* Redo LDR\n* Micro to farthest board edge\n* ISET resistors MAXIM\n* 22uF capacitor on LED\n* Move UART THT pins"
+    (at 234.95 64.135 0)
     (effects (font (size 3.27 3.27)) (justify left bottom))
     (uuid 8f4b6ccd-19cb-492f-a873-288f78a3d3f9)
   )

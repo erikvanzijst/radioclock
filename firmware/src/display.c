@@ -103,9 +103,16 @@ void update_display(const struct timer_task *const timer_task) {
 
 int32_t display_init(void) {
     int32_t err;
+
+    tx_queue.head = 0;
+    tx_queue.tail = 0;
+
+    SPI_0_init();
     spi_m_async_get_io_descriptor(&SPI_0, &spi_io);
     spi_m_async_register_callback(&SPI_0, SPI_M_ASYNC_CB_XFER, (FUNC_PTR)complete_cb_SPI_0);
     spi_m_async_enable(&SPI_0);
+
+    delay_ms(100);  // let chip initialize
 
     if ((err = (
             // leave shutdown mode:
@@ -117,7 +124,7 @@ int32_t display_init(void) {
             // enable BCD decode mode:
             enqueue_command((uint8_t[]){0x09, 0x00, 0x09, 0x00})))) {
 
-        ulog(ERROR, "enqueue_command() failed (%ld)", err)
+        ulog(ERROR, "enqueue_command() failed (%ld)", (unsigned long)err)
     }
 
     TIMER_0_display_task.interval = 50;     // 20Hz
@@ -134,5 +141,6 @@ int32_t display_deinit(void) {
     }
     spi_m_async_register_callback(&SPI_0, SPI_M_ASYNC_CB_XFER, (FUNC_PTR)NULL);
     spi_m_async_disable(&SPI_0);
+    spi_m_async_deinit(&SPI_0);
     return ERR_NONE;
 }

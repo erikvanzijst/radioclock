@@ -10,12 +10,12 @@ void increment_millis(const struct timer_task *const timer_task) {
     CRITICAL_SECTION_LEAVE()
 }
 
-void millis_init() {
+int32_t millis_init() {
     TIMER_0_millis_task.interval = 1;
     TIMER_0_millis_task.cb       = increment_millis;
     TIMER_0_millis_task.mode     = TIMER_TASK_REPEAT;
 
-    timer_add_task(&TIMER_0, &TIMER_0_millis_task);
+    return timer_add_task(&TIMER_0, &TIMER_0_millis_task);
 }
 
 uint64_t millis() {
