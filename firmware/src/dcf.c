@@ -10,7 +10,7 @@ struct sync_state_t {
     volatile uint64_t dcf_bits;
     volatile uint32_t dcf_prev_posedge;
     volatile bool prev_edge;
-    bool dcf_corrupt;
+    volatile uint64_t errors;
 };
 
 enum dcf_isr_result_t {
@@ -89,11 +89,12 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
     uint32_t now = dcf_millis();
     uint32_t duration = now - state->dcf_prev_posedge;
     if (edge) { // positive edge
+        state->errors >>= 1;
         if (duration > 900 && duration < 1100) {
             // end of second and start of new second
         } else if (duration > 1900 && duration < 2100) {
             // minute mark, capture complete
-            if (!state->dcf_corrupt) {
+            if (!state->errors) {
                 struct calendar_date_time cal_dt;
                 struct date_time_t dt;
 
@@ -127,12 +128,11 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
             } else {
                 ulog(WARN, "DCF: capture corrupt")
             }
-            state->dcf_corrupt = false;
             state->dcf_bits = 0;
 
         } else {
-            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
-            state->dcf_corrupt = true;
+//            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
+            state->errors |= 0x4000000000;  // bit 38
         }
         state->dcf_prev_posedge = now;
 
@@ -145,8 +145,8 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
 //            ulog(INFO, "DCF: 1");
             bit = 0x400000000000000;                    // bit 58 set to 1
         } else {
-            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
-            state->dcf_corrupt = true;
+//            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
+            state->errors |= 0x4000000000;
         }
         state->dcf_bits >>= 1;
         state->dcf_bits |= bit;
@@ -159,7 +159,7 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
 }
 
 enum dcf_error_t dcf_sync(int32_t max_millis) {
-    struct sync_state_t sync_state = {.dcf_bits = 0, .dcf_prev_posedge = 0, .dcf_corrupt = true, .prev_edge = false};
+    struct sync_state_t sync_state = {.dcf_bits = 0, .dcf_prev_posedge = 0, .errors = 0, .prev_edge = false};
 
     dcf_init();
     dcf_millis_reset();
