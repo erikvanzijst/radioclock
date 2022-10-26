@@ -45,7 +45,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.508
+          "min_clearance": 0.308
         }
       },
       "diff_pair_dimensions": [
@@ -382,7 +382,7 @@
         "clearance": 0.127,
         "diff_pair_gap": 0.127,
         "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.4,
+        "diff_pair_width": 0.127,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
@@ -393,7 +393,7 @@
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.4,
+        "track_width": 0.127,
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6.0
@@ -432,9 +432,7 @@
           "/3.3V",
           "/5V",
           "/NCP_IN",
-          "/USB_PWR",
-          "Net-(D5-Pad2)",
-          "Net-(D6-Pad2)"
+          "/USB_PWR"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -550,8 +548,6 @@
           "/DCF_DATA",
           "/DCF_PDN",
           "/DO",
-          "/LDR",
-          "/LDR_SINK",
           "/PERIPHERAL_PWR",
           "/SCK",
           "/SWCLK",
@@ -568,12 +564,9 @@
           "Net-(R4-Pad1)",
           "unconnected-(J10-Pad10)",
           "unconnected-(J10-Pad9)",
-          "unconnected-(J11-Pad8)",
           "unconnected-(J11-Pad9)",
           "unconnected-(J13-Pad8)",
           "unconnected-(J13-Pad9)",
-          "unconnected-(J7-Pad10)",
-          "unconnected-(J7-Pad9)",
           "unconnected-(J8-Pad10)",
           "unconnected-(J8-Pad9)",
           "unconnected-(J9-Pad10)",
