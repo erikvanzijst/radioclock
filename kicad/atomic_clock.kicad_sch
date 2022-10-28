@@ -9497,7 +9497,7 @@
     (property "Value" "Conn_01x03_Male" (id 1) (at 470.6112 171.8822 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "" (id 2) (at 469.9 170.18 0)
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" (id 2) (at 469.9 170.18 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 469.9 170.18 0)
