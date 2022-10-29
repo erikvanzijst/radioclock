@@ -44,27 +44,27 @@ void long_press(void) {
 
 int main(void) {
     struct io_descriptor *uart_io;
-    static struct calendar_alarm alarm_2am = {
-            .cal_alarm.mode = REPEAT,
-            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            // start a few seconds early, so we don't have to wait for the start of the minute
-            .cal_alarm.datetime.time.hour = 1,
-            .cal_alarm.datetime.time.min = 59,
-            .cal_alarm.datetime.time.sec = 55,
-    };
     static struct calendar_alarm alarm_3am = {
             .cal_alarm.mode = REPEAT,
             .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            .cal_alarm.datetime.time.hour = 2,
-            .cal_alarm.datetime.time.min = 59,
-            .cal_alarm.datetime.time.sec = 55,
+            .cal_alarm.datetime.time.hour = 3,
+            // start just after 3am to catch the end of DST change
+            .cal_alarm.datetime.time.min = 1,
+            .cal_alarm.datetime.time.sec = 0,
+    };
+    static struct calendar_alarm alarm_330am = {
+            .cal_alarm.mode = REPEAT,
+            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
+            .cal_alarm.datetime.time.hour = 3,
+            .cal_alarm.datetime.time.min = 30,
+            .cal_alarm.datetime.time.sec = 0,
     };
     static struct calendar_alarm alarm_4am = {
             .cal_alarm.mode = REPEAT,
             .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            .cal_alarm.datetime.time.hour = 3,
-            .cal_alarm.datetime.time.min = 59,
-            .cal_alarm.datetime.time.sec = 55,
+            .cal_alarm.datetime.time.hour = 4,
+            .cal_alarm.datetime.time.min = 0,
+            .cal_alarm.datetime.time.sec = 0,
     };
 
     atmel_start_init();
@@ -98,8 +98,8 @@ int main(void) {
 
     power_up_peripherals();
 
-    calendar_set_alarm(&CALENDAR_0, &alarm_2am, init_sync);
     calendar_set_alarm(&CALENDAR_0, &alarm_3am, init_sync);
+    calendar_set_alarm(&CALENDAR_0, &alarm_330am, init_sync);
     calendar_set_alarm(&CALENDAR_0, &alarm_4am, init_sync);
 
     do_sync = false;
