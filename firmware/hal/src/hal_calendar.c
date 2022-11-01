@@ -411,7 +411,7 @@ static void calendar_alarm(struct calendar_dev *const dev)
          *
          * This flag does not get unset by calendar_set_alarm() on the way out
          * and remains set. So then when the actual scheduled alarm triggers
-         * this functions, it sees PROCESS_ALARM_BUSY is still set, and it
+         * this function, it sees PROCESS_ALARM_BUSY is still set, and it
          * bails, breaking the alarm schedule entirely.
          */
 //		calendar->flags |= PROCESS_ALARM_BUSY;

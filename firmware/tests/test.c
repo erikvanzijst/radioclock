@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
     char *str = "0123456789";
     char buf[11];
     encode(str, buf);
-    assert(0 == memcmp((char[]){126, 96, 109, 121, 51, 91, 95, 112, 127, 123, 0}, buf, strlen(str)));
+    assert(0 == memcmp((char[]){126, 48, 109, 121, 51, 91, 95, 112, 127, 123, 0}, buf, strlen(str)));
 
     printf("All tests passed!\n");
     return 0;
