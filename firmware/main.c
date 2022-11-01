@@ -14,21 +14,19 @@
 // max time of a sync interval (5 minutes plus 10 seconds margin for early start)
 #define MAX_SYNC_MILLIS (5 * 60 * 1000 + 10000)
 
-// milliseconds we can go until the RTC is considered stale and due for sync (12 hours)
-#define STALE_TIMEOUT_MS (12 * 3600 * 1000)
-
 volatile uint64_t last_dcf_sync = 0;
-volatile bool do_sync = false;
+volatile bool do_sync = true;
 
-bool time_is_stale() {
-    // stale unless we managed to sync successfully in the past 12 hours
-    return !last_dcf_sync || millis() - last_dcf_sync > STALE_TIMEOUT_MS;
-}
+static struct calendar_alarm alarm = {
+        .cal_alarm.mode = ONESHOT,
+        .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
+        .cal_alarm.datetime.time.hour = 3,
+        .cal_alarm.datetime.time.min = 1,
+        .cal_alarm.datetime.time.sec = 0,
+};
 
 static void init_sync(struct calendar_descriptor *const descr) {
-    if (usb_power() && time_is_stale()) {   // don't schedule to sync immediately after a power outage
-        do_sync = true;
-    }
+    do_sync = true;
 }
 
 void short_press(void) {
@@ -42,30 +40,15 @@ void long_press(void) {
     _reset_mcu();
 }
 
+void schedule_sync() {
+    calendar_set_alarm(&CALENDAR_0, &alarm, init_sync);
+    ulog(INFO, "Next sync at: %04d-%02d-%02d %02d:%02d:%02d",
+         alarm.cal_alarm.datetime.date.year, alarm.cal_alarm.datetime.date.month, alarm.cal_alarm.datetime.date.day,
+         alarm.cal_alarm.datetime.time.hour, alarm.cal_alarm.datetime.time.min, alarm.cal_alarm.datetime.time.sec)
+}
+
 int main(void) {
     struct io_descriptor *uart_io;
-    static struct calendar_alarm alarm_3am = {
-            .cal_alarm.mode = REPEAT,
-            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            .cal_alarm.datetime.time.hour = 3,
-            // start just after 3am to catch the end of DST change
-            .cal_alarm.datetime.time.min = 1,
-            .cal_alarm.datetime.time.sec = 0,
-    };
-    static struct calendar_alarm alarm_330am = {
-            .cal_alarm.mode = REPEAT,
-            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            .cal_alarm.datetime.time.hour = 3,
-            .cal_alarm.datetime.time.min = 30,
-            .cal_alarm.datetime.time.sec = 0,
-    };
-    static struct calendar_alarm alarm_4am = {
-            .cal_alarm.mode = REPEAT,
-            .cal_alarm.option = CALENDAR_ALARM_MATCH_HOUR,
-            .cal_alarm.datetime.time.hour = 4,
-            .cal_alarm.datetime.time.min = 0,
-            .cal_alarm.datetime.time.sec = 0,
-    };
 
     atmel_start_init();
     gpio_set_pin_level(LED, false);
@@ -94,15 +77,8 @@ int main(void) {
     ulog(INFO, "https://github.com/erikvanzijst/radioclock")
     ulog(INFO, "Erik van Zijst <erik.van.zijst@gmail.com>\r\n")
 
-    ulog(INFO, "Time not set; starting sync...")
-
     power_up_peripherals();
 
-    calendar_set_alarm(&CALENDAR_0, &alarm_3am, init_sync);
-    calendar_set_alarm(&CALENDAR_0, &alarm_330am, init_sync);
-    calendar_set_alarm(&CALENDAR_0, &alarm_4am, init_sync);
-
-    do_sync = false;
     for (;;) {
         if (do_sync) {
             ulog(INFO, "Starting time sync...")
@@ -125,6 +101,7 @@ int main(void) {
 
             power_up_peripherals();
             do_sync = false;
+            schedule_sync();
         }
 
         if (!usb_power()) {
@@ -134,6 +111,7 @@ int main(void) {
                 sleep(3);
             }
             power_up_peripherals();
+            schedule_sync();
         }
     }
 }

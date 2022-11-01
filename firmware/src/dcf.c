@@ -106,7 +106,6 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
                         calendar_set_time(&CALENDAR_0, &cal_dt.time);
                         calendar_set_date(&CALENDAR_0, &cal_dt.date);
 
-                        // notify listeners:
                         return SYNCED;
                     case DCF_ERR_START:
                         ulog(WARN, "DCF invalid start-of-minute mark")

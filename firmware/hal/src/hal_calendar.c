@@ -400,7 +400,21 @@ static void calendar_alarm(struct calendar_dev *const dev)
 	struct calendar_alarm *head, *it, current_dt;
 
 	if ((calendar->flags & SET_ALARM_BUSY) || (calendar->flags & PROCESS_ALARM_BUSY)) {
-		calendar->flags |= PROCESS_ALARM_BUSY;
+        /* IMPLEMENTATION NOTE:
+         *
+         * This is commented out to fix a problem where the first call to
+         * calendar_set_alarm() sets the SET_ALARM_BUSY flag and then calls
+         * _calendar_register_callback() which enables the RTC interrupt,
+         * which then immediately triggers, calling into this ISR function;
+         * sees the SET_ALARM_BUSY flag and would then set the
+         * PROCESS_ALARM_BUSY flag here.
+         *
+         * This flag does not get unset by calendar_set_alarm() on the way out
+         * and remains set. So then when the actual scheduled alarm triggers
+         * this functions, it sees PROCESS_ALARM_BUSY is still set, and it
+         * bails, breaking the alarm schedule entirely.
+         */
+//		calendar->flags |= PROCESS_ALARM_BUSY;
 		return;
 	}
 
