@@ -1,0 +1,21 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: stronglytyped/arm-none-eabi-gcc
+
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: Run tests
+      run: cd tests && make test
+    
+    - name: Build firmware
+      run: cd gcc && make
