@@ -1,5 +1,6 @@
 VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
+CHIP="__SAMDA1E16B__"
 LOG_LEVEL=INFO
 
 MK_DIR = mkdir -p
@@ -285,7 +286,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU C Compiler
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
+-D$(CHIP) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -294,7 +295,7 @@ $(DIR_INCLUDES) \
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Assembler
 	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
+-D$(CHIP) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -303,7 +304,7 @@ $(DIR_INCLUDES) \
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Preprocessing Assembler
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__SAMDA1E16B__ -mcpu=cortex-m0plus  \
+-D$(CHIP) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
