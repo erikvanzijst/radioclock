@@ -24,6 +24,14 @@ void ADC_0_example(void)
 	adc_async_start_conversion(&ADC_0);
 }
 
+static void button_on_PA18_pressed(void)
+{
+}
+
+static void button_on_PA19_pressed(void)
+{
+}
+
 static void button_on_PA05_pressed(void)
 {
 }
@@ -42,6 +50,8 @@ static void button_on_PA15_pressed(void)
 void EXTERNAL_IRQ_0_example(void)
 {
 
+	ext_irq_register(PIN_PA18, button_on_PA18_pressed);
+	ext_irq_register(PIN_PA19, button_on_PA19_pressed);
 	ext_irq_register(PIN_PA05, button_on_PA05_pressed);
 	ext_irq_register(PIN_PA06, button_on_PA06_pressed);
 	ext_irq_register(PIN_PA15, button_on_PA15_pressed);

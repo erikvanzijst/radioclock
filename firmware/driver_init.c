@@ -64,6 +64,34 @@ void EXTERNAL_IRQ_0_init(void)
 {
 	_gclk_enable_channel(EIC_GCLK_ID, CONF_GCLK_EIC_SRC);
 
+#ifdef __TZ__
+	// Set pin direction to input
+	gpio_set_pin_direction(TZ1, GPIO_DIRECTION_IN);
+
+	gpio_set_pin_pull_mode(TZ1,
+	                       // <y> Pull configuration
+	                       // <id> pad_pull_config
+	                       // <GPIO_PULL_OFF"> Off
+	                       // <GPIO_PULL_UP"> Pull-up
+	                       // <GPIO_PULL_DOWN"> Pull-down
+                           GPIO_PULL_DOWN);
+
+	gpio_set_pin_function(TZ1, PINMUX_PA18A_EIC_EXTINT2);
+
+	// Set pin direction to input
+	gpio_set_pin_direction(TZ2, GPIO_DIRECTION_IN);
+
+	gpio_set_pin_pull_mode(TZ2,
+	                       // <y> Pull configuration
+	                       // <id> pad_pull_config
+	                       // <GPIO_PULL_OFF"> Off
+	                       // <GPIO_PULL_UP"> Pull-up
+	                       // <GPIO_PULL_DOWN"> Pull-down
+                           GPIO_PULL_DOWN);
+
+	gpio_set_pin_function(TZ2, PINMUX_PA19A_EIC_EXTINT3);
+#endif
+
 	// Set pin direction to input
 	gpio_set_pin_direction(PWR_SENSE, GPIO_DIRECTION_IN);
 

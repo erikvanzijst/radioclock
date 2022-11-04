@@ -2,16 +2,16 @@ format_version: '2'
 name: My Project
 versions:
   api: '1.0'
-  backend: 1.8.580
-  commit: f3d8d96e294de8dee688333bbbe8d8458a4f6b4c
+  backend: 1.9.696
+  commit: ''
   content: unknown
   content_pack_name: unknown
   format: '2'
-  frontend: 1.8.580
+  frontend: 1.9.696
   packs_version_avr8: 1.0.1463
   packs_version_qtouch: unknown
   packs_version_sam: 1.0.1726
-  version_backend: 1.8.580
+  version_backend: 1.9.696
   version_frontend: ''
 board:
   identifier: CustomBoard
@@ -95,8 +95,8 @@ drivers:
       eic_arch_enable_irq_setting13: false
       eic_arch_enable_irq_setting14: false
       eic_arch_enable_irq_setting15: true
-      eic_arch_enable_irq_setting2: false
-      eic_arch_enable_irq_setting3: false
+      eic_arch_enable_irq_setting2: true
+      eic_arch_enable_irq_setting3: true
       eic_arch_enable_irq_setting4: false
       eic_arch_enable_irq_setting5: true
       eic_arch_enable_irq_setting6: true
@@ -145,8 +145,8 @@ drivers:
       eic_arch_sense13: No detection
       eic_arch_sense14: No detection
       eic_arch_sense15: Both-edges detection
-      eic_arch_sense2: No detection
-      eic_arch_sense3: No detection
+      eic_arch_sense2: Both-edges detection
+      eic_arch_sense3: Both-edges detection
       eic_arch_sense4: No detection
       eic_arch_sense5: Both-edges detection
       eic_arch_sense6: Both-edges detection
@@ -170,6 +170,20 @@ drivers:
       eic_arch_wakeupen8: false
       eic_arch_wakeupen9: false
     optional_signals:
+    - identifier: EXTERNAL_IRQ_0:EXTINT/2
+      pad: PA18
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.2
+      name: EIC/EXTINT/2
+      label: EXTINT/2
+    - identifier: EXTERNAL_IRQ_0:EXTINT/3
+      pad: PA19
+      mode: Enabled
+      configuration: null
+      definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::optional_signal_definition::EIC.EXTINT.3
+      name: EIC/EXTINT/3
+      label: EXTINT/3
     - identifier: EXTERNAL_IRQ_0:EXTINT/5
       pad: PA05
       mode: Enabled
@@ -553,7 +567,7 @@ drivers:
       timer_advanced_configuration: true
       timer_event_control: false
       timer_prescaler: No division
-      timer_tick: 10000000
+      timer_tick: 4294967295
     optional_signals: []
     variant: null
     clocks:
@@ -1022,6 +1036,18 @@ pads:
     definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA17
     mode: I2C
     user_label: DHT_SCL
+    configuration: null
+  TZ1:
+    name: PA18
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA18
+    mode: Digital input
+    user_label: TZ1
+    configuration: null
+  TZ2:
+    name: PA19
+    definition: Atmel:SAMDA1_Drivers:0.0.1::SAMDA1E16B-MB::pad::PA19
+    mode: Digital input
+    user_label: TZ2
     configuration: null
   PA22:
     name: PA22

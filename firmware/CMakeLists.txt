@@ -9,6 +9,7 @@ set(CMAKE_C_STANDARD 11)
 
 add_compile_definitions(__SAMDA1E16B__)
 add_compile_definitions(__ADC__)
+add_compile_definitions(__TZ__)
 
 include_directories(.)
 include_directories(config)
@@ -80,4 +81,4 @@ add_executable(firmware
         tests/test.c
         src/peripherals.c
         src/power.c
-)
+        src/timezone.c)

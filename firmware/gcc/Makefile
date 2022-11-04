@@ -30,12 +30,19 @@ ifeq ($(BOARD), v1_64)
 # PCB version 2, 64kb flash, no ADC, analog brightness control:
 else ifeq ($(BOARD), v2_64)
     LINKER = samda1e16b_flash.ld
-    CFLAGS += -D__SAMDA1E16B__
+    CFLAGS += -D__SAMDA1E16B__ -D__TZ__
+    OBJS += src/timezone.o
+    OBJS_AS_ARGS += "src/timezone.o"
+    DEPS_AS_ARGS += "src/timezone.d"
 
 # PCB version 2, 32kb flash, no ADC, analog brightness control:
 else ifeq ($(BOARD), v2_32)
     LINKER = samda1e15b_flash.ld
-    CFLAGS += -D__SAMDA1E15B__
+    CFLAGS += -D__SAMDA1E15B__ -D__TZ__
+    OBJS += src/timezone.o
+    OBJS_AS_ARGS += "src/timezone.o"
+    DEPS_AS_ARGS += "src/timezone.d"
+
 else
     $(error Unknown board variant $(BOARD))
 endif

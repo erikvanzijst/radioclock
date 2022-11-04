@@ -10,6 +10,7 @@
 #include "peripherals.h"
 #include "power.h"
 #include "switch.h"
+#include "timezone.h"
 
 // max time of a sync interval (5 minutes plus 10 seconds margin for early start)
 #define MAX_SYNC_MILLIS (5 * 60 * 1000 + 10000)
@@ -69,10 +70,13 @@ int main(void) {
         ulog(ERROR, "millis_init() failed")
     }
     calendar_enable(&CALENDAR_0);
+    switch_init(short_press, long_press);
 #ifdef __ADC__
     ldr_init();
 #endif
-    switch_init(short_press, long_press);
+#ifdef __TZ__
+    timezone_init();
+#endif
 
     printf("\r\n\r\n");
     ulog(INFO, "Radio clock firmware build: %s", VERSION_STR)

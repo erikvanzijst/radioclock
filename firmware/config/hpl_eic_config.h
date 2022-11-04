@@ -111,7 +111,7 @@
 // <e> Interrupt 2 Settings
 // <id> eic_arch_enable_irq_setting2
 #ifndef CONF_EIC_ENABLE_IRQ_SETTING2
-#define CONF_EIC_ENABLE_IRQ_SETTING2 0
+#define CONF_EIC_ENABLE_IRQ_SETTING2 1
 #endif
 
 // <q> External Interrupt 2 Event Output Enable
@@ -145,14 +145,14 @@
 // <i> This defines input sense trigger
 // <id> eic_arch_sense2
 #ifndef CONF_EIC_SENSE2
-#define CONF_EIC_SENSE2 EIC_NMICTRL_NMISENSE_NONE_Val
+#define CONF_EIC_SENSE2 EIC_NMICTRL_NMISENSE_BOTH_Val
 #endif
 // </e>
 
 // <e> Interrupt 3 Settings
 // <id> eic_arch_enable_irq_setting3
 #ifndef CONF_EIC_ENABLE_IRQ_SETTING3
-#define CONF_EIC_ENABLE_IRQ_SETTING3 0
+#define CONF_EIC_ENABLE_IRQ_SETTING3 1
 #endif
 
 // <q> External Interrupt 3 Event Output Enable
@@ -186,7 +186,7 @@
 // <i> This defines input sense trigger
 // <id> eic_arch_sense3
 #ifndef CONF_EIC_SENSE3
-#define CONF_EIC_SENSE3 EIC_NMICTRL_NMISENSE_NONE_Val
+#define CONF_EIC_SENSE3 EIC_NMICTRL_NMISENSE_BOTH_Val
 #endif
 // </e>
 
@@ -683,7 +683,7 @@
 // </e>
 
 #ifndef CONFIG_EIC_EXTINT_MAP
-#define CONFIG_EIC_EXTINT_MAP {5, PIN_PA05}, {6, PIN_PA06}, {15, PIN_PA15},
+#define CONFIG_EIC_EXTINT_MAP {2, PIN_PA18}, {3, PIN_PA19}, {5, PIN_PA05}, {6, PIN_PA06}, {15, PIN_PA15},
 #endif
 
 // <<< end of configuration section >>>
