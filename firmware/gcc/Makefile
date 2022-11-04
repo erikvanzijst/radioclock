@@ -1,6 +1,6 @@
 VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
-CHIP="__SAMDA1E16B__"
+CHIP="SAMDA1E16B"
 LOG_LEVEL=INFO
 
 MK_DIR = mkdir -p
@@ -262,7 +262,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS_AS_ARGS) -Wl,--start-group -lm -Wl,--end-group -mthumb \
 -Wl,-Map="$(OUTPUT_FILE_NAME).map" --specs=nano.specs -Wl,--gc-sections -mcpu=cortex-m0plus \
  \
--T"../samda1b/gcc/gcc/samda1e16b_flash.ld" \
+-T"../samda1b/gcc/gcc/$(shell echo $(CHIP) | tr [:upper:] [:lower:])_flash.ld" \
 -L"../samda1b/gcc/gcc"
 	@echo Finished building target: $@
 
@@ -286,7 +286,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU C Compiler
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D$(CHIP) -mcpu=cortex-m0plus  \
+-D__$(CHIP)__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -295,7 +295,7 @@ $(DIR_INCLUDES) \
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Assembler
 	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D$(CHIP) -mcpu=cortex-m0plus  \
+-D__$(CHIP)__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -304,7 +304,7 @@ $(DIR_INCLUDES) \
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Preprocessing Assembler
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D$(CHIP) -mcpu=cortex-m0plus  \
+-D__$(CHIP)__ -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
