@@ -100,6 +100,7 @@ src/dht.o \
 src/display.o \
 src/font.o \
 src/ldr.o \
+src/log.o \
 src/peripherals.o \
 src/power.o \
 src/switch.o \
@@ -153,6 +154,7 @@ OBJS_AS_ARGS +=  \
 "src/display.o" \
 "src/font.o" \
 "src/ldr.o" \
+"src/log.o" \
 "src/peripherals.o" \
 "src/power.o" \
 "src/switch.o" \
@@ -236,6 +238,7 @@ DEPS_AS_ARGS +=  \
 "src/dht.d" \
 "src/font.d" \
 "src/ldr.d" \
+"src/log.d" \
 "src/peripherals.d" \
 "src/power.d" \
 "src/switch.d" \

@@ -9,12 +9,6 @@
 #include "atmel_start.h"
 #include "stdio_start.h"
 
-void STDIO_REDIRECT_0_example(void)
-{
-	/* Print welcome message */
-	printf("\r\nHello ATMEL World!\r\n");
-}
-
 void stdio_redirect_init(void)
 {
 
