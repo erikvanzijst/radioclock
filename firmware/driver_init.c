@@ -13,6 +13,7 @@
 #include <hpl_gclk_base.h>
 #include <hpl_pm_base.h>
 
+#ifdef __ADC__
 #include <hpl_adc_base.h>
 
 /* The channel amount for ADC */
@@ -26,19 +27,8 @@
 
 struct adc_async_descriptor         ADC_0;
 struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
-struct timer_descriptor             TIMER_0;
-struct timer_descriptor             TIMER_1;
-
 static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
 static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
-
-struct spi_m_async_descriptor SPI_0;
-
-struct i2c_m_async_desc I2C_0;
-
-struct usart_sync_descriptor USART_0;
-
-struct calendar_descriptor CALENDAR_0;
 
 /**
  * \brief ADC initialization function
@@ -57,6 +47,18 @@ void ADC_0_init(void)
 
 	gpio_set_pin_function(LDR, PINMUX_PA02B_ADC_AIN0);
 }
+#endif
+
+struct timer_descriptor             TIMER_0;
+struct timer_descriptor             TIMER_1;
+
+struct spi_m_async_descriptor SPI_0;
+
+struct i2c_m_async_desc I2C_0;
+
+struct usart_sync_descriptor USART_0;
+
+struct calendar_descriptor CALENDAR_0;
 
 void EXTERNAL_IRQ_0_init(void)
 {
@@ -351,6 +353,7 @@ void system_init(void)
 
 	// GPIO on PA27
 
+#ifdef __ADC__
 	gpio_set_pin_level(LDR_SINK,
 	                   // <y> Initial level
 	                   // <id> pad_initial_level
@@ -364,6 +367,8 @@ void system_init(void)
 	gpio_set_pin_function(LDR_SINK, GPIO_PIN_FUNCTION_OFF);
 
 	ADC_0_init();
+#endif
+
 	EXTERNAL_IRQ_0_init();
 
 	SPI_0_init();

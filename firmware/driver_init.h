@@ -21,7 +21,6 @@ extern "C" {
 #include <hal_io.h>
 #include <hal_sleep.h>
 
-#include <hal_adc_async.h>
 #include <hal_ext_irq.h>
 
 #include <hal_spi_m_async.h>
@@ -38,7 +37,12 @@ extern "C" {
 #include <hal_timer.h>
 #include <hpl_tc_base.h>
 
+#ifdef __ADC__
+#include <hal_adc_async.h>
 extern struct adc_async_descriptor ADC_0;
+
+void ADC_0_init(void);
+#endif
 
 extern struct spi_m_async_descriptor SPI_0;
 
@@ -49,8 +53,6 @@ extern struct usart_sync_descriptor USART_0;
 extern struct calendar_descriptor CALENDAR_0;
 extern struct timer_descriptor    TIMER_0;
 extern struct timer_descriptor    TIMER_1;
-
-void ADC_0_init(void);
 
 void SPI_0_PORT_init(void);
 void SPI_0_CLOCK_init(void);

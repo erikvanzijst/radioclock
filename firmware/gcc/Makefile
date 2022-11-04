@@ -15,11 +15,17 @@ endif
 # PCB version 1, 64kb flash, using ADC to set brightness digitally:
 ifeq ($(BOARD), v1_64)
     LINKER = samda1e16b_flash.ld
-    CFLAGS += -D__SAMDA1E16B__
-    CFLAGS += -D__ADC__
-    OBJS += src/ldr.o
-    OBJS_AS_ARGS += "src/ldr.o"
-    DEPS_AS_ARGS += "src/ldr.d"
+    CFLAGS += -D__SAMDA1E16B__ -D__ADC__
+
+    OBJS += src/ldr.o \
+    hpl/adc/hpl_adc.o \
+    hal/src/hal_adc_async.o
+    OBJS_AS_ARGS += "src/ldr.o" \
+    "hal/src/hal_adc_async.o" \
+    "hpl/adc/hpl_adc.o"
+    DEPS_AS_ARGS += "src/ldr.d" \
+    "hal/src/hal_adc_async.d" \
+    "hpl/adc/hpl_adc.d"
 
 # PCB version 2, 64kb flash, no ADC, analog brightness control:
 else ifeq ($(BOARD), v2_64)
@@ -74,7 +80,6 @@ hpl/pm \
 hpl/sysctrl \
 hpl/eic \
 hpl/sercom \
-examples \
 hpl/gclk \
 stdio_redirect/gcc \
 hal/utils/src \
@@ -102,7 +107,6 @@ hal/utils/src/utils_list.o \
 hpl/core/hpl_core_m0plus_base.o \
 hal/utils/src/utils_assert.o \
 hpl/dmac/hpl_dmac.o \
-hal/src/hal_adc_async.o \
 hpl/pm/hpl_pm.o \
 hal/src/hal_usart_sync.o \
 hal/src/hal_i2c_m_async.o \
@@ -112,7 +116,6 @@ stdio_start.o \
 hal/src/hal_spi_m_async.o \
 main.o \
 hpl/rtc/hpl_rtc.o \
-examples/driver_examples.o \
 driver_init.o \
 hal/src/hal_ext_irq.o \
 hal/utils/src/utils_ringbuffer.o \
@@ -123,7 +126,6 @@ samda1b/gcc/gcc/startup_samda1.o \
 atmel_start.o \
 hpl/tc/hpl_tc.o \
 hal/src/hal_atomic.o \
-hpl/adc/hpl_adc.o \
 src/dcf.o \
 src/dcf_parser.o \
 src/dht.o \
@@ -155,7 +157,6 @@ OBJS_AS_ARGS +=  \
 "hpl/core/hpl_core_m0plus_base.o" \
 "hal/utils/src/utils_assert.o" \
 "hpl/dmac/hpl_dmac.o" \
-"hal/src/hal_adc_async.o" \
 "hpl/pm/hpl_pm.o" \
 "hal/src/hal_usart_sync.o" \
 "hal/src/hal_i2c_m_async.o" \
@@ -165,7 +166,6 @@ OBJS_AS_ARGS +=  \
 "hal/src/hal_spi_m_async.o" \
 "main.o" \
 "hpl/rtc/hpl_rtc.o" \
-"examples/driver_examples.o" \
 "driver_init.o" \
 "hal/src/hal_ext_irq.o" \
 "hal/utils/src/utils_ringbuffer.o" \
@@ -176,7 +176,6 @@ OBJS_AS_ARGS +=  \
 "atmel_start.o" \
 "hpl/tc/hpl_tc.o" \
 "hal/src/hal_atomic.o" \
-"hpl/adc/hpl_adc.o" \
 "src/dcf.o" \
 "src/dcf_parser.o" \
 "src/dht.o" \
@@ -193,7 +192,6 @@ OBJS_AS_ARGS +=  \
 DIR_INCLUDES +=  \
 -I"../" \
 -I"../config" \
--I"../examples" \
 -I"../hal/include" \
 -I"../hal/utils/include" \
 -I"../hpl/adc" \
@@ -233,7 +231,6 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_timer.d" \
 "hpl/core/hpl_core_m0plus_base.d" \
 "hal/utils/src/utils_list.d" \
-"hal/src/hal_adc_async.d" \
 "hpl/dmac/hpl_dmac.d" \
 "hal/utils/src/utils_assert.d" \
 "hal/src/hal_delay.d" \
@@ -247,7 +244,6 @@ DEPS_AS_ARGS +=  \
 "driver_init.d" \
 "hal/src/hal_i2c_m_async.d" \
 "main.d" \
-"examples/driver_examples.d" \
 "hpl/rtc/hpl_rtc.d" \
 "hal/src/hal_sleep.d" \
 "hal/utils/src/utils_ringbuffer.d" \
@@ -257,7 +253,6 @@ DEPS_AS_ARGS +=  \
 "hal/src/hal_atomic.d" \
 "hpl/tc/hpl_tc.d" \
 "hpl/pm/hpl_pm.d" \
-"hpl/adc/hpl_adc.d" \
 "hal/src/hal_ext_irq.d" \
 "samda1b/gcc/gcc/startup_samda1.d" \
 "src/dcf.d" \
