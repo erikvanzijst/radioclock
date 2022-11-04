@@ -21,11 +21,29 @@ jobs:
     - name: Run tests
       run: ( cd firmware/tests && make test )
     
-    - name: Build firmware
-      run: ( cd firmware/gcc && make )
-      
-    - name: Archive firmware
+    - name: Build firmware for v1_64
+      run: ( cd firmware/gcc && make clean all BOARD=v1_64 )
+
+    - name: Archive firmware v1_64
       uses: actions/upload-artifact@v3
       with:
-        name: firmware
+        name: firmware-v1_64
+        path: firmware/gcc/radioclock.*
+
+    - name: Build firmware for v2_64
+      run: ( cd firmware/gcc && make clean all BOARD=v2_64 )
+
+    - name: Archive firmware v2_64
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware-v2_64
+        path: firmware/gcc/radioclock.*
+
+    - name: Build firmware for v2_32
+      run: ( cd firmware/gcc && make clean all BOARD=v2_32 )
+      
+    - name: Archive firmware v2_32
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware-v2_32
         path: firmware/gcc/radioclock.*

@@ -1,7 +1,38 @@
 VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
-CHIP="SAMDA1E16B"
 LOG_LEVEL=INFO
+CFLAGS += -DVERSION=$(BUILD) \
+-DLOG_LEVEL=$(LOG_LEVEL) \
+-DDEBUG
+
+# Select the board to build for:
+ifndef BOARD
+BOARD=v1_64
+#BOARD=v2_64
+#BOARD=v2_32
+endif
+
+# PCB version 1, 64kb flash, using ADC to set brightness digitally:
+ifeq ($(BOARD), v1_64)
+    LINKER = samda1e16b_flash.ld
+    CFLAGS += -D__SAMDA1E16B__
+    CFLAGS += -D__ADC__
+    OBJS += src/ldr.o
+    OBJS_AS_ARGS += "src/ldr.o"
+    DEPS_AS_ARGS += "src/ldr.d"
+
+# PCB version 2, 64kb flash, no ADC, analog brightness control:
+else ifeq ($(BOARD), v2_64)
+    LINKER = samda1e16b_flash.ld
+    CFLAGS += -D__SAMDA1E16B__
+
+# PCB version 2, 32kb flash, no ADC, analog brightness control:
+else ifeq ($(BOARD), v2_32)
+    LINKER = samda1e15b_flash.ld
+    CFLAGS += -D__SAMDA1E15B__
+else
+    $(error Unknown board variant $(BOARD))
+endif
 
 MK_DIR = mkdir -p
 ifdef SystemRoot
@@ -31,7 +62,6 @@ endif
 
 # List the subdirectories for creating object files
 SUB_DIRS +=  \
- \
 hpl/adc \
 hpl/tc \
 samda1b/gcc \
@@ -99,7 +129,6 @@ src/dcf_parser.o \
 src/dht.o \
 src/display.o \
 src/font.o \
-src/ldr.o \
 src/log.o \
 src/peripherals.o \
 src/power.o \
@@ -153,7 +182,6 @@ OBJS_AS_ARGS +=  \
 "src/dht.o" \
 "src/display.o" \
 "src/font.o" \
-"src/ldr.o" \
 "src/log.o" \
 "src/peripherals.o" \
 "src/power.o" \
@@ -237,7 +265,6 @@ DEPS_AS_ARGS +=  \
 "src/display.d" \
 "src/dht.d" \
 "src/font.d" \
-"src/ldr.d" \
 "src/log.d" \
 "src/peripherals.d" \
 "src/power.d" \
@@ -265,7 +292,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS_AS_ARGS) -Wl,--start-group -lm -Wl,--end-group -mthumb \
 -Wl,-Map="$(OUTPUT_FILE_NAME).map" --specs=nano.specs -Wl,--gc-sections -mcpu=cortex-m0plus \
  \
--T"../samda1b/gcc/gcc/$(shell echo $(CHIP) | tr [:upper:] [:lower:])_flash.ld" \
+-T"../samda1b/gcc/gcc/$(LINKER)" \
 -L"../samda1b/gcc/gcc"
 	@echo Finished building target: $@
 
@@ -288,8 +315,8 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 %.o: %.c
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU C Compiler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__$(CHIP)__ -mcpu=cortex-m0plus  \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+$(CFLAGS) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -297,8 +324,8 @@ $(DIR_INCLUDES) \
 %.o: %.s
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Assembler
-	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__$(CHIP)__ -mcpu=cortex-m0plus  \
+	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+$(CFLAGS) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<
@@ -306,8 +333,8 @@ $(DIR_INCLUDES) \
 %.o: %.S
 	@echo Building file: $< "->" $@
 	@echo ARM/GNU Preprocessing Assembler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -DLOG_LEVEL=$(LOG_LEVEL) -DVERSION=$(BUILD) -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
--D__$(CHIP)__ -mcpu=cortex-m0plus  \
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 \
+$(CFLAGS) -mcpu=cortex-m0plus  \
 $(DIR_INCLUDES) \
 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
 	@echo Finished building: $<

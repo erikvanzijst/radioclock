@@ -91,11 +91,13 @@ void update_display(const struct timer_task *const timer_task) {
         }
     }
 
+#ifdef __ADC__
     // set brightness
     uint8_t intensity = (0xff - ldr[0]) >> 4;
     if ((err = enqueue_command((uint8_t[]){0x0a, intensity, 0x0a, intensity}))) {
         ulog(ERROR, "enqueue_command() failed (%ld)", err)
     }
+#endif
 
     dp_countdown--;
     memcpy(&prev_dt, &dt, sizeof(dt));

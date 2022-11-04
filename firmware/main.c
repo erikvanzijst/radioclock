@@ -69,7 +69,9 @@ int main(void) {
         ulog(ERROR, "millis_init() failed")
     }
     calendar_enable(&CALENDAR_0);
+#ifdef __ADC__
     ldr_init();
+#endif
     switch_init(short_press, long_press);
 
     printf("\r\n\r\n");

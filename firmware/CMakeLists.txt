@@ -1,9 +1,14 @@
+# NOTE:
+#
+# Not used for building, just to get CLion to navigate the codebase.
+
 cmake_minimum_required(VERSION 3.22)
 project(firmware C)
 
 set(CMAKE_C_STANDARD 11)
 
 add_compile_definitions(__SAMDA1E16B__)
+add_compile_definitions(__ADC__)
 
 include_directories(.)
 include_directories(config)
