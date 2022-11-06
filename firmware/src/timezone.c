@@ -20,7 +20,7 @@ int32_t timezone_init() {
     // Register interrupt handler on TZ1 and TZ2 pins
     int32_t err;
     if ((err = ext_irq_register(PIN_PA18, tz_isr)) || (err = ext_irq_register(PIN_PA19, tz_isr))) {
-        ulog(ERROR, "ext_irq_register() failed (%ld)", (unsigned long)err)
+        ulog(ERROR, "ext_irq_register() failed (%ld)", (long)err)
         return -1;
     }
     tz_isr();

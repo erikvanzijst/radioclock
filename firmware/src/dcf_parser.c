@@ -6,13 +6,15 @@
 int32_t parse_dcf(uint64_t bits, struct date_time_t *const date_time) {
     if (bits & 0x01) {
         return DCF_ERR_START;
+    } else if (!parity((uint32_t)((bits >> 17) & 0x3))) {
+        return DCF_ERR_PARITY_DST;
     } else if (((bits >> 20) & 0x01) != 1) {
         return DCF_ERR_START_OF_TIME;
-    } else if (parity((uint32_t)((bits >> 21) & 0x7f)) != ((bits >> 28) & 0x01)) {
+    } else if (parity((uint32_t)((bits >> 21) & 0xff))) {
         return DCF_ERR_PARITY_MINUTES;
-    } else if (parity((uint32_t)((bits >> 29) & 0x3f)) != ((bits >> 35) & 0x01)) {
+    } else if (parity((uint32_t)((bits >> 29) & 0x7f))) {
         return DCF_ERR_PARITY_HOURS;
-    } else if (parity((uint32_t)((bits >> 36) & 0x3FFFFF)) != ((bits >> 58) & 0x01)) {
+    } else if (parity((uint32_t)((bits >> 36) & 0x7FFFFF))) {
         return DCF_ERR_PARITY_DATE;
     }
 
@@ -29,6 +31,7 @@ int32_t parse_dcf(uint64_t bits, struct date_time_t *const date_time) {
     date_time->year  = 2000 + \
                        1 * BIT_VAL(bits, 50) + 2 * BIT_VAL(bits, 51) + 4 * BIT_VAL(bits, 52) + 8 * BIT_VAL(bits, 53) + \
                       10 * BIT_VAL(bits, 54) + 20 * BIT_VAL(bits, 55) + 40 * BIT_VAL(bits, 56) + 80 * BIT_VAL(bits, 57);
+    date_time->dst   = BIT_VAL(bits, 17);
 
     return 0;
 }

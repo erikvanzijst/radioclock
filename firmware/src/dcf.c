@@ -131,7 +131,7 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
 
         } else {
 //            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
-            state->errors |= 0x4000000000;  // bit 38
+            state->errors |= 0x40000000000;  // bit 42
         }
         state->dcf_prev_posedge = now;
 
@@ -145,7 +145,7 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
             bit = 0x400000000000000;                    // bit 58 set to 1
         } else {
 //            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
-            state->errors |= 0x4000000000;
+            state->errors |= 0x40000000000;
         }
         state->dcf_bits >>= 1;
         state->dcf_bits |= bit;

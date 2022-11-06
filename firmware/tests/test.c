@@ -60,6 +60,15 @@ int main(int argc, char **argv) {
     assert(1 == parity(0x69b66996));
     assert(1 == parity(0x7fffffff));
 
+    char ts0[] = "00101000000001100010110000001000000010100001110001010001000";  // 2022-11-05 00:01
+    str_reverse(ts0);
+    assert(!parse_dcf(strtol(ts0, NULL, 2), &dt));
+    assert(2022 == dt.year);
+    assert(11 == dt.month);
+    assert(5 == dt.day);
+    assert(0 == dt.hour);
+    assert(1 == dt.min);
+
     char ts1[] = "00111101000100100100110100101110001101000110111100010001001";  // 2022-07-22 23:25
     str_reverse(ts1);
     assert(!parse_dcf(strtol(ts1, NULL, 2), &dt));
@@ -103,6 +112,10 @@ int main(int argc, char **argv) {
     str_reverse(ts7);
     assert(DCF_ERR_PARITY_DATE == parse_dcf(strtol(ts7, NULL, 2), &dt));
 
+    // Inconsistent DST bits
+    char ts8[] = "01111011110001100110100101011001010001100011110001010001001";
+    str_reverse(ts8);
+    assert(DCF_ERR_PARITY_DST == parse_dcf(strtol(ts8, NULL, 2), &dt));
 
     // 7-segment font
     char *str = "0123456789";
