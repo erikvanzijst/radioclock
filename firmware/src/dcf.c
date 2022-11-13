@@ -130,7 +130,7 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
             state->dcf_bits = 0;
 
         } else {
-//            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
+            ulog(WARN, "DCF pulse length mismatch (%lums)", (unsigned long)duration)
             state->errors |= 0x40000000000;  // bit 42
         }
         state->dcf_prev_posedge = now;
@@ -138,13 +138,13 @@ enum dcf_isr_result_t process_data(struct sync_state_t *state) {
     } else {    // negative edge
         uint64_t bit = 0;
         if (duration > 60 && duration < 140) {          // logic 0
-//            ulog(INFO, "DCF: 0");
+            ulog(INFO, "DCF: 0");
             bit = 0;
         } else if (duration > 160 && duration < 240) {  // logic 1
-//            ulog(INFO, "DCF: 1");
+            ulog(INFO, "DCF: 1");
             bit = 0x400000000000000;                    // bit 58 set to 1
         } else {
-//            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
+            ulog(WARN, "DCF interval length mismatch (%lums)", (unsigned long)duration)
             state->errors |= 0x40000000000;
         }
         state->dcf_bits >>= 1;
