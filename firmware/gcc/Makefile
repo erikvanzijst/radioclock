@@ -7,15 +7,16 @@ CFLAGS += -DVERSION=$(BUILD) \
 
 # Select the board to build for:
 ifndef BOARD
-BOARD=v1_64
+#BOARD=v1_64
 #BOARD=v2_64
-#BOARD=v2_32
+BOARD=v2_32
 endif
 
 # PCB version 1, 64kb flash, using ADC to set brightness digitally:
 ifeq ($(BOARD), v1_64)
     LINKER = samda1e16b_flash.ld
     CFLAGS += -D__SAMDA1E16B__ -D__ADC__
+    OPENOCD_CFG = ../openocd/samda1e16b.cfg
 
     OBJS += src/ldr.o \
     hpl/adc/hpl_adc.o \
@@ -31,6 +32,7 @@ ifeq ($(BOARD), v1_64)
 else ifeq ($(BOARD), v2_64)
     LINKER = samda1e16b_flash.ld
     CFLAGS += -D__SAMDA1E16B__ -D__TZ__
+    OPENOCD_CFG = ../openocd/samda1e16b.cfg
     OBJS += src/timezone.o
     OBJS_AS_ARGS += "src/timezone.o"
     DEPS_AS_ARGS += "src/timezone.d"
@@ -39,6 +41,7 @@ else ifeq ($(BOARD), v2_64)
 else ifeq ($(BOARD), v2_32)
     LINKER = samda1e15b_flash.ld
     CFLAGS += -D__SAMDA1E15B__ -D__TZ__
+    OPENOCD_CFG = ../openocd/samda1e15b.cfg
     OBJS += src/timezone.o
     OBJS_AS_ARGS += "src/timezone.o"
     DEPS_AS_ARGS += "src/timezone.d"
@@ -350,7 +353,7 @@ endif
 
 program: $(SUB_DIRS) $(OUTPUT_FILE_PATH)
 	@echo Writing flash...
-	openocd -f ../openocd.cfg -c "program $(OUTPUT_FILE_PATH) verify reset exit"
+	openocd -f ../openocd/openocd.cfg -f $(OPENOCD_CFG) -c "program $(OUTPUT_FILE_PATH) verify reset exit"
 
 gdb: $(OUTPUT_FILE_PATH)
 	arm-none-eabi-gdb -iex "target extended-remote localhost:3333" $(OUTPUT_FILE_PATH)
@@ -358,8 +361,8 @@ gdb: $(OUTPUT_FILE_PATH)
 debug: $(OUTPUT_FILE_PATH)
 	@echo Starting OpenOCD debug server...
 	@( sleep 1 && echo Connect CLion Remote Debug session now...) &
-	openocd -f ../openocd.cfg -c "init; reset halt"
-	#openocd -f ../openocd.cfg -c "init; resume; exit"	# make does not propagate interrupts unfortunately
+	openocd -f ../openocd/openocd.cfg -f $(OPENOCD_CFG) -c "init; reset halt"
+	#openocd -f ../openocd/openocd.cfg -f $(OPENOCD_CFG) -c "init; resume; exit"	# make does not propagate interrupts unfortunately
 
 $(SUB_DIRS):
 	$(MK_DIR) "$@"
