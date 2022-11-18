@@ -109,6 +109,7 @@ int32_t display_init(void) {
     tx_queue.head = 0;
     tx_queue.tail = 0;
 
+    gpio_set_pin_level(DSPL_SS, true);
     SPI_0_init();
     spi_m_async_get_io_descriptor(&SPI_0, &spi_io);
     spi_m_async_register_callback(&SPI_0, SPI_M_ASYNC_CB_XFER, (FUNC_PTR)complete_cb_SPI_0);
@@ -119,7 +120,7 @@ int32_t display_init(void) {
     if ((err = (
             // leave shutdown mode:
             enqueue_command((uint8_t[]){0x0c, 0x01, 0x0c, 0x01}) |
-            // set initial intensity:
+            // set intensity to half-power:
             enqueue_command((uint8_t[]){0x0a, 0x08, 0x0a, 0x08}) |
             // set scan-limit register to all segments:
             enqueue_command((uint8_t[]){0x0b, 0x07, 0x0b, 0x07}) |
@@ -144,5 +145,15 @@ int32_t display_deinit(void) {
     spi_m_async_register_callback(&SPI_0, SPI_M_ASYNC_CB_XFER, (FUNC_PTR)NULL);
     spi_m_async_disable(&SPI_0);
     spi_m_async_deinit(&SPI_0);
+
+    // Set all output pins to GND (power to the MAX chips has been cut)
+    gpio_set_pin_direction(DSPL_SCK, GPIO_DIRECTION_OUT);
+    gpio_set_pin_function(DSPL_SCK, GPIO_PIN_FUNCTION_OFF);
+    gpio_set_pin_direction(DSPL_DO, GPIO_DIRECTION_OUT);
+    gpio_set_pin_function(DSPL_DO, GPIO_PIN_FUNCTION_OFF);
+
+    gpio_set_pin_level(DSPL_SS, false);
+    gpio_set_pin_level(DSPL_SCK, false);
+    gpio_set_pin_level(DSPL_DO, false);
     return ERR_NONE;
 }
