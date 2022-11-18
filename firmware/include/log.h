@@ -7,6 +7,7 @@
 #include "utils.h"
 
 enum log_level_t {
+    VERBOSE,
     INFO,
     WARN,
     ERROR

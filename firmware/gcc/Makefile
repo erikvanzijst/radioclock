@@ -1,6 +1,6 @@
 VERSION=1.1
 BUILD="$(VERSION)-$(shell git rev-parse HEAD | cut -c 1-9) $(shell date)"
-LOG_LEVEL=INFO
+LOG_LEVEL ?= INFO
 CFLAGS += -DVERSION=$(BUILD) \
 -DLOG_LEVEL=$(LOG_LEVEL) \
 -DDEBUG

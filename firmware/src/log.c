@@ -7,7 +7,7 @@ void _ulog(enum log_level_t lvl, const char *filename, uint16_t line, const char
     calendar_get_date_time(&CALENDAR_0, &dt);
     printf("%04d-%02d-%02d %02d:%02d:%02d %s [%s:%u] %s(): ",
            dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min, dt.time.sec,
-           lvl == INFO ? "INFO" : (lvl == WARN ? "WARN" : (lvl == ERROR ? "ERR " : "UNKN")),
+           lvl == VERBOSE ? "VERBOSE" : lvl == INFO ? "INFO" : (lvl == WARN ? "WARN" : (lvl == ERROR ? "ERR " : "UNKN")),
            get_filename(filename), line, function);
 
     va_list argptr;
