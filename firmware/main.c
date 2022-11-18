@@ -15,7 +15,6 @@
 // max time of a sync interval (5 minutes plus 10 seconds margin for early start)
 #define MAX_SYNC_MILLIS (5 * 60 * 1000 + 10000)
 
-volatile uint64_t last_dcf_sync = 0;
 volatile bool do_sync = true;
 
 static struct calendar_alarm alarm = {
@@ -32,7 +31,6 @@ static void init_sync(struct calendar_descriptor *const descr) {
 
 void short_press(void) {
     ulog(INFO, "DCF time sync requested")
-    last_dcf_sync = 0;
     do_sync = true;
 }
 
@@ -91,9 +89,8 @@ int main(void) {
             power_down_peripherals();
 
             struct calendar_date_time dt;
-            switch (dcf_sync(last_dcf_sync ? MAX_SYNC_MILLIS : 0x7FFFFFFF)) {
+            switch (dcf_sync(MAX_SYNC_MILLIS)) {
                 case DCF_SUCCESSFUL:
-                    last_dcf_sync = millis();
                     calendar_get_date_time(&CALENDAR_0, &dt);
                     ulog(INFO, "Time sync: %04d-%02d-%02d %02d:%02d:00", dt.date.year, dt.date.month, dt.date.day, dt.time.hour, dt.time.min)
                     break;
