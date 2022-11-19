@@ -560,8 +560,6 @@
           "/~{DCF_CTL}",
           "/~{PERIPHERAL_CTL}",
           "/~{SS}",
-          "Net-(R1-Pad1)",
-          "Net-(R4-Pad1)",
           "unconnected-(J10-Pad10)",
           "unconnected-(J10-Pad9)",
           "unconnected-(J11-Pad9)",
