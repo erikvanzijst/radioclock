@@ -5,7 +5,6 @@
 
 void tz_isr(void) {
     timezone = gpio_get_pin_level(TZ1) ? LON : gpio_get_pin_level(TZ2) ? AMS : HEL;
-    ulog(INFO, "Timezone set to: %s", get_tz_name(timezone))
 }
 
 volatile timezone_t timezone;

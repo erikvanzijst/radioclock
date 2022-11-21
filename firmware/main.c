@@ -12,10 +12,10 @@
 #include "switch.h"
 #include "timezone.h"
 
-// max time of a sync interval (5 minutes plus 10 seconds margin for early start)
-#define MAX_SYNC_MILLIS (5 * 60 * 1000 + 10000)
+// max time of a sync interval (10 minutes plus 10 seconds margin for early start)
+#define MAX_SYNC_MILLIS (10 * 60 * 1000 + 10000)
 
-volatile bool do_sync = true;
+volatile bool do_sync = false;
 
 static struct calendar_alarm alarm = {
         .cal_alarm.mode = ONESHOT,
@@ -73,6 +73,7 @@ int main(void) {
     ldr_init();
 #endif
 #ifdef __TZ__
+    timezone_t tz;
     timezone_init();
 #endif
 
@@ -84,6 +85,14 @@ int main(void) {
     power_up_peripherals();
 
     for (;;) {
+
+#ifdef __TZ__
+        if (timezone != tz) {
+            tz = timezone;
+            ulog(INFO, "Timezone set to: %s", get_tz_name(tz))
+        }
+#endif
+
         if (do_sync) {
             ulog(INFO, "Starting time sync...")
             power_down_peripherals();
@@ -108,11 +117,14 @@ int main(void) {
         }
 
         if (!usb_power()) {
+            ulog(INFO, "USB Power is OFF")
+
             power_down_peripherals();
             while (!usb_power()) {
                 ulog(INFO, "Entering STANDBY...")
                 sleep(3);
             }
+            ulog(INFO, "USB Power is ON")
             power_up_peripherals();
             schedule_sync();
         }

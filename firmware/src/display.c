@@ -120,8 +120,8 @@ int32_t display_init(void) {
     if ((err = (
             // leave shutdown mode:
             enqueue_command((uint8_t[]){0x0c, 0x01, 0x0c, 0x01}) |
-            // set intensity to half-power:
-            enqueue_command((uint8_t[]){0x0a, 0x08, 0x0a, 0x08}) |
+            // set intensity as used by PCB v2 and above:
+            enqueue_command((uint8_t[]){0x0a, 0x0c, 0x0a, 0x0c}) |
             // set scan-limit register to all segments:
             enqueue_command((uint8_t[]){0x0b, 0x07, 0x0b, 0x07}) |
             // enable BCD decode mode:
